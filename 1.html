@@ -23,11 +23,22 @@
       }
     }
     *{ box-sizing:border-box; }
-    html,body{ height:100%; margin:0; font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial; background: var(--bg); color: var(--text); display:grid; grid-template-columns:280px 1fr; gap:20px; }
+    html,body{
+      height:100%; margin:0; 
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial; 
+      background: var(--bg); color: var(--text); 
+      display:grid; grid-template-columns:280px 1fr; gap:20px;
+    }
     
     /* Sidebar */
-    nav{ position:sticky; top:0; height:100dvh; overflow:auto; padding:24px 16px; background:var(--panel); border-right:1px solid var(--border); }
-    .logo{ font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:10px; }
+    nav{
+      position:sticky; top:0; height:100dvh; overflow:auto; 
+      padding:24px 16px; background:var(--panel); border-right:1px solid var(--border);
+      transition: transform 0.3s ease-in-out;
+    }
+    .logo{
+      font-weight:800; font-size:1.25rem; display:flex; align-items:center; gap:10px;
+    }
     .logo .dot{ width:10px; height:10px; border-radius:999px; background: var(--accent); }
     #menu-toggle{ margin-left:auto; background:none; border:none; cursor:pointer; color:var(--text); font-size:1.5rem; }
     .toc{ margin-top:18px; display:grid; gap:10px; }
@@ -55,26 +66,38 @@
     
     /* Workflow */
     .flow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  flex-wrap: nowrap; /* keep all steps in one line */
-  padding: 16px;
-  border-radius: 16px;
-  border: 1px dashed var(--border);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, #000 8%), var(--panel));
-  overflow-x: auto; /* allow horizontal scroll on very small screens */
-}
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: nowrap; /* keep all steps in one line */
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px dashed var(--border);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, #000 8%), var(--panel));
+      overflow-x: auto; /* allow horizontal scroll on very small screens */
+    }
 
     footer{ margin-top:30px; color:var(--muted); font-size:.9rem; text-align:center; }
 
-    @media (max-width: 900px){ body{ grid-template-columns:1fr; } nav{ position:relative; height:auto; } }
+    /* Responsive */
+    @media (max-width: 900px){
+      html,body{ grid-template-columns:1fr; }
+      nav{
+        position:fixed; left:0; top:0; bottom:0;
+        width:240px; height:100vh;
+        transform:translateX(-100%);
+        z-index:1000;
+      }
+      nav.active{ transform:translateX(0); }
+      main{ padding:80px 16px 20px; }
+      #menu-toggle{ display:block; }
+    }
   </style>
 </head>
 <body>
   <!-- Sidebar / TOC -->
-  <nav>
+  <nav id="sidebar">
     <div class="logo">
      Git & GitHub Guide
       <button id="menu-toggle">⋮</button>
@@ -100,7 +123,7 @@
       <span class="pill">💡 Tip: click any code block to copy</span>
     </header>
 
-    <!-- 1. Git -->
+       <!-- 1. Git -->
     <section id="git" class="card">
       <h2>1) Git</h2>
       <p><strong>About Git</strong><br>Git is a distributed version control system that tracks changes in your files and lets you move between versions safely.</p>
@@ -187,7 +210,6 @@ git stash list    # view stashed changes
 git stash apply   # apply latest stash</code></pre>
       <p>Stash acts like a stack: you can save multiple changes and reapply them later.</p>
     </section>
-
     <footer>
     <i>Made with ❤ by Laksh.</i>
     </footer>
@@ -203,11 +225,10 @@ git stash apply   # apply latest stash</code></pre>
     });
     function flash(el){ const old = el.style.boxShadow; el.style.boxShadow = '0 0 0 3px var(--accent) inset'; setTimeout(()=> el.style.boxShadow=old,600); }
 
-    // TOC toggle for three-dot menu
+    // Sidebar toggle
     const toggleBtn = document.getElementById('menu-toggle');
-    const tocMenu = document.getElementById('toc-menu');
-    toggleBtn.addEventListener('click', ()=>{ tocMenu.style.display = tocMenu.style.display==='none'?'grid':'none'; });
-    if(window.innerWidth<=900){ tocMenu.style.display='none'; }
+    const sidebar = document.getElementById('sidebar');
+    toggleBtn.addEventListener('click', ()=>{ sidebar.classList.toggle('active'); });
   </script>
 </body>
 </html>
