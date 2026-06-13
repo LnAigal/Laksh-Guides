@@ -1,191 +1,382 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script> 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-NDLH3RKL58');
 </script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Laksh Guides</title>
   <style>
-    :root {
-      --bg: #0b0c10;
-      --panel: #111318;
-      --muted: #c5c6c7;
-      --text: #e8e8ea;
-      --accent: #7aa2f7;
-      --border: #1f2430;
+    :root{
+      --bg: #07080e;
+      --bg-alt: #0b0d17;
+      --surface: rgba(18,22,40,0.75);
+      --surface-hover: rgba(28,34,60,0.85);
+      --text: #f1f5f9;
+      --text-dim: #8892b0;
+      --text-muted: #64748b;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.4);
+      --accent-from: #6366f1;
+      --accent-via: #8b5cf6;
+      --accent-to: #a855f7;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --glow: 0 0 40px rgba(99,102,241,0.1);
+      --card-bg: rgba(18,22,40,0.5);
     }
-
     @media (prefers-color-scheme: light) {
-      :root {
-        --bg: #f7f8fb;
-        --panel: #ffffff;
-        --muted: #4b5563;
-        --text: #101827;
-        --accent: #2457e0;
-        --border: #e5e7eb;
+      :root{
+        --bg: #f8fafc;
+        --bg-alt: #f1f5f9;
+        --surface: rgba(255,255,255,0.85);
+        --surface-hover: rgba(255,255,255,1);
+        --text: #0f172a;
+        --text-dim: #475569;
+        --text-muted: #94a3b8;
+        --border: rgba(99,102,241,0.15);
+        --border-hover: rgba(99,102,241,0.35);
+        --shadow: 0 8px 32px rgba(0,0,0,0.06);
+        --glow: 0 0 40px rgba(99,102,241,0.05);
+        --card-bg: rgba(255,255,255,0.6);
       }
     }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; }
+    body{
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: var(--bg); color: var(--text);
+      display:flex; min-height:100vh;
+    }
+    a{ color:var(--accent-via); text-decoration:none; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      min-height: 100vh;
+    ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
+
+    nav{
+      flex:0 0 260px; padding:28px 16px;
+      background:var(--bg-alt); border-right:1px solid var(--border);
+      display:flex; flex-direction:column; gap:6px;
+      transition:transform 0.3s ease; z-index:100;
+    }
+    .logo{
+      font-weight:800; font-size:1.15rem; display:flex; align-items:center; gap:10px;
+      padding-bottom:16px; border-bottom:1px solid var(--border);
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .logo .dot{
+      width:8px; height:8px; border-radius:50%;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-text-fill-color:initial; flex-shrink:0;
+    }
+    .toc{ margin-top:6px; display:flex; flex-direction:column; gap:6px; flex:1; }
+    .toc a{
+      display:flex; align-items:center; gap:12px;
+      padding:12px 16px; border-radius:14px;
+      text-decoration:none; color:var(--text-dim);
+      border:1px solid var(--border);
+      background:var(--surface); backdrop-filter:blur(12px);
+      transition:all 0.2s ease; font-size:0.92rem; font-weight:500;
+    }
+    .toc a:hover{
+      border-color:var(--border-hover); color:var(--text);
+      background:var(--surface-hover); transform:translateY(-1px);
+      box-shadow:var(--glow);
+    }
+    .toc a .icon{ font-size:1rem; width:22px; text-align:center; flex-shrink:0; }
+
+    .sidebar-footer{
+      padding-top:10px; border-top:1px solid var(--border);
+      font-size:0.72rem; color:var(--text-muted); text-align:center;
     }
 
-    /* Sidebar */
-    nav {
-      flex: 0 0 260px;
-      padding: 24px 16px;
-      background: var(--panel);
-      border-right: 1px solid var(--border);
-      transition: transform 0.3s ease-in-out;
-    }
-    .logo {
-      font-weight: 800;
-      font-size: 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-    .toc {
-      margin-top: 18px;
-      display: grid;
-      gap: 10px;
-    }
-    .toc a {
-      display: block;
-      padding: 10px 12px;
-      border-radius: 12px;
-      text-decoration: none;
-      color: var(--text);
-      border: 1px solid var(--border);
-      background: var(--panel);
-    }
-    .toc a:hover { border-color: var(--accent); }
+    main{ flex:1; padding:48px 36px 60px; max-width:960px; position:relative; }
 
-    /* Main */
-    main {
-      flex: 1;
-      padding: 36px 24px;
+    header.hero{ margin-bottom:32px; position:relative; }
+    header.hero::after{
+      content:''; position:absolute; bottom:-16px; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,var(--border),transparent);
     }
-    header.hero { text-align: center; margin-bottom: 30px; }
-    .title { font-size: clamp(1.5rem, 2vw, 2.2rem); }
-    .subtitle { color: var(--muted); margin: 10px 0 20px; }
-    .search-box { margin: 20px auto; max-width: 400px; }
-    input[type="text"] {
-      width: 100%; padding: 10px 14px;
-      border-radius: 10px; border: 1px solid var(--border);
-      background: var(--panel); color: var(--text);
+    .hero-glow{
+      position:absolute; top:-60px; right:-40px;
+      width:250px; height:250px; border-radius:50%;
+      background:radial-gradient(circle,rgba(99,102,241,0.08),rgba(168,85,247,0.04),transparent 70%);
+      pointer-events:none;
     }
-    .toc-main { display: grid; gap: 10px; margin-top: 20px; }
-    .toc-main a {
-      padding: 14px 18px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      text-decoration: none;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: center;
-      transition: 0.2s;
+    .title{
+      font-size: clamp(1.8rem, 1.4rem + 2.2vw, 2.8rem);
+      font-weight:800; line-height:1.15; letter-spacing:-0.02em;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
     }
-    .toc-main a:hover { border-color: var(--accent); background: rgba(122,162,247,0.1); }
-    footer { margin-top: 40px; text-align: center; color: var(--muted); }
+    .subtitle{ color:var(--text-dim); margin:10px 0 24px; max-width:65ch; line-height:1.7; font-size:0.95rem; }
 
-    /* Mobile */
-    .menu-btn {
-      display: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      background: none;
-      border: none;
-      color: var(--text);
-      padding: 12px;
+    .search-box{ margin:0 0 0 0; max-width:400px; }
+    input[type="text"]{
+      width:100%; padding:13px 18px;
+      border-radius:14px; border:1px solid var(--border);
+      background:var(--surface); backdrop-filter:blur(12px);
+      color:var(--text); font-size:0.92rem; outline:none;
+      transition:all 0.2s; font-family:inherit;
+    }
+    input[type="text"]:focus{ border-color:var(--border-hover); box-shadow:var(--glow); }
+    input::placeholder{ color:var(--text-muted); opacity:0.7; }
+
+    .guide-grid{ display:grid; gap:14px; margin-top:8px; }
+    .guide-card{
+      padding:20px 24px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:var(--card-bg); backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      display:flex; align-items:center; gap:18px;
+      transition:all 0.3s ease;
+      text-decoration:none; color:var(--text);
+      position:relative; overflow:hidden;
+    }
+    .guide-card::before{
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,transparent,var(--border-hover),transparent);
+      opacity:0; transition:opacity 0.3s;
+    }
+    .guide-card:hover{
+      border-color:var(--border-hover); transform:translateY(-2px);
+      box-shadow:var(--shadow),var(--glow);
+    }
+    .guide-card:hover::before{ opacity:1; }
+    .guide-card .card-icon{
+      width:50px; height:50px; border-radius:14px;
+      background:var(--surface); border:1px solid var(--border);
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; transition:all 0.3s;
+    }
+    .guide-card:hover .card-icon{ border-color:var(--border-hover); background:var(--surface-hover); }
+    .guide-card .card-icon img{ width:24px; height:24px; }
+    .guide-card .card-body{ flex:1; min-width:0; }
+    .guide-card .card-title{ font-weight:600; font-size:1.05rem; }
+    .guide-card .card-desc{ color:var(--text-dim); font-size:0.85rem; margin-top:3px; line-height:1.5; }
+    .guide-card .card-arrow{ color:var(--text-muted); font-size:1.3rem; flex-shrink:0; transition:transform 0.2s; }
+    .guide-card:hover .card-arrow{ transform:translateX(4px); color:var(--accent-from); }
+
+    .empty-state{ display:none; text-align:center; padding:40px; color:var(--text-muted); }
+    .empty-state.visible{ display:block; }
+
+    footer{ margin-top:44px; text-align:center; color:var(--text-dim); font-size:0.85rem; padding-top:20px; border-top:1px solid var(--border); }
+
+    .menu-btn{
+      display:none; font-size:1.3rem; cursor:pointer;
+      background:none; border:none; color:var(--text);
+      padding:8px 10px; position:absolute; top:10px; left:10px; z-index:50;
+    }
+    #overlay{
+      display:none; position:fixed; inset:0;
+      background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+      z-index:99;
     }
 
     @media (max-width: 900px) {
-      body { flex-direction: column; }
-      nav {
-        position: fixed;
-        top: 0; left: 0;
-        height: 100%;
-        transform: translateX(-100%);
-        z-index: 1000;
+      body{ flex-direction:column; }
+      nav{
+        position:fixed; top:0; left:0; height:100%;
+        transform:translateX(-100%); z-index:1000; width:260px;
       }
-      nav.active { transform: translateX(0); }
-      .menu-btn { display: block; position: absolute; top: 10px; left: 10px; }
-      main { padding: 70px 16px 20px; }
+      nav.active{ transform:translateX(0); }
+      .menu-btn{ display:block; }
+      main{ padding:70px 18px 30px; }
+      #overlay.active{ display:block; }
+    }
+
+    .gh-icon{
+      display:inline-block; width:18px; height:18px;
+      background:var(--text-dim);
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .gh-icon-accent{ background:var(--accent-from); }
+    .title .gh-icon{ width:28px; height:28px; background:var(--accent-to); vertical-align:middle; }
+
+    /* ═══ ANIMATIONS ═══ */
+    @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+    @keyframes pulse-glow{ 0%,100%{ box-shadow:0 0 20px rgba(99,102,241,0.05); } 50%{ box-shadow:0 0 40px rgba(99,102,241,0.12); } }
+    @keyframes gradient-shift{ 0%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+    @keyframes slide-up{ 0%{ opacity:0; transform:translateY(30px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes scale-in{ 0%{ opacity:0; transform:scale(0.9); } 100%{ opacity:1; transform:scale(1); } }
+    @keyframes fade-in{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes orb-drift{ 0%{ transform:translate(0,0); } 50%{ transform:translate(30px,-40px); } 100%{ transform:translate(0,0); } }
+
+    .orb-container{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+    .orb{ position:absolute; border-radius:50%; opacity:0.12; filter:blur(60px); }
+    .orb-1{ width:350px; height:350px; background:radial-gradient(circle,var(--accent-from),transparent); top:-80px; right:-80px; animation:orb-drift 20s ease-in-out infinite; }
+    .orb-2{ width:280px; height:280px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-60px; left:-60px; animation:orb-drift 25s ease-in-out infinite reverse; }
+    .orb-3{ width:200px; height:200px; background:radial-gradient(circle,var(--cyan),transparent); top:50%; left:50%; animation:orb-drift 18s ease-in-out infinite; opacity:0.06; }
+
+    .hero{ animation:fade-in 0.8s ease-out; }
+    .title .animated-gradient{
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan),var(--accent-to),var(--accent-from));
+      background-size:300% 300%;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:gradient-shift 6s ease infinite;
+    }
+    .subtitle{ animation:slide-up 0.8s ease-out 0.3s both; }
+
+    .guide-card{ opacity:0; transform:translateY(20px); transition:all 0.6s cubic-bezier(0.16,1,0.3,1); }
+    .guide-card.visible{ opacity:1; transform:translateY(0); }
+    .guide-card:nth-child(2){ transition-delay:0.1s; }
+
+    .guide-card:hover{ transform:translateY(-4px) scale(1.01); }
+
+    .toc a{ animation:scale-in 0.5s ease-out both; }
+    .toc a:nth-child(1){ animation-delay:0.1s; }
+    .toc a:nth-child(2){ animation-delay:0.2s; }
+
+    footer{ animation:fade-in 1s ease-out 0.8s both; }
+
+    @media (prefers-reduced-motion: reduce){
+      .orb,.guide-card,.toc a{ animation:none !important; }
+      .guide-card{ opacity:1; transform:none; }
+      .title .animated-gradient{ background-size:100% 100%; animation:none; }
+      .subtitle{ animation:none; }
     }
   </style>
 </head>
 <body>
-  <!-- Menu Button (3 dots) -->
-  <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div id="overlay"></div>
 
-  <!-- Sidebar -->
+  <button class="menu-btn" id="menuToggle">☰</button>
+
   <nav id="sidebar">
     <div class="logo"><span class="dot"></span> Laksh Guides</div>
     <div class="toc">
-      <a href="1.html">Git & GitHub</a>
-<a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/">NMAMIT-Notes-Hub</a>
-    
+      <a href="GithubGuide.html"><span class="icon"><span class="gh-icon gh-icon-accent" style="display:inline-block;vertical-align:middle;"></span></span> Git & GitHub</a>
+      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon">◈</span> NMAMIT-Notes-Hub</a>
     </div>
+    <div class="sidebar-footer">Laksh Guides</div>
   </nav>
 
-
-  <!-- Main Content -->
   <main>
+    <div class="hero-glow"></div>
     <header class="hero">
-      <h1 class="title">Laksh Guides</h1>
-      <p class="subtitle">Your go-to reference for coding, tech, and academic essentials.</p>
+      <h1 class="title"><span class="animated-gradient">Laksh Guides</span></h1>
+      <p class="subtitle">Your go-to reference for coding, tech, and academic essentials. Quick guides, clear explanations, and practical workflows.</p>
       <div class="search-box">
-        <input type="text" placeholder="Search guides..." />
+        <input type="text" id="searchInput" placeholder="Search guides..." />
       </div>
     </header>
 
-    <div class="toc-main">
-      <a href="1.html">
-        <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub" width="20">
-        Git & GitHub Guide
+    <div class="guide-grid" id="guideGrid">
+      <a href="GithubGuide.html" class="guide-card" data-title="Git & GitHub Guide">
+        <div class="card-icon">
+          <span class="gh-icon gh-icon-accent" style="width:26px;height:26px;display:block;"></span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Git & GitHub Guide</div>
+          <div class="card-desc">Version control, branching, remotes, pull requests, and more.</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/" class="guide-card" data-title="NMAMIT Notes Hub">
+        <div class="card-icon">
+          <img src="https://raw.githubusercontent.com/LnAigal/NMAMIT-Notes-Hub/main/nav/nnhicon.jpg" alt="NNHub">
+        </div>
+        <div class="card-body">
+          <div class="card-title">NMAMIT-Notes-Hub</div>
+          <div class="card-desc">Academic notes and resources for NMAMIT courses.</div>
+        </div>
+        <div class="card-arrow">→</div>
       </a>
     </div>
 
-<div class="toc-main">
-      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/">
-        <img src="https://raw.githubusercontent.com/LnAigal/NMAMIT-Notes-Hub/main/nav/nnhicon.jpg" alt="NNHub" width="20">
-        NMAMIT-Notes-Hub
-      </a>
-    </div>
+    <div class="empty-state" id="emptyState">No guides match your search.</div>
 
-
-    <footer>
-      <i>Made with ❤ by Laksh.</i>
-    </footer>
+    <footer><i>Made with ❤ by Laksh.</i></footer>
   </main>
 
   <script>
-    function toggleMenu() {
-      document.getElementById("sidebar").classList.toggle("active");
-    }
+    // Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    });
+
+    // Search
+    const searchInput = document.getElementById('searchInput');
+    const cards = document.querySelectorAll('.guide-card');
+    const emptyState = document.getElementById('emptyState');
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.toLowerCase().trim();
+      let visible = 0;
+      cards.forEach(card => {
+        const title = card.dataset.title.toLowerCase();
+        const match = !q || title.includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      emptyState.classList.toggle('visible', visible === 0);
+    });
+
+    // Scroll reveal
+    (function() {
+      const cards = document.querySelectorAll('.guide-card');
+      if (!cards.length || !('IntersectionObserver' in window)) {
+        cards.forEach(c => c.classList.add('visible'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      cards.forEach(card => observer.observe(card));
+    })();
+
+    // 3D tilt on guide cards
+    (function() {
+      document.querySelectorAll('.guide-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const cx = rect.width / 2;
+          const cy = rect.height / 2;
+          card.style.transform =
+            `perspective(800px) rotateX(${((y - cy) / cy) * -4}deg) rotateY(${((x - cx) / cx) * 4}deg) translateY(-4px) scale(1.01)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    })();
   </script>
 </body>
 </html>
