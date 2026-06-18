@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NDLH3RKL58');
+</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Linux Guide — Laksh Guides</title>
+  <style>
+    :root{
+      --bg: #07080e;
+      --bg-alt: #0b0d17;
+      --surface: rgba(18,22,40,0.75);
+      --surface-hover: rgba(28,34,60,0.85);
+      --text: #f1f5f9;
+      --text-dim: #8892b0;
+      --text-muted: #64748b;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.4);
+      --accent-from: #6366f1;
+      --accent-via: #8b5cf6;
+      --accent-to: #a855f7;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --code-bg: #0a0c16;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --glow: 0 0 40px rgba(99,102,241,0.1);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f8fafc;
+        --bg-alt: #f1f5f9;
+        --surface: rgba(255,255,255,0.85);
+        --surface-hover: rgba(255,255,255,1);
+        --text: #0f172a;
+        --text-dim: #475569;
+        --text-muted: #94a3b8;
+        --border: rgba(99,102,241,0.15);
+        --border-hover: rgba(99,102,241,0.35);
+        --code-bg: #0f172a;
+        --shadow: 0 8px 32px rgba(0,0,0,0.06);
+        --glow: 0 0 40px rgba(99,102,241,0.05);
+      }
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; scroll-padding-top:100px; }
+    html,body{
+      min-height:100%;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      display:grid; grid-template-columns:270px 1fr; gap:0;
+    }
+    a{ color:var(--accent-via); text-decoration:none; }
+
+    ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
+
+    nav{
+      position:sticky; top:0; height:100dvh; overflow-y:auto;
+      padding:28px 16px; background:var(--bg-alt); border-right:1px solid var(--border);
+      display:flex; flex-direction:column; gap:2px;
+      z-index:100;
+    }
+    nav::-webkit-scrollbar{ width:4px; }
+    nav::-webkit-scrollbar-thumb{ background:var(--border); border-radius:9px; }
+
+    .logo{
+      font-weight:800; font-size:1.1rem; display:flex; align-items:center; gap:10px;
+      padding-bottom:16px; border-bottom:1px solid var(--border); flex-shrink:0;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .logo .mark{
+      width:8px; height:8px; border-radius:999px;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-text-fill-color:initial; flex-shrink:0;
+    }
+    .logo .home-link{
+      margin-left:auto; font-size:0.8rem; opacity:0.4;
+      -webkit-text-fill-color:initial; color:var(--text-dim);
+      transition:opacity 0.2s;
+    }
+    .logo .home-link:hover{ opacity:0.8; }
+
+    .toc{ display:flex; flex-direction:column; gap:2px; margin-top:6px; flex:1; }
+    .toc a{
+      display:flex; align-items:center; gap:12px;
+      padding:9px 14px; border-radius:12px;
+      text-decoration:none; color:var(--text-dim);
+      border:1px solid transparent;
+      transition:all 0.2s ease; font-size:0.82rem; font-weight:450;
+      position:relative;
+    }
+    .toc a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+    .toc a.active{
+      color:#fff; border-color:var(--border-hover);
+      background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08));
+      box-shadow:inset 2px 0 0 var(--accent-from);
+    }
+    .toc a .tag-icon{ font-size:0.7rem; width:16px; text-align:center; flex-shrink:0; opacity:0.5; }
+    .toc a.active .tag-icon{ opacity:0.9; }
+
+    .sidebar-footer{
+      padding-top:10px; border-top:1px solid var(--border);
+      font-size:0.7rem; color:var(--text-muted); text-align:center; flex-shrink:0;
+    }
+
+    .level{ font-size:0.55rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:3px 7px; border-radius:6px; margin-left:auto; flex-shrink:0; }
+    .level-beginner{ background:rgba(16,185,129,0.12); color:var(--green); border:1px solid rgba(16,185,129,0.2); }
+    .level-intermediate{ background:rgba(99,102,241,0.12); color:var(--accent-from); border:1px solid rgba(99,102,241,0.2); }
+    .level-advanced{ background:rgba(245,158,11,0.12); color:var(--amber); border:1px solid rgba(245,158,11,0.2); }
+
+    main{ padding:48px 36px 64px; max-width:1000px; }
+
+    header.hero{ margin-bottom:36px; position:relative; }
+    header.hero::after{
+      content:''; position:absolute; bottom:-18px; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,var(--border),transparent);
+    }
+    .breadcrumb{ font-size:0.78rem; color:var(--text-dim); margin-bottom:14px; }
+    .breadcrumb a{ color:var(--text-dim); }
+    .breadcrumb a:hover{ color:var(--accent-from); }
+    .title{
+      font-size: clamp(1.8rem, 1.4rem + 2.2vw, 2.8rem); font-weight:800; margin:0;
+      line-height:1.15; letter-spacing:-0.02em;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .subtitle{ color:var(--text-dim); margin:10px 0 20px; max-width:70ch; line-height:1.7; font-size:0.95rem; }
+    .pill{
+      display:inline-flex; align-items:center; gap:10px; padding:7px 16px;
+      border-radius:999px; background:var(--surface); backdrop-filter:blur(12px);
+      border:1px solid var(--border); color:var(--text-dim); font-size:0.8rem;
+    }
+
+    section.card{
+      background:var(--surface); backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--border); border-radius:20px;
+      padding:28px 28px 20px; margin-bottom:24px;
+      transition:all 0.3s ease; box-shadow:var(--glow);
+      position:relative; overflow:hidden;
+    }
+    section.card::before{
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,transparent,var(--border-hover),transparent);
+      opacity:0; transition:opacity 0.3s;
+    }
+    section.card:hover{
+      border-color:var(--border-hover); box-shadow:var(--shadow),var(--glow);
+      transform:translateY(-1px);
+    }
+    section.card:hover::before{ opacity:1; }
+
+    section.card h2{ margin:0 0 12px; font-size:1.3rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    section.card h2 .section-num{
+      font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:8px;
+      background:rgba(99,102,241,0.1); color:var(--accent-from);
+      border:1px solid rgba(99,102,241,0.15);
+    }
+    section.card h3{ margin:18px 0 8px; font-size:1rem; color:var(--text); font-weight:600; }
+    section.card p, section.card li{ color:var(--text-dim); line-height:1.75; }
+    section.card p{ margin:0 0 10px; font-size:0.92rem; }
+    section.card ul, section.card ol{ padding-left:22px; margin:0 0 12px; }
+    section.card ul{ list-style-type:none; padding-left:0; }
+    section.card ul li{ padding-left:20px; position:relative; }
+    section.card ul li::before{ content:'▸'; position:absolute; left:0; color:var(--accent-from); opacity:0.6; font-size:0.8rem; }
+    section.card ol li{ color:var(--text-dim); line-height:1.75; margin-bottom:4px; }
+    section.card li strong{ color:var(--text); }
+
+    details.accordion{
+      border:1px solid var(--border); border-radius:14px; padding:16px 18px;
+      background:var(--bg); transition:all 0.25s ease;
+    }
+    details.accordion[open]{ border-color:var(--border-hover); background:rgba(99,102,241,0.02); }
+    details.accordion + details.accordion{ margin-top:10px; }
+    details.accordion:hover:not([open]){ border-color:var(--border-hover); }
+    details.accordion summary{
+      cursor:pointer; list-style:none; display:flex; align-items:center; gap:12px;
+      font-weight:550; user-select:none; font-size:0.93rem;
+    }
+    details.accordion summary::-webkit-details-marker{ display:none; }
+    details.accordion summary .arrow{
+      font-size:0.6rem; color:var(--accent-from); transition:transform 0.25s ease;
+      width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+      border-radius:6px; border:1px solid var(--border);
+      flex-shrink:0;
+    }
+    details.accordion[open] summary .arrow{ transform:rotate(90deg); border-color:var(--border-hover); background:rgba(99,102,241,0.05); }
+    details.accordion pre{ margin-top:14px; }
+    details.accordion p{ margin-top:10px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+
+    .tag{
+      font-size:0.65rem; font-weight:600; letter-spacing:0.02em;
+      background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.15);
+      padding:4px 10px; border-radius:8px; color:var(--accent-from);
+      white-space:nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    pre{
+      background: var(--code-bg); color:#e2e8f0;
+      padding:18px; border-radius:14px; overflow-x:auto;
+      border:1px solid rgba(99,102,241,0.1);
+      font-size:0.85rem; line-height:1.6;
+      position:relative;
+    }
+    code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:0.87rem; }
+    .inline-code{ display:inline; padding:3px 8px; border-radius:6px; background:rgba(99,102,241,0.06); border:1px solid var(--border); font-size:0.85em; color:var(--accent-from); }
+
+    .note{
+      background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(16,185,129,0.02));
+      border:1px solid rgba(16,185,129,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .note strong{ color:var(--green); }
+
+    .warn{
+      background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(245,158,11,0.02));
+      border:1px solid rgba(245,158,11,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .warn strong{ color:var(--amber); }
+
+    .tip{
+      background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(99,102,241,0.02));
+      border:1px solid rgba(6,182,212,0.15);
+      color:var(--text); padding:14px 18px; border-radius:14px; margin:14px 0;
+      line-height:1.65; font-size:0.9rem;
+    }
+    .tip strong{ color:var(--cyan); }
+
+    .try-it{
+      background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.03));
+      border:1px solid rgba(99,102,241,0.15);
+      padding:18px 22px; border-radius:14px; margin:16px 0;
+    }
+    .try-it .try-head{ font-weight:600; font-size:0.8rem; color:var(--accent-from); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+    .try-it p{ margin:0 0 6px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+    .try-it p:last-child{ margin:0; }
+
+    .flow{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      flex-wrap:nowrap; padding:22px 26px;
+      border-radius:16px;
+      background:linear-gradient(135deg,rgba(99,102,241,0.03),rgba(168,85,247,0.02));
+      border:1px solid var(--border);
+      overflow-x:auto; margin:16px 0;
+    }
+    .flow .step{ text-align:center; min-width:0; }
+    .flow .step strong{ display:block; font-size:0.9rem; color:var(--text); }
+    .flow .step small{ color:var(--text-dim); font-size:0.75rem; }
+    .flow .arrow{ color:var(--accent-from); font-size:1.2rem; flex-shrink:0; }
+
+    pre .copy-tip{
+      position:absolute; top:10px; right:10px;
+      font-size:0.6rem; padding:5px 11px; border-radius:8px;
+      background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15);
+      color:var(--text-dim); cursor:pointer; opacity:0;
+      transition:all 0.2s; z-index:2; font-weight:500;
+    }
+    pre:hover .copy-tip{ opacity:1; }
+    .copy-tip:hover{ background:rgba(99,102,241,0.2); color:var(--text); }
+    .copy-tip.copied{ background:rgba(16,185,129,0.2); color:var(--green); border-color:rgba(16,185,129,0.3); }
+
+    .cheat-grid{
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:8px; margin:14px 0;
+    }
+    .cheat-item{
+      background:var(--code-bg); border:1px solid rgba(99,102,241,0.08); border-radius:12px; padding:12px 14px;
+      transition:border-color 0.2s;
+    }
+    .cheat-item:hover{ border-color:rgba(99,102,241,0.2); }
+    .cheat-item .cheat-cmd{ font-family:ui-monospace, monospace; font-size:0.8rem; font-weight:600; color:var(--cyan); }
+    .cheat-item .cheat-desc{ font-size:0.75rem; color:var(--text-muted); margin-top:3px; }
+
+    footer{ margin-top:44px; color:var(--text-dim); font-size:0.85rem; text-align:center; padding-top:20px; border-top:1px solid var(--border); }
+    footer a{ color:var(--text-dim); }
+    footer a:hover{ color:var(--accent-from); }
+
+    #back-top{
+      position:fixed; bottom:28px; right:28px;
+      width:46px; height:46px; border-radius:999px;
+      background:var(--surface); backdrop-filter:blur(20px);
+      border:1px solid var(--border); color:var(--text-dim);
+      font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition:all 0.3s; z-index:999;
+      box-shadow:var(--shadow);
+    }
+    #back-top.visible{ opacity:1; pointer-events:auto; }
+    #back-top:hover{ border-color:var(--border-hover); color:var(--text); background:var(--surface-hover); transform:translateY(-2px); }
+
+    @media (max-width: 900px){
+      html,body{ grid-template-columns:1fr; }
+      nav{
+        position:fixed; left:0; top:0; bottom:0;
+        width:270px; height:100vh;
+        transform:translateX(-100%);
+        padding:24px 14px;
+      }
+      nav.active{ transform:translateX(0); }
+      main{ padding:70px 18px 30px; }
+      #menu-bar{ display:flex !important; }
+    }
+
+    #menu-bar{
+      display:none;
+      position:fixed; top:0; left:0; right:0; height:52px;
+      background:var(--bg-alt); border-bottom:1px solid var(--border);
+      z-index:50; align-items:center; padding:0 16px;
+      backdrop-filter:blur(20px);
+    }
+    #menu-bar .menu-btn{
+      background:none; border:none; cursor:pointer; color:var(--text);
+      font-size:1.3rem; padding:4px;
+    }
+    #menu-bar .menu-title{
+      margin-left:12px; font-weight:700; font-size:0.95rem;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    #overlay{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
+      backdrop-filter:blur(4px); z-index:99;
+    }
+    @media (max-width: 900px){
+      #overlay.active{ display:block; }
+    }
+
+    .sect-offset{ scroll-margin-top:100px; }
+
+    .badge{ display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; padding:3px 8px; border-radius:6px; font-weight:500; }
+    .badge-green{ background:rgba(16,185,129,0.1); color:var(--green); }
+    .badge-blue{ background:rgba(99,102,241,0.1); color:var(--accent-from); }
+    .badge-amber{ background:rgba(245,158,11,0.1); color:var(--amber); }
+
+    .linux-icon{
+      display:inline-block; width:18px; height:18px;
+      background:var(--text-dim);
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .linux-icon-light{ background:var(--text-dim); }
+    .linux-icon-accent{ background:var(--accent-from); }
+    a:hover .linux-icon, .active .linux-icon{ background:var(--text); }
+    .title .linux-icon{ width:28px; height:28px; background:var(--accent-via); vertical-align:middle; }
+
+    .hero-glow{
+      position:absolute; top:-60px; right:-40px;
+      width:200px; height:200px; border-radius:50%;
+      background:radial-gradient(circle,rgba(99,102,241,0.08),transparent 70%);
+      pointer-events:none;
+    }
+
+    pre .hl{ color:var(--cyan); }
+    pre .cm{ color:var(--text-muted); }
+    pre .kw{ color:var(--accent-from); }
+    pre .str{ color:var(--green); }
+
+    @keyframes float{
+      0%,100%{ transform:translateY(0) rotate(0deg); }
+      33%{ transform:translateY(-20px) rotate(1deg); }
+      66%{ transform:translateY(10px) rotate(-1deg); }
+    }
+    @keyframes float-delayed{
+      0%,100%{ transform:translateY(0) rotate(0deg); }
+      50%{ transform:translateY(-30px) rotate(2deg); }
+    }
+    @keyframes pulse-glow{
+      0%,100%{ box-shadow:0 0 20px rgba(99,102,241,0.05),0 0 40px rgba(99,102,241,0); }
+      50%{ box-shadow:0 0 30px rgba(99,102,241,0.15),0 0 60px rgba(99,102,241,0.05); }
+    }
+    @keyframes gradient-shift{
+      0%{ background-position:0% 50%; }
+      50%{ background-position:100% 50%; }
+      100%{ background-position:0% 50%; }
+    }
+    @keyframes slide-up{
+      0%{ opacity:0; transform:translateY(40px) scale(0.98); }
+      100%{ opacity:1; transform:translateY(0) scale(1); }
+    }
+    @keyframes fade-in{
+      0%{ opacity:0; }
+      100%{ opacity:1; }
+    }
+    @keyframes scale-in{
+      0%{ opacity:0; transform:scale(0.9); }
+      100%{ opacity:1; transform:scale(1); }
+    }
+    @keyframes orb-drift{
+      0%{ transform:translate(0,0) scale(1); }
+      25%{ transform:translate(30px,-40px) scale(1.1); }
+      50%{ transform:translate(-20px,-80px) scale(0.9); }
+      75%{ transform:translate(-40px,-20px) scale(1.05); }
+      100%{ transform:translate(0,0) scale(1); }
+    }
+    @keyframes orb-drift-2{
+      0%{ transform:translate(0,0) scale(1); }
+      25%{ transform:translate(-40px,30px) scale(1.1); }
+      50%{ transform:translate(20px,60px) scale(0.85); }
+      75%{ transform:translate(40px,-20px) scale(1.05); }
+      100%{ transform:translate(0,0) scale(1); }
+    }
+    @keyframes badge-pulse{
+      0%,100%{ transform:scale(1); }
+      50%{ transform:scale(1.05); }
+    }
+    @keyframes confetti-fall{
+      0%{ opacity:1; transform:translateY(0) rotate(0deg) scale(1); }
+      100%{ opacity:0; transform:translateY(80px) rotate(720deg) scale(0); }
+    }
+    @keyframes wobble{
+      0%,100%{ transform:rotate(0deg); }
+      25%{ transform:rotate(-3deg); }
+      75%{ transform:rotate(3deg); }
+    }
+    @keyframes title-reveal{
+      0%{ opacity:0; transform:translateY(20px) scale(0.95); filter:blur(10px); }
+      100%{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+    }
+
+    .orb-container{
+      position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0;
+    }
+    .orb{
+      position:absolute; border-radius:50%; opacity:0.15;
+      filter:blur(60px);
+    }
+    .orb-1{
+      width:400px; height:400px;
+      background:radial-gradient(circle,var(--accent-from),transparent);
+      top:-100px; right:-100px;
+      animation:orb-drift 20s ease-in-out infinite;
+    }
+    .orb-2{
+      width:300px; height:300px;
+      background:radial-gradient(circle,var(--accent-to),transparent);
+      bottom:-80px; left:-80px;
+      animation:orb-drift-2 25s ease-in-out infinite;
+    }
+    .orb-3{
+      width:250px; height:250px;
+      background:radial-gradient(circle,var(--cyan),transparent);
+      top:40%; left:50%;
+      animation:orb-drift 18s ease-in-out infinite reverse;
+      opacity:0.08;
+    }
+    .orb-4{
+      width:200px; height:200px;
+      background:radial-gradient(circle,var(--green),transparent);
+      top:60%; right:20%;
+      animation:orb-drift-2 22s ease-in-out infinite;
+      opacity:0.06;
+    }
+
+    .hero{ animation:fade-in 0.8s ease-out; }
+    .title{ animation:title-reveal 1s ease-out both; }
+    .title .animated-gradient{
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan),var(--accent-to),var(--accent-from));
+      background-size:300% 300%;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:gradient-shift 6s ease infinite;
+    }
+    .subtitle{ animation:slide-up 0.8s ease-out 0.3s both; }
+    .breadcrumb{ animation:slide-up 0.6s ease-out 0.1s both; }
+    .pill{ animation:scale-in 0.6s ease-out 0.6s both; }
+
+    .card{ opacity:0; transform:translateY(30px); transition:all 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .card.visible{ opacity:1; transform:translateY(0); }
+    .card:nth-child(2){ transition-delay:0.05s; }
+    .card:nth-child(3){ transition-delay:0.1s; }
+    .card:nth-child(4){ transition-delay:0.15s; }
+    .card:nth-child(5){ transition-delay:0.2s; }
+
+    .card:hover{ transform:translateY(-4px) scale(1.005); }
+    .card:hover .section-num{ animation:wobble 0.4s ease; }
+
+    details.accordion:hover summary .arrow{
+      border-color:var(--border-hover);
+      background:rgba(99,102,241,0.08);
+    }
+
+    pre:hover{
+      border-color:rgba(99,102,241,0.2);
+      box-shadow:0 0 30px rgba(99,102,241,0.05);
+    }
+
+    .copy-tip{ transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+    .copy-tip.copied{
+      animation:scale-in 0.3s ease-out;
+      transform-origin:center;
+    }
+
+    .toc a.active{ animation:pulse-glow 3s ease-in-out infinite; }
+
+    .flow .step{ animation:float 6s ease-in-out infinite; }
+    .flow .step:nth-child(3){ animation-delay:-2s; }
+    .flow .step:nth-child(5){ animation-delay:-4s; }
+
+    .badge{ animation:badge-pulse 3s ease-in-out infinite; }
+    .badge-green{ animation-delay:0s; }
+    .badge-blue{ animation-delay:-1s; }
+    .badge-amber{ animation-delay:-2s; }
+
+    #back-top.visible{ animation:scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+
+    .typewriter-cursor{
+      display:inline-block; width:2px; height:1.1em;
+      background:var(--accent-from); margin-left:2px;
+      animation:blink-cursor 0.8s step-end infinite;
+      vertical-align:text-bottom;
+    }
+    @keyframes blink-cursor{
+      0%,100%{ opacity:1; }
+      50%{ opacity:0; }
+    }
+
+    .cheat-item:hover{
+      transform:translateY(-2px);
+      box-shadow:0 4px 16px rgba(99,102,241,0.08);
+    }
+
+    .confetti-container{
+      position:fixed; pointer-events:none; z-index:10000;
+    }
+    .confetti{
+      position:absolute; width:6px; height:6px; border-radius:50%;
+      animation:confetti-fall 0.8s ease-out forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .orb,.card,.flow .step{ animation:none !important; }
+      .card{ opacity:1; transform:none; }
+      .title{ animation:none; }
+      .animated-gradient{ background-size:100% 100%; animation:none; }
+      .subtitle,.breadcrumb,.pill{ animation:none; }
+    }
+
+    @media (max-width: 900px){
+      .orb{ opacity:0.05; }
+      .card:hover{ transform:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+  <div id="overlay"></div>
+  <div id="menu-bar">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <span class="menu-title"><span class="linux-icon" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> Linux Guide</span>
+  </div>
+
+  <nav id="sidebar">
+    <div class="logo">
+      <span class="mark"></span> <span class="linux-icon linux-icon-accent"></span> Linux
+      <a href="index.html" class="home-link" title="Back to home">⌂</a>
+    </div>
+    <div class="toc" id="toc-menu">
+      <a href="#intro"><span class="tag-icon">●</span> Introduction</a>
+      <a href="#filesystem"><span class="tag-icon">◉</span> Filesystem</a>
+      <a href="#navigation"><span class="tag-icon">◆</span> Navigation</a>
+      <a href="#fileops"><span class="tag-icon">◇</span> File Operations</a>
+      <a href="#permissions"><span class="tag-icon">⊡</span> Permissions</a>
+      <a href="#processes"><span class="tag-icon">⚙</span> Processes</a>
+      <a href="#packages"><span class="tag-icon">⌗</span> Package Management</a>
+      <a href="#network"><span class="tag-icon">◈</span> Networking</a>
+      <a href="#editors"><span class="tag-icon">✎</span> Text Editors</a>
+      <a href="#shell"><span class="tag-icon">▸</span> Shell Basics</a>
+      <a href="#users"><span class="tag-icon">◎</span> Users & Groups</a>
+      <a href="#storage"><span class="tag-icon">○</span> Storage & Disks</a>
+      <a href="#system"><span class="tag-icon">↻</span> System Info</a>
+      <a href="#scripts"><span class="tag-icon">◌</span> Shell Scripting</a>
+      <a href="#security"><span class="tag-icon">◫</span> Security Basics</a>
+      <a href="#cheatsheet"><span class="tag-icon">☰</span> Command Reference</a>
+    </div>
+    <div class="sidebar-footer">Laksh Guides</div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="hero-glow"></div>
+      <div class="breadcrumb"><a href="index.html">⌂ Home</a> / Linux Guide</div>
+      <h1 class="title"><span class="linux-icon" style="width:32px;height:32px;background:var(--accent-to);display:inline-block;vertical-align:middle;margin-right:4px;"></span> <span class="animated-gradient">Linux Guide</span></h1>
+      <p class="subtitle"><span id="typewriter-text"></span><span class="typewriter-cursor"></span></p>
+      <span class="pill">⤒ Click code blocks to copy &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
+    </header>
+
+    <!-- ═══ 1. Introduction ═══ -->
+    <section id="intro" class="card sect-offset">
+      <h2><span class="section-num">01</span> Introduction — What is Linux?</h2>
+
+      <p><strong>Linux</strong> is an open-source operating system kernel that powers everything from servers and supercomputers to Android phones and embedded devices. Unlike Windows or macOS, Linux is highly customizable, secure, and free.</p>
+
+      <p>A Linux system is made of several layers:</p>
+
+      <div class="flow">
+        <div class="step"><strong>Kernel</strong><br><small>Core of the OS</small></div>
+        <div class="arrow">⟶</div>
+        <div class="step"><strong>Shell</strong><br><small>Command interpreter</small></div>
+        <div class="arrow">⟶</div>
+        <div class="step"><strong>Utilities</strong><br><small>Standard programs</small></div>
+        <div class="arrow">⟶</div>
+        <div class="step"><strong>Applications</strong><br><small>User programs</small></div>
+      </div>
+
+      <p><strong>Distributions</strong> (distros) are Linux packaged with a kernel, tools, and package manager. Popular ones include:</p>
+      <ul>
+        <li><strong>Ubuntu</strong> — beginner-friendly, Debian-based</li>
+        <li><strong>Fedora</strong> — cutting-edge, Red Hat-based</li>
+        <li><strong>Debian</strong> — rock-stable, server favorite</li>
+        <li><strong>Arch</strong> — DIY, rolling release</li>
+        <li><strong>CentOS / Rocky Linux</strong> — enterprise servers</li>
+      </ul>
+
+      <div class="note"><strong>Key idea:</strong> In Linux, <em>everything is a file</em> — hardware devices, processes, sockets, and regular files are all represented as files in the filesystem.</div>
+    </section>
+
+    <!-- ═══ 2. Filesystem Hierarchy ═══ -->
+    <section id="filesystem" class="card sect-offset">
+      <h2><span class="section-num">02</span> The Linux Filesystem Hierarchy <span class="level level-beginner">Beginner</span></h2>
+
+      <p>Linux uses a <strong>single rooted tree</strong> — everything starts at <code>/</code> (the root directory). There are no drive letters like <code>C:\</code>.</p>
+
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">/</div><div class="cheat-desc">Root — top of the filesystem</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/home</div><div class="cheat-desc">User home directories</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/etc</div><div class="cheat-desc">Configuration files</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/var</div><div class="cheat-desc">Variable data (logs, databases)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/usr</div><div class="cheat-desc">User programs & libraries</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/bin</div><div class="cheat-desc">Essential user binaries</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/sbin</div><div class="cheat-desc">System administration binaries</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/tmp</div><div class="cheat-desc">Temporary files (cleared on boot)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/dev</div><div class="cheat-desc">Device files (hardware)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/proc</div><div class="cheat-desc">Process & kernel info (virtual)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/opt</div><div class="cheat-desc">Optional third-party software</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/boot</div><div class="cheat-desc">Boot loader files & kernel</div></div>
+      </div>
+
+      <div class="tip"><strong>Tip:</strong> <code>/proc</code> and <code>/sys</code> are <em>virtual filesystems</em> — they don't exist on disk but reflect kernel data structures. Reading them gives you real-time system info.</div>
+    </section>
+
+    <!-- ═══ 3. Navigation ═══ -->
+    <section id="navigation" class="card sect-offset">
+      <h2><span class="section-num">03</span> Navigation — Moving Around <span class="level level-beginner">Beginner</span></h2>
+
+      <p>Your current location is called the <strong>working directory</strong>. The shell prompt usually shows it.</p>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span><span class="tag">pwd</span> Print working directory</summary>
+        <pre><code>pwd
+<span class="cm"># Output: /home/username/projects</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">ls</span> List directory contents</summary>
+        <pre><code>ls                     <span class="cm"># list files in current dir</span>
+ls -l                  <span class="cm"># long format (permissions, size, date)</span>
+ls -a                  <span class="cm"># include hidden files (starting with .)</span>
+ls -la                 <span class="cm"># long + hidden</span>
+ls -lh                 <span class="cm"># human-readable sizes (KB, MB, GB)</span>
+ls -R                  <span class="cm"># recursive (list subdirectories too)</span>
+ls -t                  <span class="cm"># sort by modification time</span>
+ls -S                  <span class="cm"># sort by file size</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">cd</span> Change directory</summary>
+        <pre><code>cd /etc                <span class="cm"># go to /etc</span>
+cd ..                  <span class="cm"># go up one level</span>
+cd ~                   <span class="cm"># go to your home directory</span>
+cd -                   <span class="cm"># go to previous directory</span>
+cd /                   <span class="cm"># go to root</span>
+cd ~/Documents          <span class="cm"># go to Documents in home</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">tree</span> View directory tree</summary>
+        <pre><code>tree                   <span class="cm"># show directory structure</span>
+tree -L 2              <span class="cm"># limit depth to 2 levels</span>
+tree -d                <span class="cm"># directories only</span></code><span class="copy-tip">Copy</span></pre>
+        <p>May need installing: <code>sudo apt install tree</code> (Debian/Ubuntu) or <code>sudo dnf install tree</code> (Fedora).</p>
+      </details>
+
+      <div class="try-it">
+        <div class="try-head">▸ Try it yourself</div>
+        <p>Open a terminal and run <code>cd / &amp;&amp; ls</code> to see the root directory. Then <code>cd /home &amp;&amp; ls</code> to see user folders. Use <code>pwd</code> after each move to confirm your location.</p>
+      </div>
+    </section>
+
+    <!-- ═══ 4. File Operations ═══ -->
+    <section id="fileops" class="card sect-offset">
+      <h2><span class="section-num">04</span> File & Directory Operations <span class="level level-beginner">Beginner</span></h2>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span><span class="tag">touch</span> Create an empty file</summary>
+        <pre><code>touch file.txt         <span class="cm"># create empty file (or update timestamp)</span>
+touch file1.txt file2.txt  <span class="cm"># create multiple files</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">mkdir</span> Create directories</summary>
+        <pre><code>mkdir myfolder          <span class="cm"># create a directory</span>
+mkdir -p a/b/c          <span class="cm"># create parent directories as needed</span>
+mkdir -m 755 secure     <span class="cm"># create with specific permissions</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">cp</span> Copy files & directories</summary>
+        <pre><code>cp file.txt backup.txt             <span class="cm"># copy file</span>
+cp -r myfolder backup               <span class="cm"># copy directory recursively</span>
+cp -i file.txt /target/             <span class="cm"># prompt before overwrite</span>
+cp -v file.txt /target/             <span class="cm"># verbose output</span>
+cp -u file.txt /target/             <span class="cm"># copy only if newer</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">mv</span> Move or rename</summary>
+        <pre><code>mv file.txt /new/location/         <span class="cm"># move file</span>
+mv oldname.txt newname.txt          <span class="cm"># rename file</span>
+mv -i file.txt /target/             <span class="cm"># prompt before overwrite</span>
+mv -u file.txt /target/             <span class="cm"># move only if newer</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">rm</span> Remove files & directories</summary>
+        <pre><code>rm file.txt                         <span class="cm"># delete a file</span>
+rm -r myfolder                      <span class="cm"># delete directory recursively</span>
+rm -f file.txt                      <span class="cm"># force delete (no prompt)</span>
+rm -rf myfolder                     <span class="cm"># ⚠ dangerous — delete without confirmation</span></code><span class="copy-tip">Copy</span></pre>
+        <p><code>rm -rf /</code> will delete your entire system. Double-check before running destructive commands!</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">ln</span> Create links</summary>
+        <pre><code>ln -s /original/file link-name      <span class="cm"># symbolic (soft) link</span>
+ln /original/file hard-link          <span class="cm"># hard link (same inode)</span></code><span class="copy-tip">Copy</span></pre>
+        <p><strong>Symbolic links</strong> are shortcuts. <strong>Hard links</strong> are additional names for the same file data — deleting one keeps the other.</p>
+      </details>
+
+      <div class="warn"><strong>⚠ Safety first:</strong> Use <code>-i</code> (interactive) with <code>cp</code>, <code>mv</code>, and <code>rm</code> when you're learning. It will ask before overwriting or deleting.</div>
+    </section>
+
+    <!-- ═══ 5. Permissions ═══ -->
+    <section id="permissions" class="card sect-offset">
+      <h2><span class="section-num">05</span> Permissions <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Linux uses a <strong>permission system</strong> with three levels: <strong>owner</strong>, <strong>group</strong>, and <strong>others</strong>. Each level has three rights: <strong>read (r)</strong>, <strong>write (w)</strong>, and <strong>execute (x)</strong>.</p>
+
+      <pre><code><span class="cm"># View permissions with ls -l</span>
+-rw-r--r--  1 alice developers  1024 Jun 15 10:00 file.txt
+<span class="cm"># ^^^^       ^               ^
+# |owner    group           others
+# rw- = read+write, r-- = read-only, r-x = read+execute</span></code><span class="copy-tip">Copy</span></pre>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span><span class="tag">chmod</span> Change permissions</summary>
+        <pre><code><span class="cm"># Symbolic mode:</span>
+chmod u+x script.sh      <span class="cm"># add execute for user (owner)</span>
+chmod g-w file.txt       <span class="cm"># remove write for group</span>
+chmod o+r file.txt       <span class="cm"># add read for others</span>
+chmod a+x script.sh      <span class="cm"># add execute for everyone</span>
+
+<span class="cm"># Numeric mode (octal):</span>
+chmod 755 script.sh      <span class="cm"># rwxr-xr-x</span>
+chmod 644 file.txt       <span class="cm"># rw-r--r--</span>
+chmod 700 private.sh     <span class="cm"># rwx------</span>
+
+<span class="cm"># Common values:</span>
+<span class="cm"># 7 = rwx (read+write+execute)</span>
+<span class="cm"># 6 = rw- (read+write)</span>
+<span class="cm"># 5 = r-x (read+execute)</span>
+<span class="cm"># 4 = r-- (read only)</span>
+<span class="cm"># 0 = --- (no permissions)</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">chown</span> Change owner & group</summary>
+        <pre><code>sudo chown bob file.txt         <span class="cm"># change owner to bob</span>
+sudo chown bob:devs file.txt    <span class="cm"># change owner:group</span>
+sudo chown -R bob:devs mydir/   <span class="cm"># recursive</span></code><span class="copy-tip">Copy</span></pre>
+        <p>Only root (using <code>sudo</code>) can change file ownership.</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">chgrp</span> Change group only</summary>
+        <pre><code>chgrp devs file.txt             <span class="cm"># change group to devs</span>
+chgrp -R devs mydir/            <span class="cm"># recursive</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">umask</span> Default permission mask</summary>
+        <pre><code>umask                          <span class="cm"># show current mask (e.g., 0022)</span>
+umask 0027                     <span class="cm"># set mask (more restrictive)</span></code><span class="copy-tip">Copy</span></pre>
+        <p>The <strong>umask</strong> subtracts permissions from the default (666 for files, 777 for directories). A umask of 022 means new files get 644 and new dirs get 755.</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">ls -l</span> Special permissions (SUID, SGID, Sticky)</summary>
+        <pre><code><span class="cm"># SUID (set user ID) — runs as file owner:</span>
+chmod u+s executable         <span class="cm"># shown as 's' in owner's execute field</span>
+
+<span class="cm"># SGID — runs as group owner:</span>
+chmod g+s directory          <span class="cm"># new files inherit group</span>
+
+<span class="cm"># Sticky bit — only owner can delete:</span>
+chmod +t /tmp                <span class="cm"># shown as 't' in others' execute field</span></code><span class="copy-tip">Copy</span></pre>
+        <p><strong>Sticky bit</strong> is used on <code>/tmp</code> — anyone can write but only the file owner can delete their own files.</p>
+      </details>
+
+      <div class="note"><strong>Permission check:</strong> To execute a script, you need <code>r-x</code> (read + execute). To list a directory, you need <code>r--</code> (read). To <em>enter</em> a directory, you need <code>--x</code> (execute).</div>
+    </section>
+
+    <!-- ═══ 6. Processes ═══ -->
+    <section id="processes" class="card sect-offset">
+      <h2><span class="section-num">06</span> Process Management <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Every running program is a <strong>process</strong> with a unique <strong>PID</strong> (Process ID).</p>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span><span class="tag">ps</span> List processes</summary>
+        <pre><code>ps                       <span class="cm"># processes in current shell</span>
+ps aux                   <span class="cm"># all processes (BSD style)</span>
+ps -ef                   <span class="cm"># all processes (standard style)</span>
+ps aux --sort=-%mem      <span class="cm"># sorted by memory usage</span>
+ps aux --sort=-%cpu      <span class="cm"># sorted by CPU usage</span>
+ps -u username           <span class="cm"># processes of a specific user</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">top / htop</span> Real-time process monitor</summary>
+        <pre><code>top                      <span class="cm"># real-time view (press q to quit)</span>
+htop                     <span class="cm"># prettier version (install first)</span></code><span class="copy-tip">Copy</span></pre>
+        <p>Inside <code>top</code>: press <kbd>P</kbd> to sort by CPU, <kbd>M</kbd> for memory, <kbd>k</kbd> to kill a process, <kbd>q</kbd> to quit.</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">kill</span> Send signals to processes</summary>
+        <pre><code>kill PID                 <span class="cm"># gracefully terminate (SIGTERM, 15)</span>
+kill -9 PID              <span class="cm"># force kill (SIGKILL, 9) — immediate</span>
+kill -15 PID             <span class="cm"># explicitly send SIGTERM</span>
+kill -2 PID              <span class="cm"># interrupt (SIGINT, like Ctrl+C)</span>
+kill -1 PID              <span class="cm"># hangup — reload config (SIGHUP)</span>
+killall firefox          <span class="cm"># kill all processes named firefox</span>
+pkill -f "pattern"       <span class="cm"># kill by pattern match</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">jobs / bg / fg</span> Background & foreground</summary>
+        <pre><code><span class="cm"># Run a command in background:</span>
+long-command &amp;
+
+<span class="cm"># Suspend current process:</span>
+<span class="cm"># Press Ctrl+Z</span>
+
+jobs                     <span class="cm"># list background jobs</span>
+bg %1                    <span class="cm"># resume job 1 in background</span>
+fg %2                    <span class="cm"># bring job 2 to foreground</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">nohup / disown</span> Keep processes running after logout</summary>
+        <pre><code>nohup long-command &amp;     <span class="cm"># ignore HUP signal</span>
+long-command &amp; disown    <span class="cm"># remove from shell job control</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <div class="note"><strong>Process states:</strong> <code>R</code> (running), <code>S</code> (sleeping), <code>D</code> (uninterruptible sleep), <code>Z</code> (zombie), <code>T</code> (stopped).</div>
+    </section>
+
+    <!-- ═══ 7. Package Management ═══ -->
+    <section id="packages" class="card sect-offset">
+      <h2><span class="section-num">07</span> Package Management <span class="level level-beginner">Beginner</span></h2>
+
+      <p>Package managers install, update, and remove software. Commands vary by distribution family.</p>
+
+      <h3>Debian / Ubuntu (apt)</h3>
+      <pre><code>sudo apt update              <span class="cm"># update package list</span>
+sudo apt upgrade             <span class="cm"># upgrade all packages</span>
+sudo apt install firefox     <span class="cm"># install a package</span>
+sudo apt remove firefox      <span class="cm"># remove a package</span>
+sudo apt purge firefox       <span class="cm"># remove package + config files</span>
+sudo apt autoremove          <span class="cm"># remove unused dependencies</span>
+apt search keyword           <span class="cm"># search for a package</span>
+apt show firefox             <span class="cm"># show package details</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Fedora / RHEL (dnf)</h3>
+      <pre><code>sudo dnf install firefox     <span class="cm"># install</span>
+sudo dnf remove firefox      <span class="cm"># remove</span>
+sudo dnf update              <span class="cm"># update all</span>
+sudo dnf search keyword      <span class="cm"># search</span>
+sudo dnf info firefox        <span class="cm"># package info</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Arch Linux (pacman)</h3>
+      <pre><code>sudo pacman -S firefox       <span class="cm"># install</span>
+sudo pacman -R firefox       <span class="cm"># remove</span>
+sudo pacman -Syu             <span class="cm"># sync + upgrade (full update)</span>
+sudo pacman -Ss keyword      <span class="cm"># search</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Snap & Flatpak (universal)</h3>
+      <pre><code>sudo snap install firefox    <span class="cm"># Snap package</span>
+flatpak install flathub org.mozilla.firefox  <span class="cm"># Flatpak</span></code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>Tip:</strong> Always run <code>sudo apt update</code> (or equivalent) before installing — it refreshes the list of available packages and versions.</div>
+    </section>
+
+    <!-- ═══ 8. Networking ═══ -->
+    <section id="network" class="card sect-offset">
+      <h2><span class="section-num">08</span> Networking Basics <span class="level level-intermediate">Intermediate</span></h2>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span><span class="tag">ip</span> Modern network configuration</summary>
+        <pre><code>ip addr                  <span class="cm"># show all network interfaces + IPs</span>
+ip a                     <span class="cm"># shorthand</span>
+ip link                  <span class="cm"># show interface status</span>
+ip route                 <span class="cm"># show routing table</span>
+ip link set eth0 up      <span class="cm"># bring interface up</span>
+ip link set eth0 down    <span class="cm"># bring interface down</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">ping</span> Test network connectivity</summary>
+        <pre><code>ping google.com          <span class="cm"># ping until Ctrl+C</span>
+ping -c 4 google.com     <span class="cm"># ping 4 times then stop</span>
+ping -4 8.8.8.8          <span class="cm"># ping by IP (Google DNS)</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">ss</span> Socket statistics</summary>
+        <pre><code>ss -tulpn                <span class="cm"># show listening ports and processes</span>
+ss -tua                  <span class="cm"># all TCP/UDP connections</span>
+ss -tuln                 <span class="cm"># numeric ports only (no DNS)</span></code><span class="copy-tip">Copy</span></pre>
+        <p>Replaces the older <code>netstat</code>. Use <code>-p</code> to see which process owns each socket (requires sudo).</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">curl / wget</span> Download & transfer data</summary>
+        <pre><code>curl https://example.com             <span class="cm"># fetch webpage content</span>
+curl -O https://example.com/file.zip <span class="cm"># download file</span>
+curl -o myfile.zip https://...        <span class="cm"># download with custom name</span>
+
+wget https://example.com/file.zip     <span class="cm"># download file</span>
+wget -c https://...                   <span class="cm"># resume interrupted download</span>
+wget -r https://example.com           <span class="cm"># recursive download</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">ssh</span> Remote login</summary>
+        <pre><code>ssh user@192.168.1.100               <span class="cm"># connect to remote machine</span>
+ssh -p 2222 user@host                 <span class="cm"># custom port</span>
+ssh -i ~/.ssh/id_rsa user@host        <span class="cm"># use specific key</span>
+ssh -J jump@gateway user@target       <span class="cm"># via jump host</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">scp</span> Secure copy (over SSH)</summary>
+        <pre><code>scp file.txt user@host:/remote/path/     <span class="cm"># copy to remote</span>
+scp user@host:/remote/file.txt .         <span class="cm"># copy from remote</span>
+scp -r myfolder/ user@host:/path/        <span class="cm"># recursive directory copy</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <div class="tip"><strong>Common ports:</strong> 22 (SSH), 80 (HTTP), 443 (HTTPS), 3306 (MySQL), 5432 (PostgreSQL), 8080 (alternative HTTP).</div>
+    </section>
+
+    <!-- ═══ 9. Text Editors ═══ -->
+    <section id="editors" class="card sect-offset">
+      <h2><span class="section-num">09</span> Text Editors in the Terminal <span class="level level-beginner">Beginner</span></h2>
+
+      <p>You'll often need to edit files directly in the terminal. Here are the most common editors:</p>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span><span class="tag">nano</span> Beginner-friendly (start here)</summary>
+        <pre><code>nano file.txt            <span class="cm"># open file</span>
+<span class="cm"># Ctrl+O  → Save (write out)</span>
+<span class="cm"># Ctrl+X  → Exit</span>
+<span class="cm"># Ctrl+W  → Search</span>
+<span class="cm"># Ctrl+K  → Cut line</span>
+<span class="cm"># Ctrl+U  → Paste line</span>
+<span class="cm"># Ctrl+G  → Help</span></code><span class="copy-tip">Copy</span></pre>
+        <p>Nano shows available commands at the bottom of the screen. <code>^</code> means the <kbd>Ctrl</kbd> key.</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">vim</span> Powerful & ubiquitous</summary>
+        <pre><code>vim file.txt             <span class="cm"># open file</span>
+
+<span class="cm"># Modes:</span>
+<span class="cm"># Normal — press Esc to get here</span>
+<span class="cm"># Insert — press i to enter</span>
+<span class="cm"># Visual — press v to select text</span>
+<span class="cm"># Command — press : to type commands</span>
+
+<span class="cm"># Essential commands (in Normal mode):</span>
+i              <span class="cm"># enter Insert mode</span>
+:w             <span class="cm"># save file</span>
+:q             <span class="cm"># quit</span>
+:wq            <span class="cm"># save and quit</span>
+:q!            <span class="cm"># quit without saving</span>
+/pattern       <span class="cm"># search for "pattern"</span>
+dd             <span class="cm"># delete (cut) current line</span>
+yy             <span class="cm"># yank (copy) current line</span>
+p              <span class="cm"># paste below</span>
+u              <span class="cm"># undo</span>
+Ctrl+r         <span class="cm"># redo</span></code><span class="copy-tip">Copy</span></pre>
+        <p>Vim has a steep learning curve but is incredibly efficient. Run <code>vimtutor</code> for a built-in 30-minute tutorial.</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">VS Code</span> Graphical editor (GUI)</summary>
+        <pre><code>code file.txt            <span class="cm"># open file in VS Code</span>
+code .                   <span class="cm"># open current directory</span></code><span class="copy-tip">Copy</span></pre>
+        <p>Not terminal-based but invaluable for larger projects. Install via your package manager.</p>
+      </details>
+    </section>
+
+    <!-- ═══ 10. Shell Basics ═══ -->
+    <section id="shell" class="card sect-offset">
+      <h2><span class="section-num">10</span> Shell Basics & Shortcuts <span class="level level-beginner">Beginner</span></h2>
+
+      <p>The <strong>shell</strong> is your command interpreter. Bash is the most common one. Here are essential tricks:</p>
+
+      <h3>Wildcards (globbing)</h3>
+      <pre><code><span class="cm"># * matches any characters</span>
+ls *.txt                 <span class="cm"># all .txt files</span>
+rm *.log                 <span class="cm"># delete all .log files</span>
+
+<span class="cm"># ? matches exactly one character</span>
+ls file?.txt             <span class="cm"># file1.txt, fileA.txt, but not file10.txt</span>
+
+<span class="cm"># [] matches a set of characters</span>
+ls file[0-9].txt         <span class="cm"># file0.txt through file9.txt</span>
+ls [abc]*.txt            <span class="cm"># files starting with a, b, or c</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Redirection & pipes</h3>
+      <pre><code><span class="cm"># Redirect output to a file (overwrite)</span>
+echo "Hello" &gt; file.txt
+
+<span class="cm"># Append to a file</span>
+echo "More" &gt;&gt; file.txt
+
+<span class="cm"># Redirect errors</span>
+command 2&gt; error.log
+
+<span class="cm"># Pipe: send output of one command as input to another</span>
+ls -la | grep ".txt"               <span class="cm"># filter list</span>
+ps aux | grep firefox              <span class="cm"># find process</span>
+dmesg | tail -20                   <span class="cm"># last 20 kernel messages</span>
+cat file.txt | wc -l               <span class="cm"># count lines</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Command chaining</h3>
+      <pre><code><span class="cm"># && — run next only if previous succeeds</span>
+mkdir project &amp;&amp; cd project &amp;&amp; git init
+
+<span class="cm"># || — run next only if previous fails</span>
+cd /nonexistent || echo "Directory not found"
+
+<span class="cm"># ; — run sequentially regardless</span>
+echo "start" ; echo "middle" ; echo "end"</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Command history</h3>
+      <pre><code>history                  <span class="cm"># show command history</span>
+!!                       <span class="cm"># repeat last command</span>
+!100                     <span class="cm"># repeat command #100 from history</span>
+Ctrl+r                   <span class="cm"># search history (type to filter)</span>
+!$                       <span class="cm"># last argument of previous command</span>
+!ls                      <span class="cm"># repeat last ls command</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Useful shortcuts</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+C</div><div class="cheat-desc">Kill current command</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+D</div><div class="cheat-desc">Exit shell / EOF</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Z</div><div class="cheat-desc">Suspend (background)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+L</div><div class="cheat-desc">Clear screen</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+A</div><div class="cheat-desc">Go to start of line</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+E</div><div class="cheat-desc">Go to end of line</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+W</div><div class="cheat-desc">Delete word backward</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Tab</div><div class="cheat-desc">Auto-complete</div></div>
+      </div>
+
+      <div class="note"><strong>Tab completion is your best friend:</strong> Press <kbd>Tab</kbd> to auto-complete file names, commands, and paths. Press twice to see all matches.</div>
+    </section>
+
+    <!-- ═══ 11. Users & Groups ═══ -->
+    <section id="users" class="card sect-offset">
+      <h2><span class="section-num">11</span> Users & Groups <span class="level level-intermediate">Intermediate</span></h2>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span><span class="tag">whoami / id</span> Who are you?</summary>
+        <pre><code>whoami                   <span class="cm"># current username</span>
+id                       <span class="cm"># uid, gid, groups</span>
+id username              <span class="cm"># info about another user</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">useradd / usermod / userdel</span> Manage users</summary>
+        <pre><code>sudo useradd -m newuser         <span class="cm"># create user with home dir</span>
+sudo passwd newuser             <span class="cm"># set password</span>
+sudo usermod -aG sudo newuser   <span class="cm"># add to sudo group</span>
+sudo usermod -L username        <span class="cm"># lock account</span>
+sudo userdel -r username        <span class="cm"># delete user + home dir</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">groupadd / groupmod / groupdel</span> Manage groups</summary>
+        <pre><code>sudo groupadd developers        <span class="cm"># create group</span>
+sudo groupmod -n newname oldname <span class="cm"># rename group</span>
+sudo groupdel developers         <span class="cm"># delete group</span>
+sudo usermod -aG groupname user  <span class="cm"># add user to group</span>
+groups username                  <span class="cm"># list user's groups</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">sudo</span> Run commands as root</summary>
+        <pre><code>sudo command               <span class="cm"># run as root</span>
+sudo -i                    <span class="cm"># open root shell</span>
+sudo -u user command        <span class="cm"># run as another user</span>
+sudo -l                    <span class="cm"># list allowed commands</span></code><span class="copy-tip">Copy</span></pre>
+        <p>Use sudo sparingly — only when a command needs elevated privileges. Running everything as root is dangerous.</p>
+      </details>
+
+      <div class="warn"><strong>⚠ Root safety:</strong> Never log in as root for daily work. Use <code>sudo</code> for specific commands. One typo as root can break the system.</div>
+    </section>
+
+    <!-- ═══ 12. Storage & Disks ═══ -->
+    <section id="storage" class="card sect-offset">
+      <h2><span class="section-num">12</span> Storage, Disks & Filesystems <span class="level level-advanced">Advanced</span></h2>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span><span class="tag">df</span> Disk free space</summary>
+        <pre><code>df -h                    <span class="cm"># human-readable disk usage</span>
+df -h /home              <span class="cm"># usage for a specific mount</span>
+df -T                    <span class="cm"># show filesystem type</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">du</span> Directory/file size</summary>
+        <pre><code>du -sh myfolder          <span class="cm"># total size of folder</span>
+du -sh *                 <span class="cm"># size of each item in current dir</span>
+du -h --max-depth=1      <span class="cm"># show sizes one level deep</span>
+du -ah myfolder          <span class="cm"># show every file's size</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">lsblk / blkid</span> List block devices</summary>
+        <pre><code>lsblk                    <span class="cm"># show disks and partitions</span>
+lsblk -f                 <span class="cm"># show filesystem info</span>
+blkid                    <span class="cm"># show UUIDs and labels</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">mount / umount</span> Attach & detach filesystems</summary>
+        <pre><code>mount                    <span class="cm"># show all mounted filesystems</span>
+sudo mount /dev/sdb1 /mnt/usb    <span class="cm"># mount a drive</span>
+sudo umount /mnt/usb              <span class="cm"># unmount</span>
+sudo mount -t tmpfs tmpfs /mnt/ram  <span class="cm"># RAM disk (in memory)</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">fdisk / parted</span> Partition disks</summary>
+        <pre><code>sudo fdisk -l             <span class="cm"># list all partitions</span>
+sudo fdisk /dev/sda       <span class="cm"># interactively partition</span>
+sudo parted /dev/sda      <span class="cm"># modern partition tool</span></code><span class="copy-tip">Copy</span></pre>
+        <p class="warn" style="margin-top:10px"><strong>⚠ Warning:</strong> Repartitioning can <strong>destroy your data</strong>. Only do this on empty or backed-up drives.</p>
+      </details>
+
+      <div class="note"><strong>UUIDs are forever:</strong> Use <code>blkid</code> to find a drive's UUID, then reference it in <code>/etc/fstab</code> for reliable mounting — unlike device names (<code>/dev/sda1</code>), UUIDs never change.</div>
+    </section>
+
+    <!-- ═══ 13. System Info ═══ -->
+    <section id="system" class="card sect-offset">
+      <h2><span class="section-num">13</span> System Information <span class="level level-beginner">Beginner</span></h2>
+
+      <pre><code><span class="cm"># System & hardware</span>
+uname -a                 <span class="cm"># all system info (kernel, arch, hostname)</span>
+uname -r                 <span class="cm"># kernel release</span>
+hostname                 <span class="cm"># system hostname</span>
+uptime                   <span class="cm"># how long the system has been running</span>
+who                      <span class="cm"># who is logged in</code><span class="copy-tip">Copy</span></pre>
+
+      <pre><code><span class="cm"># Memory</span>
+free -h                  <span class="cm"># RAM + swap usage (human-readable)</span>
+free -m                  <span class="cm"># in MB</span>
+vmstat 1                 <span class="cm"># continuous memory/proc stats</code><span class="copy-tip">Copy</span></pre>
+
+      <pre><code><span class="cm"># CPU</span>
+lscpu                    <span class="cm"># CPU architecture info</span>
+nproc                    <span class="cm"># number of CPU cores</code><span class="copy-tip">Copy</span></pre>
+
+      <pre><code><span class="cm"># Hardware (requires lshw or dmidecode)</span>
+sudo lshw                <span class="cm"># full hardware details</span>
+sudo dmidecode           <span class="cm"># DMI/BIOS info</span>
+lsusb                    <span class="cm"># USB devices</span>
+lspci                    <span class="cm"># PCI devices</code><span class="copy-tip">Copy</span></pre>
+
+      <pre><code><span class="cm"># Date & time</span>
+date                     <span class="cm"># current date/time</span>
+cal                      <span class="cm"># calendar of current month</span>
+timedatectl              <span class="cm"># system time settings</code><span class="copy-tip">Copy</span></pre>
+
+      <pre><code><span class="cm"># Logs</span>
+journalctl               <span class="cm"># view systemd logs</span>
+journalctl -u ssh        <span class="cm"># logs for a specific service</span>
+journalctl -f            <span class="cm"># follow logs in real time</span>
+journalctl --since yesterday  <span class="cm"># logs since yesterday</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>Tip:</strong> Use <code>watch -n 2 'command'</code> to run any command every 2 seconds — great for monitoring: <code>watch -n 1 'free -h'</code></div>
+    </section>
+
+    <!-- ═══ 14. Shell Scripting ═══ -->
+    <section id="scripts" class="card sect-offset">
+      <h2><span class="section-num">14</span> Shell Scripting Basics <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Shell scripts let you automate repetitive tasks. A script is just a file with commands.</p>
+
+      <h3>Your first script</h3>
+      <pre><code><span class="cm">#!/bin/bash</span>
+<span class="cm"># This is a comment. The line above is the shebang — tells the system this is a Bash script.</span>
+
+echo <span class="str">"Hello, World!"</span>
+
+<span class="cm"># Variables (no spaces around =):</span>
+name=<span class="str">"Laksh"</span>
+echo <span class="str">"Hello, $name"</span>
+
+<span class="cm"># Read user input:</span>
+echo <span class="str">"Enter your name:"</span>
+read username
+echo <span class="str">"Welcome, $username"</span>
+
+<span class="cm"># Exit with a status:</span>
+exit 0</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Run a script</h3>
+      <pre><code>chmod +x script.sh       <span class="cm"># make executable</span>
+./script.sh              <span class="cm"># run it</span>
+bash script.sh           <span class="cm"># or run with Bash directly</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Conditionals & loops</h3>
+      <pre><code><span class="cm"># If/else</span>
+<span class="kw">if</span> [ -f <span class="str">"$file"</span> ]; <span class="kw">then</span>
+    echo <span class="str">"$file exists"</span>
+<span class="kw">elif</span> [ -d <span class="str">"$dir"</span> ]; <span class="kw">then</span>
+    echo <span class="str">"$dir is a directory"</span>
+<span class="kw">else</span>
+    echo <span class="str">"Not found"</span>
+<span class="kw">fi</span>
+
+<span class="cm"># For loop</span>
+<span class="kw">for</span> file <span class="kw">in</span> *.txt; <span class="kw">do</span>
+    echo <span class="str">"Processing $file"</span>
+<span class="kw">done</span>
+
+<span class="cm"># While loop</span>
+count=1
+<span class="kw">while</span> [ <span class="hl">$count</span> -le 5 ]; <span class="kw">do</span>
+    echo <span class="str">"Count: $count"</span>
+    count=<span class="hl">$((count + 1))</span>
+<span class="kw">done</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Useful test operators</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">[ -f "$file" ]</div><div class="cheat-desc">Is a regular file?</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">[ -d "$dir" ]</div><div class="cheat-desc">Is a directory?</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">[ -e "$path" ]</div><div class="cheat-desc">Does path exist?</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">[ -z "$var" ]</div><div class="cheat-desc">Is variable empty?</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">[ -n "$var" ]</div><div class="cheat-desc">Is variable non-empty?</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">[ "$a" = "$b" ]</div><div class="cheat-desc">String equals</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">[ $n -gt 5 ]</div><div class="cheat-desc">Number greater than</div></div>
+      </div>
+
+      <div class="note"><strong>Always quote variables:</strong> Use <code>"$var"</code> not <code>$var</code>. Quoting prevents errors if the variable contains spaces or is empty.</div>
+    </section>
+
+    <!-- ═══ 15. Security Basics ═══ -->
+    <section id="security" class="card sect-offset">
+      <h2><span class="section-num">15</span> Security Basics <span class="level level-intermediate">Intermediate</span></h2>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span><span class="tag">ufw</span> Firewall (Uncomplicated Firewall)</summary>
+        <pre><code>sudo ufw status             <span class="cm"># check status</span>
+sudo ufw enable              <span class="cm"># turn on firewall</span>
+sudo ufw default deny        <span class="cm"># deny incoming by default</span>
+sudo ufw allow 22/tcp        <span class="cm"># allow SSH</span>
+sudo ufw allow 80/tcp        <span class="cm"># allow HTTP</span>
+sudo ufw allow 443/tcp       <span class="cm"># allow HTTPS</span>
+sudo ufw deny 23/tcp         <span class="cm"># deny telnet</span>
+sudo ufw delete allow 80     <span class="cm"># remove a rule</code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">fail2ban</span> Block brute-force attacks</summary>
+        <pre><code>sudo apt install fail2ban
+sudo systemctl enable fail2ban --now
+
+<span class="cm"># Configuration: /etc/fail2ban/jail.local</span>
+<span class="cm"># It monitors SSH logs and bans IPs after 5 failed attempts</span></code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">openssl</span> Generate keys & certificates</summary>
+        <pre><code><span class="cm"># Generate a private key</span>
+openssl genrsa -out key.pem 2048
+
+<span class="cm"># Generate a self-signed certificate</span>
+openssl req -new -x509 -key key.pem -out cert.pem -days 365
+
+<span class="cm"># View certificate info</span>
+openssl x509 -in cert.pem -text -noout</code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">gpg</span> Encrypt & sign files</summary>
+        <pre><code>gpg --gen-key                     <span class="cm"># generate a key pair</span>
+gpg -c file.txt                   <span class="cm"># symmetric encryption (password)</span>
+gpg -e -r recipient file.txt       <span class="cm"># encrypt for a recipient</span>
+gpg -d file.txt.gpg               <span class="cm"># decrypt</code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span><span class="tag">chkrootkit / rkhunter</span> Rootkit detection</summary>
+        <pre><code>sudo apt install chkrootkit rkhunter
+sudo chkrootkit
+sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <div class="warn"><strong>⚠ Security rule #1:</strong> Keep your system updated: <code>sudo apt update &amp;&amp; sudo apt upgrade</code> (or equivalent). Most attacks exploit <em>known</em> vulnerabilities with available patches.</div>
+    </section>
+
+    <!-- ═══ 16. Command Reference ═══ -->
+    <section id="cheatsheet" class="card sect-offset">
+      <h2><span class="section-num">16</span> Quick Command Reference</h2>
+
+      <p>Keep this section bookmarked — it covers 90% of daily Linux tasks.</p>
+
+      <h3>File Operations</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">ls -la</div><div class="cheat-desc">List all files with details</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">cd /path</div><div class="cheat-desc">Change directory</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">pwd</div><div class="cheat-desc">Print working directory</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">cp -r src dst</div><div class="cheat-desc">Copy recursively</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">mv old new</div><div class="cheat-desc">Move or rename</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">rm -rf dir</div><div class="cheat-desc">⚠ Delete directory</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">mkdir -p a/b/c</div><div class="cheat-desc">Create nested dirs</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">touch file</div><div class="cheat-desc">Create empty file</div></div>
+      </div>
+
+      <h3>Viewing & Editing</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">cat file</div><div class="cheat-desc">Print file content</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">less file</div><div class="cheat-desc">Paginated view (q to quit)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">head -20 file</div><div class="cheat-desc">First 20 lines</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">tail -f file</div><div class="cheat-desc">Follow file (logs)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">nano file</div><div class="cheat-desc">Simple editor</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">vim file</div><div class="cheat-desc">Powerful editor</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">grep pattern file</div><div class="cheat-desc">Search for pattern</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">sed 's/old/new/g' file</div><div class="cheat-desc">Find & replace</div></div>
+      </div>
+
+      <h3>Permissions & Ownership</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">chmod 755 file</div><div class="cheat-desc">Set rwxr-xr-x</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">chown user:group file</div><div class="cheat-desc">Change owner:group</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">chgrp group file</div><div class="cheat-desc">Change group</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">umask 022</div><div class="cheat-desc">Default permissions mask</div></div>
+      </div>
+
+      <h3>Process Management</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">ps aux</div><div class="cheat-desc">All processes</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">top / htop</div><div class="cheat-desc">Real-time monitor</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">kill -9 PID</div><div class="cheat-desc">Force kill</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">killall name</div><div class="cheat-desc">Kill by name</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">command &</div><div class="cheat-desc">Run in background</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">nohup command &</div><div class="cheat-desc">Run after logout</div></div>
+      </div>
+
+      <h3>Network</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">ip a</div><div class="cheat-desc">Show IP addresses</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">ping -c 4 host</div><div class="cheat-desc">Test connectivity</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">ss -tulpn</div><div class="cheat-desc">Listening ports</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">curl -O url</div><div class="cheat-desc">Download file</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">ssh user@host</div><div class="cheat-desc">Remote login</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">scp file host:</div><div class="cheat-desc">Copy over SSH</div></div>
+      </div>
+
+      <h3>System</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">uname -a</div><div class="cheat-desc">Full system info</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">free -h</div><div class="cheat-desc">Memory usage</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">df -h</div><div class="cheat-desc">Disk space</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">du -sh *</div><div class="cheat-desc">Directory sizes</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">journalctl -xe</div><div class="cheat-desc">System logs</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">systemctl status svc</div><div class="cheat-desc">Service status</div></div>
+      </div>
+
+      <h3>Package Management</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">apt install pkg</div><div class="cheat-desc">Debian/Ubuntu install</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">dnf install pkg</div><div class="cheat-desc">Fedora/RHEL install</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">pacman -S pkg</div><div class="cheat-desc">Arch install</div></div>
+      </div>
+
+      <div class="tip"><strong>Remember:</strong> Most commands have a <code>--help</code> flag or a manual page: <code>man &lt;command&gt;</code>. Press <kbd>q</kbd> to exit the manual.</div>
+    </section>
+
+    <footer><i>Made with ❤ by Laksh.</i> · <a href="index.html">Back to Home</a> · <a href="#intro">Back to top ↑</a></footer>
+  </main>
+
+  <button id="back-top" title="Back to top">↑</button>
+
+  <script>
+    document.querySelectorAll('pre').forEach(pre => {
+      const btn = pre.querySelector('.copy-tip');
+      if (!btn) return;
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const code = pre.querySelector('code');
+        try {
+          await navigator.clipboard.writeText(code ? code.innerText : pre.innerText);
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          spawnConfetti(btn);
+          setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+        } catch (e) {}
+      });
+    });
+
+    function spawnConfetti(el) {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const colors = ['#6366f1','#8b5cf6','#a855f7','#06b6d4','#10b981','#f59e0b','#f43f5e'];
+      const container = document.createElement('div');
+      container.className = 'confetti-container';
+      container.style.left = cx + 'px';
+      container.style.top = cy + 'px';
+      for (let i = 0; i < 12; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.width = (4 + Math.random() * 4) + 'px';
+        c.style.height = (4 + Math.random() * 4) + 'px';
+        c.style.animationDuration = (0.5 + Math.random() * 0.6) + 's';
+        c.style.animationDelay = (Math.random() * 0.1) + 's';
+        c.style.transform = `translate(${(Math.random() - 0.5) * 40}px, ${(Math.random() - 0.5) * 20}px)`;
+        container.appendChild(c);
+      }
+      document.body.appendChild(container);
+      setTimeout(() => container.remove(), 1200);
+    }
+
+    (function typewriter() {
+      const el = document.getElementById('typewriter-text');
+      if (!el) return;
+      const text = 'A comprehensive Linux command-line guide — filesystem navigation, permissions, processes, networking, shell scripting, and more. Click any code block to copy.';
+      let i = 0;
+      function tick() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          const delay = text.charAt(i - 1) === '.' || text.charAt(i - 1) === ',' ? 60 : 20;
+          setTimeout(tick, delay);
+        }
+      }
+      setTimeout(tick, 800);
+    })();
+
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menuBtn');
+
+    function toggleMenu() {
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    });
+
+    const tocLinks = document.querySelectorAll('.toc a');
+    const sections = [];
+    tocLinks.forEach(a => {
+      const target = a.getAttribute('href');
+      if (target && target.startsWith('#')) {
+        const el = document.getElementById(target.slice(1));
+        if (el) sections.push({ el, link: a });
+      }
+    });
+
+    function highlightTOC() {
+      let current = sections[0];
+      for (const s of sections) {
+        const rect = s.el.getBoundingClientRect();
+        if (rect.top <= 120) current = s;
+        else break;
+      }
+      tocLinks.forEach(a => a.classList.remove('active'));
+      if (current) current.link.classList.add('active');
+    }
+    window.addEventListener('scroll', highlightTOC, { passive: true });
+    highlightTOC();
+
+    const backTop = document.getElementById('back-top');
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    (function scrollReveal() {
+      const cards = document.querySelectorAll('.card');
+      if (!cards.length || !('IntersectionObserver' in window)) {
+        cards.forEach(c => c.classList.add('visible'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      cards.forEach(card => observer.observe(card));
+    })();
+
+    (function tiltEffect() {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -5;
+          const rotateY = ((x - centerX) / centerX) * 5;
+          card.style.transform =
+            `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.005)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    })();
+
+    (function parallaxOrbs() {
+      const orbs = document.querySelectorAll('.orb');
+      if (!orbs.length) return;
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        orbs.forEach((orb, i) => {
+          const speed = 5 + i * 3;
+          orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+        });
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>

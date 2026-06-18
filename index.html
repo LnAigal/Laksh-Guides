@@ -205,6 +205,16 @@
     .gh-icon-accent{ background:var(--accent-from); }
     .title .gh-icon{ width:28px; height:28px; background:var(--accent-to); vertical-align:middle; }
 
+    .linux-icon{
+      display:inline-block; width:18px; height:18px;
+      background:var(--text-dim);
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .linux-icon-accent{ background:var(--accent-from); }
+
     /* ═══ ANIMATIONS ═══ */
     @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
     @keyframes pulse-glow{ 0%,100%{ box-shadow:0 0 20px rgba(99,102,241,0.05); } 50%{ box-shadow:0 0 40px rgba(99,102,241,0.12); } }
@@ -264,6 +274,7 @@
     <div class="logo"><span class="dot"></span> Laksh Guides</div>
     <div class="toc">
       <a href="GithubGuide.html"><span class="icon"><span class="gh-icon gh-icon-accent" style="display:inline-block;vertical-align:middle;"></span></span> Git & GitHub</a>
+      <a href="LinuxGuide.html"><span class="icon"><span class="linux-icon linux-icon-accent" style="display:inline-block;vertical-align:middle;"></span></span> Linux Guide</a>
       <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon">◈</span> NMAMIT-Notes-Hub</a>
     </div>
     <div class="sidebar-footer">Laksh Guides</div>
@@ -287,6 +298,16 @@
         <div class="card-body">
           <div class="card-title">Git & GitHub Guide</div>
           <div class="card-desc">Version control, branching, remotes, pull requests, and more.</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a href="LinuxGuide.html" class="guide-card" data-title="Linux Guide">
+        <div class="card-icon">
+          <span class="linux-icon linux-icon-accent" style="width:26px;height:26px;display:block;"></span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Linux Guide</div>
+          <div class="card-desc">Filesystem, permissions, processes, networking, shell scripting, and more.</div>
         </div>
         <div class="card-arrow">→</div>
       </a>
