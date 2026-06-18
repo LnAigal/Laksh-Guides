@@ -587,8 +587,8 @@
       <a href="#network"><span class="tag-icon">◈</span> Networking</a>
       <a href="#editors"><span class="tag-icon">✎</span> Text Editors</a>
       <a href="#shell"><span class="tag-icon">▸</span> Shell Basics</a>
-      <a href="#users"><span class="tag-icon">◎</span> Users & Groups</a>
-      <a href="#storage"><span class="tag-icon">○</span> Storage & Disks</a>
+      <a href="#users"><span class="tag-icon">◎</span> Users &amp; Groups</a>
+      <a href="#storage"><span class="tag-icon">○</span> Storage &amp; Disks</a>
       <a href="#system"><span class="tag-icon">↻</span> System Info</a>
       <a href="#scripts"><span class="tag-icon">◌</span> Shell Scripting</a>
       <a href="#security"><span class="tag-icon">◫</span> Security Basics</a>
@@ -647,14 +647,14 @@
         <div class="cheat-item"><div class="cheat-cmd">/home</div><div class="cheat-desc">User home directories</div></div>
         <div class="cheat-item"><div class="cheat-cmd">/etc</div><div class="cheat-desc">Configuration files</div></div>
         <div class="cheat-item"><div class="cheat-cmd">/var</div><div class="cheat-desc">Variable data (logs, databases)</div></div>
-        <div class="cheat-item"><div class="cheat-cmd">/usr</div><div class="cheat-desc">User programs & libraries</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/usr</div><div class="cheat-desc">User programs &amp; libraries</div></div>
         <div class="cheat-item"><div class="cheat-cmd">/bin</div><div class="cheat-desc">Essential user binaries</div></div>
         <div class="cheat-item"><div class="cheat-cmd">/sbin</div><div class="cheat-desc">System administration binaries</div></div>
         <div class="cheat-item"><div class="cheat-cmd">/tmp</div><div class="cheat-desc">Temporary files (cleared on boot)</div></div>
         <div class="cheat-item"><div class="cheat-cmd">/dev</div><div class="cheat-desc">Device files (hardware)</div></div>
-        <div class="cheat-item"><div class="cheat-cmd">/proc</div><div class="cheat-desc">Process & kernel info (virtual)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/proc</div><div class="cheat-desc">Process &amp; kernel info (virtual)</div></div>
         <div class="cheat-item"><div class="cheat-cmd">/opt</div><div class="cheat-desc">Optional third-party software</div></div>
-        <div class="cheat-item"><div class="cheat-cmd">/boot</div><div class="cheat-desc">Boot loader files & kernel</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">/boot</div><div class="cheat-desc">Boot loader files &amp; kernel</div></div>
       </div>
 
       <div class="tip"><strong>Tip:</strong> <code>/proc</code> and <code>/sys</code> are <em>virtual filesystems</em> — they don't exist on disk but reflect kernel data structures. Reading them gives you real-time system info.</div>
@@ -710,7 +710,7 @@ tree -d                <span class="cm"># directories only</span></code><span cl
 
     <!-- ═══ 4. File Operations ═══ -->
     <section id="fileops" class="card sect-offset">
-      <h2><span class="section-num">04</span> File & Directory Operations <span class="level level-beginner">Beginner</span></h2>
+      <h2><span class="section-num">04</span> File &amp; Directory Operations <span class="level level-beginner">Beginner</span></h2>
 
       <details class="accordion" open>
         <summary><span class="arrow">▶</span><span class="tag">touch</span> Create an empty file</summary>
@@ -726,7 +726,7 @@ mkdir -m 755 secure     <span class="cm"># create with specific permissions</spa
       </details>
 
       <details class="accordion">
-        <summary><span class="arrow">▶</span><span class="tag">cp</span> Copy files & directories</summary>
+        <summary><span class="arrow">▶</span><span class="tag">cp</span> Copy files &amp; directories</summary>
         <pre><code>cp file.txt backup.txt             <span class="cm"># copy file</span>
 cp -r myfolder backup               <span class="cm"># copy directory recursively</span>
 cp -i file.txt /target/             <span class="cm"># prompt before overwrite</span>
@@ -743,7 +743,7 @@ mv -u file.txt /target/             <span class="cm"># move only if newer</span>
       </details>
 
       <details class="accordion">
-        <summary><span class="arrow">▶</span><span class="tag">rm</span> Remove files & directories</summary>
+        <summary><span class="arrow">▶</span><span class="tag">rm</span> Remove files &amp; directories</summary>
         <pre><code>rm file.txt                         <span class="cm"># delete a file</span>
 rm -r myfolder                      <span class="cm"># delete directory recursively</span>
 rm -f file.txt                      <span class="cm"># force delete (no prompt)</span>
@@ -795,7 +795,7 @@ chmod 700 private.sh     <span class="cm"># rwx------</span>
       </details>
 
       <details class="accordion">
-        <summary><span class="arrow">▶</span><span class="tag">chown</span> Change owner & group</summary>
+        <summary><span class="arrow">▶</span><span class="tag">chown</span> Change owner &amp; group</summary>
         <pre><code>sudo chown bob file.txt         <span class="cm"># change owner to bob</span>
 sudo chown bob:devs file.txt    <span class="cm"># change owner:group</span>
 sudo chown -R bob:devs mydir/   <span class="cm"># recursive</span></code><span class="copy-tip">Copy</span></pre>
@@ -866,7 +866,7 @@ pkill -f "pattern"       <span class="cm"># kill by pattern match</span></code><
       </details>
 
       <details class="accordion">
-        <summary><span class="arrow">▶</span><span class="tag">jobs / bg / fg</span> Background & foreground</summary>
+        <summary><span class="arrow">▶</span><span class="tag">jobs / bg / fg</span> Background &amp; foreground</summary>
         <pre><code><span class="cm"># Run a command in background:</span>
 long-command &amp;
 
@@ -916,7 +916,7 @@ sudo pacman -R firefox       <span class="cm"># remove</span>
 sudo pacman -Syu             <span class="cm"># sync + upgrade (full update)</span>
 sudo pacman -Ss keyword      <span class="cm"># search</span></code><span class="copy-tip">Copy</span></pre>
 
-      <h3>Snap & Flatpak (universal)</h3>
+      <h3>Snap &amp; Flatpak (universal)</h3>
       <pre><code>sudo snap install firefox    <span class="cm"># Snap package</span>
 flatpak install flathub org.mozilla.firefox  <span class="cm"># Flatpak</span></code><span class="copy-tip">Copy</span></pre>
 
@@ -953,7 +953,7 @@ ss -tuln                 <span class="cm"># numeric ports only (no DNS)</span></
       </details>
 
       <details class="accordion">
-        <summary><span class="arrow">▶</span><span class="tag">curl / wget</span> Download & transfer data</summary>
+        <summary><span class="arrow">▶</span><span class="tag">curl / wget</span> Download &amp; transfer data</summary>
         <pre><code>curl https://example.com             <span class="cm"># fetch webpage content</span>
 curl -O https://example.com/file.zip <span class="cm"># download file</span>
 curl -o myfile.zip https://...        <span class="cm"># download with custom name</span>
@@ -1000,7 +1000,7 @@ scp -r myfolder/ user@host:/path/        <span class="cm"># recursive directory 
       </details>
 
       <details class="accordion">
-        <summary><span class="arrow">▶</span><span class="tag">vim</span> Powerful & ubiquitous</summary>
+        <summary><span class="arrow">▶</span><span class="tag">vim</span> Powerful &amp; ubiquitous</summary>
         <pre><code>vim file.txt             <span class="cm"># open file</span>
 
 <span class="cm"># Modes:</span>
@@ -1034,7 +1034,7 @@ code .                   <span class="cm"># open current directory</span></code>
 
     <!-- ═══ 10. Shell Basics ═══ -->
     <section id="shell" class="card sect-offset">
-      <h2><span class="section-num">10</span> Shell Basics & Shortcuts <span class="level level-beginner">Beginner</span></h2>
+      <h2><span class="section-num">10</span> Shell Basics &amp; Shortcuts <span class="level level-beginner">Beginner</span></h2>
 
       <p>The <strong>shell</strong> is your command interpreter. Bash is the most common one. Here are essential tricks:</p>
 
@@ -1050,7 +1050,7 @@ ls file?.txt             <span class="cm"># file1.txt, fileA.txt, but not file10
 ls file[0-9].txt         <span class="cm"># file0.txt through file9.txt</span>
 ls [abc]*.txt            <span class="cm"># files starting with a, b, or c</span></code><span class="copy-tip">Copy</span></pre>
 
-      <h3>Redirection & pipes</h3>
+      <h3>Redirection &amp; pipes</h3>
       <pre><code><span class="cm"># Redirect output to a file (overwrite)</span>
 echo "Hello" &gt; file.txt
 
@@ -1101,7 +1101,7 @@ Ctrl+r                   <span class="cm"># search history (type to filter)</spa
 
     <!-- ═══ 11. Users & Groups ═══ -->
     <section id="users" class="card sect-offset">
-      <h2><span class="section-num">11</span> Users & Groups <span class="level level-intermediate">Intermediate</span></h2>
+      <h2><span class="section-num">11</span> Users &amp; Groups <span class="level level-intermediate">Intermediate</span></h2>
 
       <details class="accordion" open>
         <summary><span class="arrow">▶</span><span class="tag">whoami / id</span> Who are you?</summary>
@@ -1142,7 +1142,7 @@ sudo -l                    <span class="cm"># list allowed commands</span></code
 
     <!-- ═══ 12. Storage & Disks ═══ -->
     <section id="storage" class="card sect-offset">
-      <h2><span class="section-num">12</span> Storage, Disks & Filesystems <span class="level level-advanced">Advanced</span></h2>
+      <h2><span class="section-num">12</span> Storage, Disks &amp; Filesystems <span class="level level-advanced">Advanced</span></h2>
 
       <details class="accordion" open>
         <summary><span class="arrow">▶</span><span class="tag">df</span> Disk free space</summary>
@@ -1194,33 +1194,33 @@ uname -a                 <span class="cm"># all system info (kernel, arch, hostn
 uname -r                 <span class="cm"># kernel release</span>
 hostname                 <span class="cm"># system hostname</span>
 uptime                   <span class="cm"># how long the system has been running</span>
-who                      <span class="cm"># who is logged in</code><span class="copy-tip">Copy</span></pre>
+who                      <span class="cm"># who is logged in</span></code><span class="copy-tip">Copy</span></pre>
 
       <pre><code><span class="cm"># Memory</span>
 free -h                  <span class="cm"># RAM + swap usage (human-readable)</span>
 free -m                  <span class="cm"># in MB</span>
-vmstat 1                 <span class="cm"># continuous memory/proc stats</code><span class="copy-tip">Copy</span></pre>
+vmstat 1                 <span class="cm"># continuous memory/proc stats</span></code><span class="copy-tip">Copy</span></pre>
 
       <pre><code><span class="cm"># CPU</span>
 lscpu                    <span class="cm"># CPU architecture info</span>
-nproc                    <span class="cm"># number of CPU cores</code><span class="copy-tip">Copy</span></pre>
+nproc                    <span class="cm"># number of CPU cores</span></code><span class="copy-tip">Copy</span></pre>
 
       <pre><code><span class="cm"># Hardware (requires lshw or dmidecode)</span>
 sudo lshw                <span class="cm"># full hardware details</span>
 sudo dmidecode           <span class="cm"># DMI/BIOS info</span>
 lsusb                    <span class="cm"># USB devices</span>
-lspci                    <span class="cm"># PCI devices</code><span class="copy-tip">Copy</span></pre>
+lspci                    <span class="cm"># PCI devices</span></code><span class="copy-tip">Copy</span></pre>
 
       <pre><code><span class="cm"># Date & time</span>
 date                     <span class="cm"># current date/time</span>
 cal                      <span class="cm"># calendar of current month</span>
-timedatectl              <span class="cm"># system time settings</code><span class="copy-tip">Copy</span></pre>
+timedatectl              <span class="cm"># system time settings</span></code><span class="copy-tip">Copy</span></pre>
 
       <pre><code><span class="cm"># Logs</span>
 journalctl               <span class="cm"># view systemd logs</span>
 journalctl -u ssh        <span class="cm"># logs for a specific service</span>
 journalctl -f            <span class="cm"># follow logs in real time</span>
-journalctl --since yesterday  <span class="cm"># logs since yesterday</code><span class="copy-tip">Copy</span></pre>
+journalctl --since yesterday  <span class="cm"># logs since yesterday</span></code><span class="copy-tip">Copy</span></pre>
 
       <div class="tip"><strong>Tip:</strong> Use <code>watch -n 2 'command'</code> to run any command every 2 seconds — great for monitoring: <code>watch -n 1 'free -h'</code></div>
     </section>
@@ -1328,11 +1328,11 @@ openssl x509 -in cert.pem -text -noout</code><span class="copy-tip">Copy</span><
       </details>
 
       <details class="accordion">
-        <summary><span class="arrow">▶</span><span class="tag">gpg</span> Encrypt & sign files</summary>
+        <summary><span class="arrow">▶</span><span class="tag">gpg</span> Encrypt &amp; sign files</summary>
         <pre><code>gpg --gen-key                     <span class="cm"># generate a key pair</span>
 gpg -c file.txt                   <span class="cm"># symmetric encryption (password)</span>
 gpg -e -r recipient file.txt       <span class="cm"># encrypt for a recipient</span>
-gpg -d file.txt.gpg               <span class="cm"># decrypt</code><span class="copy-tip">Copy</span></pre>
+gpg -d file.txt.gpg               <span class="cm"># decrypt</span></code><span class="copy-tip">Copy</span></pre>
       </details>
 
       <details class="accordion">
