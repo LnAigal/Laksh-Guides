@@ -47,6 +47,39 @@
         --card-bg: rgba(255,255,255,0.6);
       }
     }
+    :root[data-theme="light"]{
+      --bg: #f8fafc;
+      --bg-alt: #f1f5f9;
+      --surface: rgba(255,255,255,0.85);
+      --surface-hover: rgba(255,255,255,1);
+      --text: #0f172a;
+      --text-dim: #475569;
+      --text-muted: #94a3b8;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.35);
+      --shadow: 0 8px 32px rgba(0,0,0,0.06);
+      --glow: 0 0 40px rgba(99,102,241,0.05);
+      --card-bg: rgba(255,255,255,0.6);
+    }
+    :root[data-theme="dark"]{
+      --bg: #07080e;
+      --bg-alt: #0b0d17;
+      --surface: rgba(18,22,40,0.75);
+      --surface-hover: rgba(28,34,60,0.85);
+      --text: #f1f5f9;
+      --text-dim: #8892b0;
+      --text-muted: #64748b;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.4);
+      --accent-from: #6366f1;
+      --accent-via: #8b5cf6;
+      --accent-to: #a855f7;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --glow: 0 0 40px rgba(99,102,241,0.1);
+      --card-bg: rgba(18,22,40,0.5);
+    }
     *{ box-sizing:border-box; margin:0; padding:0; }
     html{ scroll-behavior:smooth; }
     body{
@@ -119,7 +152,20 @@
     }
     .subtitle{ color:var(--text-dim); margin:10px 0 24px; max-width:65ch; line-height:1.7; font-size:0.95rem; }
 
-    .search-box{ margin:0 0 0 0; max-width:400px; }
+    .header-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .search-box{ margin:0 0 0 0; max-width:400px; flex:1; min-width:200px; }
+    .theme-btn{
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:14px; width:44px; height:44px;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; color:var(--text-dim); font-size:1.15rem;
+      transition:all 0.2s; flex-shrink:0;
+    }
+    .theme-btn:hover{ border-color:var(--border-hover); color:var(--text); box-shadow:var(--glow); }
+    .guide-stats{ display:flex; gap:16px; margin-top:14px; flex-wrap:wrap; }
+    .guide-stats span{ font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center; gap:5px; }
+    .guide-stats .num{ color:var(--text); font-weight:600; font-size:0.85rem; }
+    .guide-stats .dot-sep{ width:3px; height:3px; border-radius:50%; background:var(--text-muted); opacity:0.4; }
     input[type="text"]{
       width:100%; padding:13px 18px;
       border-radius:14px; border:1px solid var(--border);
@@ -165,6 +211,20 @@
     .guide-card .card-desc{ color:var(--text-dim); font-size:0.85rem; margin-top:3px; line-height:1.5; }
     .guide-card .card-arrow{ color:var(--text-muted); font-size:1.3rem; flex-shrink:0; transition:transform 0.2s; }
     .guide-card:hover .card-arrow{ transform:translateX(4px); color:var(--accent-from); }
+    .guide-card .card-badge{
+      font-size:0.65rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase;
+      padding:2px 10px; border-radius:20px;
+      background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.12));
+      color:var(--accent-via); border:1px solid rgba(99,102,241,0.15);
+      display:inline-block; margin-top:6px; pointer-events:none;
+    }
+    .guide-card .card-badge.ext{ color:var(--cyan); background:rgba(6,182,212,0.1); border-color:rgba(6,182,212,0.2); }
+    .guide-card::after{
+      content:''; position:absolute; inset:-1px; border-radius:19px;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to),var(--cyan));
+      opacity:0; transition:opacity 0.4s; z-index:-1;
+    }
+    .guide-card:hover::after{ opacity:0.3; }
 
     .empty-state{ display:none; text-align:center; padding:40px; color:var(--text-muted); }
     .empty-state.visible{ display:block; }
@@ -296,8 +356,18 @@
     <header class="hero">
       <h1 class="title"><span class="animated-gradient">Laksh Guides</span></h1>
       <p class="subtitle">Your go-to reference for coding, tech, and academic essentials. Quick guides, clear explanations, and practical workflows.</p>
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search guides..." />
+      <div class="header-row">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search guides... (press /)" />
+        </div>
+        <button class="theme-btn" id="themeToggle" title="Toggle theme">🌙</button>
+      </div>
+      <div class="guide-stats">
+        <span><span class="num" id="guideCount">3</span> guides</span>
+        <span class="dot-sep"></span>
+        <span><span class="num">1</span> external</span>
+        <span class="dot-sep"></span>
+        <span>updated <span class="num" id="updateYear">2026</span></span>
       </div>
     </header>
 
@@ -309,6 +379,7 @@
         <div class="card-body">
           <div class="card-title">Git & GitHub Guide</div>
           <div class="card-desc">Version control, branching, remotes, pull requests, and more.</div>
+          <span class="card-badge">Guide</span>
         </div>
         <div class="card-arrow">→</div>
       </a>
@@ -319,6 +390,7 @@
         <div class="card-body">
           <div class="card-title">Linux Guide</div>
           <div class="card-desc">Filesystem, permissions, processes, networking, shell scripting, and more.</div>
+          <span class="card-badge">Guide</span>
         </div>
         <div class="card-arrow">→</div>
       </a>
@@ -329,6 +401,7 @@
         <div class="card-body">
           <div class="card-title">VS Code Guide</div>
           <div class="card-desc">Shortcuts, extensions, debugging, Git integration, multi-cursor, Emmet, remote dev, and more.</div>
+          <span class="card-badge">Guide</span>
         </div>
         <div class="card-arrow">→</div>
       </a>
@@ -339,6 +412,7 @@
         <div class="card-body">
           <div class="card-title">NMAMIT-Notes-Hub</div>
           <div class="card-desc">Academic notes and resources for NMAMIT courses.</div>
+          <span class="card-badge ext">External</span>
         </div>
         <div class="card-arrow">→</div>
       </a>
@@ -418,6 +492,42 @@
           card.style.transform = '';
         });
       });
+    })();
+
+    // Theme toggle
+    (function(){
+      const btn = document.getElementById('themeToggle');
+      const html = document.documentElement;
+      const stored = localStorage.getItem('theme');
+      if (stored) html.setAttribute('data-theme', stored);
+      const icons = { dark: '🌙', light: '☀️' };
+      btn.textContent = icons[html.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme:light)').matches ? 'light' : 'dark')] || icons.dark;
+      btn.addEventListener('click', () => {
+        const cur = html.getAttribute('data-theme');
+        const next = cur === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        btn.textContent = icons[next];
+      });
+    })();
+
+    // Keyboard shortcut / to focus search
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        document.getElementById('searchInput').focus();
+      }
+    });
+
+    // Live guide count
+    (function(){
+      const countEl = document.getElementById('guideCount');
+      const cards = document.querySelectorAll('.guide-card');
+      const updateCount = () => {
+        const visible = [...cards].filter(c => c.style.display !== 'none').length;
+        countEl.textContent = visible;
+      };
+      document.getElementById('searchInput').addEventListener('input', updateCount);
     })();
   </script>
 </body>
