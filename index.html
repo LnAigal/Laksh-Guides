@@ -215,6 +215,16 @@
     }
     .linux-icon-accent{ background:var(--accent-from); }
 
+    .vscode-icon{
+      display:inline-block; width:18px; height:18px;
+      background:var(--text-dim);
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M23.15 2.587a2.25 2.25 0 0 0-2.594.184L7.01 12.871l-3.652-2.86a0.8 0.8 0 0 0-1.02.047L0.553 11.69a0.75 0.75 0 0 0 .012 1.125l3.07 2.678-3.07 2.677a0.75 0.75 0 0 0-.012 1.125l1.785 1.632a0.8 0.8 0 0 0 1.02.047l3.652-2.86 13.545 10.1a2.25 2.25 0 0 0 2.594.184l7.3-4.299A2.25 2.25 0 0 0 32 23.91V8.09a2.25 2.25 0 0 0-1.55-2.132Z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M23.15 2.587a2.25 2.25 0 0 0-2.594.184L7.01 12.871l-3.652-2.86a0.8 0.8 0 0 0-1.02.047L0.553 11.69a0.75 0.75 0 0 0 .012 1.125l3.07 2.678-3.07 2.677a0.75 0.75 0 0 0-.012 1.125l1.785 1.632a0.8 0.8 0 0 0 1.02.047l3.652-2.86 13.545 10.1a2.25 2.25 0 0 0 2.594.184l7.3-4.299A2.25 2.25 0 0 0 32 23.91V8.09a2.25 2.25 0 0 0-1.55-2.132Z'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .vscode-icon-accent{ background:var(--accent-from); }
+
     /* ═══ ANIMATIONS ═══ */
     @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
     @keyframes pulse-glow{ 0%,100%{ box-shadow:0 0 20px rgba(99,102,241,0.05); } 50%{ box-shadow:0 0 40px rgba(99,102,241,0.12); } }
@@ -275,6 +285,7 @@
     <div class="toc">
       <a href="GithubGuide.html"><span class="icon"><span class="gh-icon gh-icon-accent" style="display:inline-block;vertical-align:middle;"></span></span> Git & GitHub</a>
       <a href="LinuxGuide.html"><span class="icon"><span class="linux-icon linux-icon-accent" style="display:inline-block;vertical-align:middle;"></span></span> Linux Guide</a>
+      <a href="VSCodeGuide.html"><span class="icon"><span class="vscode-icon vscode-icon-accent" style="display:inline-block;vertical-align:middle;"></span></span> VS Code Guide</a>
       <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon">◈</span> NMAMIT-Notes-Hub</a>
     </div>
     <div class="sidebar-footer">Laksh Guides</div>
@@ -308,6 +319,16 @@
         <div class="card-body">
           <div class="card-title">Linux Guide</div>
           <div class="card-desc">Filesystem, permissions, processes, networking, shell scripting, and more.</div>
+        </div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a href="VSCodeGuide.html" class="guide-card" data-title="VS Code Guide">
+        <div class="card-icon">
+          <span class="vscode-icon vscode-icon-accent" style="width:26px;height:26px;display:block;"></span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">VS Code Guide</div>
+          <div class="card-desc">Shortcuts, extensions, debugging, Git integration, multi-cursor, Emmet, remote dev, and more.</div>
         </div>
         <div class="card-arrow">→</div>
       </a>

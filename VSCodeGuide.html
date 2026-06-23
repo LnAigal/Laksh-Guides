@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NDLH3RKL58');
+</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VS Code Guide — Laksh Guides</title>
+  <style>
+    :root{
+      --bg: #07080e;
+      --bg-alt: #0b0d17;
+      --surface: rgba(18,22,40,0.75);
+      --surface-hover: rgba(28,34,60,0.85);
+      --text: #f1f5f9;
+      --text-dim: #8892b0;
+      --text-muted: #64748b;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.4);
+      --accent-from: #6366f1;
+      --accent-via: #8b5cf6;
+      --accent-to: #a855f7;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --code-bg: #0a0c16;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --glow: 0 0 40px rgba(99,102,241,0.1);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f8fafc;
+        --bg-alt: #f1f5f9;
+        --surface: rgba(255,255,255,0.85);
+        --surface-hover: rgba(255,255,255,1);
+        --text: #0f172a;
+        --text-dim: #475569;
+        --text-muted: #94a3b8;
+        --border: rgba(99,102,241,0.15);
+        --border-hover: rgba(99,102,241,0.35);
+        --code-bg: #0f172a;
+        --shadow: 0 8px 32px rgba(0,0,0,0.06);
+        --glow: 0 0 40px rgba(99,102,241,0.05);
+      }
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; scroll-padding-top:100px; }
+    html,body{
+      min-height:100%;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      display:grid; grid-template-columns:270px 1fr; gap:0;
+    }
+    a{ color:var(--accent-via); text-decoration:none; }
+
+    ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
+
+    nav{
+      position:sticky; top:0; height:100dvh; overflow-y:auto;
+      padding:28px 16px; background:var(--bg-alt); border-right:1px solid var(--border);
+      display:flex; flex-direction:column; gap:2px;
+      z-index:100;
+    }
+    nav::-webkit-scrollbar{ width:4px; }
+    nav::-webkit-scrollbar-thumb{ background:var(--border); border-radius:9px; }
+
+    .logo{
+      font-weight:800; font-size:1.1rem; display:flex; align-items:center; gap:10px;
+      padding-bottom:16px; border-bottom:1px solid var(--border); flex-shrink:0;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .logo .mark{
+      width:8px; height:8px; border-radius:999px;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-text-fill-color:initial; flex-shrink:0;
+    }
+    .logo .home-link{
+      margin-left:auto; font-size:0.8rem; opacity:0.4;
+      -webkit-text-fill-color:initial; color:var(--text-dim);
+      transition:opacity 0.2s;
+    }
+    .logo .home-link:hover{ opacity:0.8; }
+
+    .toc{ display:flex; flex-direction:column; gap:2px; margin-top:6px; flex:1; }
+    .toc a{
+      display:flex; align-items:center; gap:12px;
+      padding:9px 14px; border-radius:12px;
+      text-decoration:none; color:var(--text-dim);
+      border:1px solid transparent;
+      transition:all 0.2s ease; font-size:0.82rem; font-weight:450;
+      position:relative;
+    }
+    .toc a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+    .toc a.active{
+      color:#fff; border-color:var(--border-hover);
+      background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08));
+      box-shadow:inset 2px 0 0 var(--accent-from);
+    }
+    .toc a .tag-icon{ font-size:0.7rem; width:16px; text-align:center; flex-shrink:0; opacity:0.5; }
+    .toc a.active .tag-icon{ opacity:0.9; }
+
+    .sidebar-footer{
+      padding-top:10px; border-top:1px solid var(--border);
+      font-size:0.7rem; color:var(--text-muted); text-align:center; flex-shrink:0;
+    }
+
+    .level{ font-size:0.55rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:3px 7px; border-radius:6px; margin-left:auto; flex-shrink:0; }
+    .level-beginner{ background:rgba(16,185,129,0.12); color:var(--green); border:1px solid rgba(16,185,129,0.2); }
+    .level-intermediate{ background:rgba(99,102,241,0.12); color:var(--accent-from); border:1px solid rgba(99,102,241,0.2); }
+    .level-advanced{ background:rgba(245,158,11,0.12); color:var(--amber); border:1px solid rgba(245,158,11,0.2); }
+
+    main{ padding:48px 36px 64px; max-width:1000px; }
+
+    header.hero{ margin-bottom:36px; position:relative; }
+    header.hero::after{
+      content:''; position:absolute; bottom:-18px; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,var(--border),transparent);
+    }
+    .breadcrumb{ font-size:0.78rem; color:var(--text-dim); margin-bottom:14px; }
+    .breadcrumb a{ color:var(--text-dim); }
+    .breadcrumb a:hover{ color:var(--accent-from); }
+    .title{
+      font-size: clamp(1.8rem, 1.4rem + 2.2vw, 2.8rem); font-weight:800; margin:0;
+      line-height:1.15; letter-spacing:-0.02em;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .subtitle{ color:var(--text-dim); margin:10px 0 20px; max-width:70ch; line-height:1.7; font-size:0.95rem; }
+    .pill{
+      display:inline-flex; align-items:center; gap:10px; padding:7px 16px;
+      border-radius:999px; background:var(--surface); backdrop-filter:blur(12px);
+      border:1px solid var(--border); color:var(--text-dim); font-size:0.8rem;
+    }
+
+    section.card{
+      background:var(--surface); backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--border); border-radius:20px;
+      padding:28px 28px 20px; margin-bottom:24px;
+      transition:all 0.3s ease; box-shadow:var(--glow);
+      position:relative; overflow:hidden;
+    }
+    section.card::before{
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,transparent,var(--border-hover),transparent);
+      opacity:0; transition:opacity 0.3s;
+    }
+    section.card:hover{
+      border-color:var(--border-hover); box-shadow:var(--shadow),var(--glow);
+      transform:translateY(-1px);
+    }
+    section.card:hover::before{ opacity:1; }
+
+    section.card h2{ margin:0 0 12px; font-size:1.3rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    section.card h2 .section-num{
+      font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:8px;
+      background:rgba(99,102,241,0.1); color:var(--accent-from);
+      border:1px solid rgba(99,102,241,0.15);
+    }
+    section.card h3{ margin:18px 0 8px; font-size:1rem; color:var(--text); font-weight:600; }
+    section.card p, section.card li{ color:var(--text-dim); line-height:1.75; }
+    section.card p{ margin:0 0 10px; font-size:0.92rem; }
+    section.card ul, section.card ol{ padding-left:22px; margin:0 0 12px; }
+    section.card ul{ list-style-type:none; padding-left:0; }
+    section.card ul li{ padding-left:20px; position:relative; }
+    section.card ul li::before{ content:'▸'; position:absolute; left:0; color:var(--accent-from); opacity:0.6; font-size:0.8rem; }
+    section.card ol li{ color:var(--text-dim); line-height:1.75; margin-bottom:4px; }
+    section.card li strong{ color:var(--text); }
+
+    details.accordion{
+      border:1px solid var(--border); border-radius:14px; padding:16px 18px;
+      background:var(--bg); transition:all 0.25s ease;
+    }
+    details.accordion[open]{ border-color:var(--border-hover); background:rgba(99,102,241,0.02); }
+    details.accordion + details.accordion{ margin-top:10px; }
+    details.accordion:hover:not([open]){ border-color:var(--border-hover); }
+    details.accordion summary{
+      cursor:pointer; list-style:none; display:flex; align-items:center; gap:12px;
+      font-weight:550; user-select:none; font-size:0.93rem;
+    }
+    details.accordion summary::-webkit-details-marker{ display:none; }
+    details.accordion summary .arrow{
+      font-size:0.6rem; color:var(--accent-from); transition:transform 0.25s ease;
+      width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+      border-radius:6px; border:1px solid var(--border);
+      flex-shrink:0;
+    }
+    details.accordion[open] summary .arrow{ transform:rotate(90deg); border-color:var(--border-hover); background:rgba(99,102,241,0.05); }
+    details.accordion pre{ margin-top:14px; }
+    details.accordion p{ margin-top:10px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+
+    .tag{
+      font-size:0.65rem; font-weight:600; letter-spacing:0.02em;
+      background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.15);
+      padding:4px 10px; border-radius:8px; color:var(--accent-from);
+      white-space:nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    pre{
+      background: var(--code-bg); color:#e2e8f0;
+      padding:18px; border-radius:14px; overflow-x:auto;
+      border:1px solid rgba(99,102,241,0.1);
+      font-size:0.85rem; line-height:1.6;
+      position:relative;
+    }
+    code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:0.87rem; }
+    .inline-code{ display:inline; padding:3px 8px; border-radius:6px; background:rgba(99,102,241,0.06); border:1px solid var(--border); font-size:0.85em; color:var(--accent-from); }
+
+    .note{
+      background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(16,185,129,0.02));
+      border:1px solid rgba(16,185,129,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .note strong{ color:var(--green); }
+
+    .warn{
+      background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(245,158,11,0.02));
+      border:1px solid rgba(245,158,11,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .warn strong{ color:var(--amber); }
+
+    .tip{
+      background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(99,102,241,0.02));
+      border:1px solid rgba(6,182,212,0.15);
+      color:var(--text); padding:14px 18px; border-radius:14px; margin:14px 0;
+      line-height:1.65; font-size:0.9rem;
+    }
+    .tip strong{ color:var(--cyan); }
+
+    .try-it{
+      background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.03));
+      border:1px solid rgba(99,102,241,0.15);
+      padding:18px 22px; border-radius:14px; margin:16px 0;
+    }
+    .try-it .try-head{ font-weight:600; font-size:0.8rem; color:var(--accent-from); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+    .try-it p{ margin:0 0 6px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+    .try-it p:last-child{ margin:0; }
+
+    pre .copy-tip{
+      position:absolute; top:10px; right:10px;
+      font-size:0.6rem; padding:5px 11px; border-radius:8px;
+      background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15);
+      color:var(--text-dim); cursor:pointer; opacity:0;
+      transition:all 0.2s; z-index:2; font-weight:500;
+    }
+    pre:hover .copy-tip{ opacity:1; }
+    .copy-tip:hover{ background:rgba(99,102,241,0.2); color:var(--text); }
+    .copy-tip.copied{ background:rgba(16,185,129,0.2); color:var(--green); border-color:rgba(16,185,129,0.3); }
+
+    .cheat-grid{
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:8px; margin:14px 0;
+    }
+    .cheat-item{
+      background:var(--code-bg); border:1px solid rgba(99,102,241,0.08); border-radius:12px; padding:12px 14px;
+      transition:border-color 0.2s;
+    }
+    .cheat-item:hover{ border-color:rgba(99,102,241,0.2); }
+    .cheat-item .cheat-cmd{ font-family:ui-monospace, monospace; font-size:0.8rem; font-weight:600; color:var(--cyan); }
+    .cheat-item .cheat-desc{ font-size:0.75rem; color:var(--text-muted); margin-top:3px; }
+
+    footer{ margin-top:44px; color:var(--text-dim); font-size:0.85rem; text-align:center; padding-top:20px; border-top:1px solid var(--border); }
+    footer a{ color:var(--text-dim); }
+    footer a:hover{ color:var(--accent-from); }
+
+    #back-top{
+      position:fixed; bottom:28px; right:28px;
+      width:46px; height:46px; border-radius:999px;
+      background:var(--surface); backdrop-filter:blur(20px);
+      border:1px solid var(--border); color:var(--text-dim);
+      font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition:all 0.3s; z-index:999;
+      box-shadow:var(--shadow);
+    }
+    #back-top.visible{ opacity:1; pointer-events:auto; }
+    #back-top:hover{ border-color:var(--border-hover); color:var(--text); background:var(--surface-hover); transform:translateY(-2px); }
+
+    @media (max-width: 900px){
+      html,body{ grid-template-columns:1fr; }
+      nav{
+        position:fixed; left:0; top:0; bottom:0;
+        width:270px; height:100vh;
+        transform:translateX(-100%);
+        padding:24px 14px;
+      }
+      nav.active{ transform:translateX(0); }
+      main{ padding:70px 18px 30px; }
+      #menu-bar{ display:flex !important; }
+    }
+
+    #menu-bar{
+      display:none;
+      position:fixed; top:0; left:0; right:0; height:52px;
+      background:var(--bg-alt); border-bottom:1px solid var(--border);
+      z-index:50; align-items:center; padding:0 16px;
+      backdrop-filter:blur(20px);
+    }
+    #menu-bar .menu-btn{
+      background:none; border:none; cursor:pointer; color:var(--text);
+      font-size:1.3rem; padding:4px;
+    }
+    #menu-bar .menu-title{
+      margin-left:12px; font-weight:700; font-size:0.95rem;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    #overlay{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
+      backdrop-filter:blur(4px); z-index:99;
+    }
+    @media (max-width: 900px){
+      #overlay.active{ display:block; }
+    }
+
+    .sect-offset{ scroll-margin-top:100px; }
+
+    .badge{ display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; padding:3px 8px; border-radius:6px; font-weight:500; }
+    .badge-green{ background:rgba(16,185,129,0.1); color:var(--green); }
+    .badge-blue{ background:rgba(99,102,241,0.1); color:var(--accent-from); }
+    .badge-amber{ background:rgba(245,158,11,0.1); color:var(--amber); }
+
+    .vscode-icon{
+      display:inline-block; width:18px; height:18px;
+      background:var(--text-dim);
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M23.15 2.587a2.25 2.25 0 0 0-2.594.184L7.01 12.871l-3.652-2.86a0.8 0.8 0 0 0-1.02.047L0.553 11.69a0.75 0.75 0 0 0 .012 1.125l3.07 2.678-3.07 2.677a0.75 0.75 0 0 0-.012 1.125l1.785 1.632a0.8 0.8 0 0 0 1.02.047l3.652-2.86 13.545 10.1a2.25 2.25 0 0 0 2.594.184l7.3-4.299A2.25 2.25 0 0 0 32 23.91V8.09a2.25 2.25 0 0 0-1.55-2.132Z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M23.15 2.587a2.25 2.25 0 0 0-2.594.184L7.01 12.871l-3.652-2.86a0.8 0.8 0 0 0-1.02.047L0.553 11.69a0.75 0.75 0 0 0 .012 1.125l3.07 2.678-3.07 2.677a0.75 0.75 0 0 0-.012 1.125l1.785 1.632a0.8 0.8 0 0 0 1.02.047l3.652-2.86 13.545 10.1a2.25 2.25 0 0 0 2.594.184l7.3-4.299A2.25 2.25 0 0 0 32 23.91V8.09a2.25 2.25 0 0 0-1.55-2.132Z'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .vscode-icon-accent{ background:var(--accent-from); }
+
+    pre .hl{ color:var(--cyan); }
+    pre .cm{ color:var(--text-muted); }
+    pre .kw{ color:var(--accent-from); }
+    pre .vscode-key{ color:var(--green); }
+
+    @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+    @keyframes pulse-glow{ 0%,100%{ box-shadow:0 0 20px rgba(99,102,241,0.05); } 50%{ box-shadow:0 0 40px rgba(99,102,241,0.12); } }
+    @keyframes gradient-shift{ 0%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+    @keyframes slide-up{ 0%{ opacity:0; transform:translateY(30px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes scale-in{ 0%{ opacity:0; transform:scale(0.9); } 100%{ opacity:1; transform:scale(1); } }
+    @keyframes fade-in{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes orb-drift{ 0%{ transform:translate(0,0); } 50%{ transform:translate(30px,-40px); } 100%{ transform:translate(0,0); } }
+    @keyframes orb-drift-2{ 0%{ transform:translate(0,0); } 50%{ transform:translate(-20px,30px); } 100%{ transform:translate(0,0); } }
+    @keyframes blink-cursor{ 0%,100%{ opacity:1; } 50%{ opacity:0; } }
+    @keyframes title-reveal{ 0%{ opacity:0; transform:translateY(20px) scale(0.95); filter:blur(10px); } 100%{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); } }
+    @keyframes badge-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+    @keyframes wobble{ 0%,100%{ transform:rotate(0deg); } 25%{ transform:rotate(-3deg); } 75%{ transform:rotate(3deg); } }
+
+    .orb-container{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+    .orb{ position:absolute; border-radius:50%; opacity:0.15; filter:blur(60px); }
+    .orb-1{ width:400px; height:400px; background:radial-gradient(circle,var(--accent-from),transparent); top:-100px; right:-100px; animation:orb-drift 20s ease-in-out infinite; }
+    .orb-2{ width:300px; height:300px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-80px; left:-80px; animation:orb-drift-2 25s ease-in-out infinite; }
+    .orb-3{ width:250px; height:250px; background:radial-gradient(circle,var(--cyan),transparent); top:40%; left:50%; animation:orb-drift 18s ease-in-out infinite reverse; opacity:0.08; }
+
+    .hero{ animation:fade-in 0.8s ease-out; }
+    .title{ animation:title-reveal 1s ease-out both; }
+    .title .animated-gradient{
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan),var(--accent-to),var(--accent-from));
+      background-size:300% 300%;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:gradient-shift 6s ease infinite;
+    }
+    .subtitle{ animation:slide-up 0.8s ease-out 0.3s both; }
+    .breadcrumb{ animation:slide-up 0.6s ease-out 0.1s both; }
+    .pill{ animation:scale-in 0.6s ease-out 0.6s both; }
+    .card{ opacity:0; transform:translateY(30px); transition:all 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .card.visible{ opacity:1; transform:translateY(0); }
+    .card:nth-child(2){ transition-delay:0.05s; }
+    .card:nth-child(3){ transition-delay:0.1s; }
+    .card:nth-child(4){ transition-delay:0.15s; }
+    .card:nth-child(5){ transition-delay:0.2s; }
+    .card:hover{ transform:translateY(-4px) scale(1.005); }
+    .card:hover .section-num{ animation:wobble 0.4s ease; }
+    .card:hover::before{ opacity:1; }
+    .badge{ animation:badge-pulse 3s ease-in-out infinite; }
+    .badge-green{ animation-delay:0s; }
+    .badge-blue{ animation-delay:-1s; }
+    .badge-amber{ animation-delay:-2s; }
+    #back-top.visible{ animation:scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+    .typewriter-cursor{
+      display:inline-block; width:2px; height:1.1em;
+      background:var(--accent-from); margin-left:2px;
+      animation:blink-cursor 0.8s step-end infinite;
+      vertical-align:text-bottom;
+    }
+    pre:hover{ border-color:rgba(99,102,241,0.2); box-shadow:0 0 30px rgba(99,102,241,0.05); }
+    .toc a.active{ animation:pulse-glow 3s ease-in-out infinite; }
+
+    @media (prefers-reduced-motion: reduce){
+      .orb,.card{ animation:none !important; }
+      .card{ opacity:1; transform:none; }
+      .title{ animation:none; }
+      .animated-gradient{ background-size:100% 100%; animation:none; }
+      .subtitle,.breadcrumb,.pill{ animation:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div id="overlay"></div>
+  <div id="menu-bar">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <span class="menu-title"><span class="vscode-icon" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> VS Code Guide</span>
+  </div>
+
+  <nav id="sidebar">
+    <div class="logo">
+      <span class="mark"></span> <span class="vscode-icon vscode-icon-accent"></span> VS Code
+      <a href="index.html" class="home-link" title="Back to home">⌂</a>
+    </div>
+    <div class="toc" id="toc-menu">
+      <a href="#intro"><span class="tag-icon">●</span> Introduction</a>
+      <a href="#install"><span class="tag-icon">⚙</span> Installation</a>
+      <a href="#interface"><span class="tag-icon">▣</span> Interface</a>
+      <a href="#shortcuts"><span class="tag-icon">⌨</span> Essential Shortcuts</a>
+      <a href="#palette"><span class="tag-icon">≡</span> Command Palette</a>
+      <a href="#terminal"><span class="tag-icon">▸</span> Integrated Terminal</a>
+      <a href="#extensions"><span class="tag-icon">◇</span> Extensions</a>
+      <a href="#settings"><span class="tag-icon">⚙</span> Settings</a>
+      <a href="#snippets"><span class="tag-icon">◌</span> Snippets</a>
+      <a href="#debugging"><span class="tag-icon">▶</span> Debugging</a>
+      <a href="#git"><span class="tag-icon">◈</span> Git Integration</a>
+      <a href="#multicursor"><span class="tag-icon">◫</span> Multi-Cursor</a>
+      <a href="#find"><span class="tag-icon">○</span> Find &amp; Replace</a>
+      <a href="#emmet"><span class="tag-icon">⚡</span> Emmet</a>
+      <a href="#tasks"><span class="tag-icon">↻</span> Tasks &amp; Build</a>
+      <a href="#remote"><span class="tag-icon">◎</span> Remote Dev</a>
+      <a href="#keybindings"><span class="tag-icon">⌗</span> Keybinding Ref</a>
+    </div>
+    <div class="sidebar-footer">Laksh Guides</div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="hero-glow"></div>
+      <div class="breadcrumb"><a href="index.html">⌂ Home</a> / VS Code Guide</div>
+      <h1 class="title"><span class="vscode-icon" style="width:32px;height:32px;background:var(--accent-to);display:inline-block;vertical-align:middle;margin-right:4px;"></span> <span class="animated-gradient">VS Code Guide</span></h1>
+      <p class="subtitle"><span id="typewriter-text"></span><span class="typewriter-cursor"></span></p>
+      <span class="pill">⤒ Click code blocks to copy &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
+    </header>
+
+    <!-- ═══ 1. Introduction ═══ -->
+    <section id="intro" class="card sect-offset">
+      <h2><span class="section-num">01</span> Introduction — What is VS Code?</h2>
+
+      <p><strong>Visual Studio Code</strong> (VS Code) is a free, open-source code editor developed by Microsoft. It runs on Windows, macOS, and Linux, and supports hundreds of programming languages out of the box. With its rich extension ecosystem, integrated terminal, debugger, and Git support, VS Code has become the most popular developer editor worldwide.</p>
+
+      <p>Key features include:</p>
+      <ul>
+        <li><strong>IntelliSense</strong> — smart code completions based on language semantics</li>
+        <li><strong>Built-in Git</strong> — stage, commit, push, pull, and resolve conflicts without leaving the editor</li>
+        <li><strong>Integrated Terminal</strong> — full shell access right in the editor</li>
+        <li><strong>Debugger</strong> — set breakpoints, inspect variables, and step through code</li>
+        <li><strong>Extensions</strong> — thousands of community-built plugins for languages, themes, and tools</li>
+        <li><strong>Remote Development</strong> — connect to WSL, containers, or SSH servers</li>
+      </ul>
+
+      <div class="note"><strong>Analogy:</strong> VS Code is like a <em>Swiss Army knife</em> for developers — lightweight by default, but infinitely expandable through extensions. It replaces the need for multiple separate tools (editor, terminal, debugger, Git client).</div>
+    </section>
+
+    <!-- ═══ 2. Installation ═══ -->
+    <section id="install" class="card sect-offset">
+      <h2><span class="section-num">02</span> Installation & First Launch <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Download & Install</h3>
+      <ul>
+        <li><strong>Linux (Debian/Ubuntu):</strong> Download <code>.deb</code> from <a href="https://code.visualstudio.com">code.visualstudio.com</a> or use <code class="inline-code">sudo snap install code --classic</code></li>
+        <li><strong>Linux (Fedora):</strong> Download <code>.rpm</code> from code.visualstudio.com</li>
+        <li><strong>macOS:</strong> Download <code>.zip</code> from code.visualstudio.com or <code class="inline-code">brew install --cask visual-studio-code</code></li>
+        <li><strong>Windows:</strong> Download the installer from code.visualstudio.com</li>
+      </ul>
+
+      <h3>Launch from Terminal</h3>
+      <pre><code><span class="cm"># Open VS Code in the current directory</span>
+code .
+
+<span class="cm"># Open a specific file</span>
+code index.js
+
+<span class="cm"># Open and wait for the window to close (useful for Git commit messages)</span>
+code --wait file.txt
+
+<span class="cm"># Open without a window (add to PATH during install on Windows/macOS)</span>
+code --help</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> On macOS, after installing, open the Command Palette (<span class="vscode-key">Cmd+Shift+P</span>), type <code>Shell Command: Install 'code' command in PATH</code>, and run it to enable the <code class="inline-code">code</code> terminal command.</div>
+
+      <h3>First Launch Checklist</h3>
+      <ul>
+        <li>Open the <strong>Command Palette</strong> (<span class="vscode-key">Ctrl+Shift+P</span>) and try typing commands</li>
+        <li>Toggle the <strong>Explorer</strong> sidebar (<span class="vscode-key">Ctrl+B</span>)</li>
+        <li>Open the <strong>Extensions</strong> panel (<span class="vscode-key">Ctrl+Shift+X</span>) and search for a theme</li>
+        <li>Open the <strong>Integrated Terminal</strong> (<span class="vscode-key">Ctrl+`</span>)</li>
+      </ul>
+    </section>
+
+    <!-- ═══ 3. Interface ═══ -->
+    <section id="interface" class="card sect-offset">
+      <h2><span class="section-num">03</span> Interface Overview <span class="level level-beginner">Beginner</span></h2>
+
+      <p>VS Code's interface is divided into five main areas:</p>
+
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Activity Bar</div><div class="cheat-desc">Far left — switch between Explorer, Search, Source Control, Run, Extensions</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Side Bar</div><div class="cheat-desc">Shows content for the selected activity (file tree, search results, etc.)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Editor</div><div class="cheat-desc">Central area — open and edit files in tabs</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Panel</div><div class="cheat-desc">Bottom — terminal, output, debug console, problems</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Status Bar</div><div class="cheat-desc">Bottom edge — branch, encoding, line/col, language mode, errors</div></div>
+      </div>
+
+      <h3>Common View Commands</h3>
+      <pre><code><span class="cm"># Toggle Sidebar visibility</span>
+Ctrl+B
+
+<span class="cm"># Toggle Panel visibility</span>
+Ctrl+J
+
+<span class="cm"># Toggle Sidebar orientation (left/right)</span>
+<span class="cm"># Context menu on Activity Bar → Move Sidebar Right/Left</span>
+
+<span class="cm"># Zen Mode — full-screen, distraction-free editing</span>
+Ctrl+K Z
+
+<span class="cm"># Toggle Minimap (code overview on the right edge)</span>
+Ctrl+Shift+P → "View: Toggle Minimap"
+
+<span class="cm"># Split editor vertically</span>
+Ctrl+\</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Use <strong>Zen Mode</strong> (<span class="vscode-key">Ctrl+K Z</span>) when you need to focus. Press <span class="vscode-key">Esc Esc</span> to exit.</div>
+    </section>
+
+    <!-- ═══ 4. Essential Shortcuts ═══ -->
+    <section id="shortcuts" class="card sect-offset">
+      <h2><span class="section-num">04</span> Essential Keyboard Shortcuts <span class="level level-beginner">Beginner</span></h2>
+
+      <p>These shortcuts will save you the most time. <strong>Windows/Linux</strong> keys shown; macOS users replace <span class="vscode-key">Ctrl</span> with <span class="vscode-key">Cmd</span> and <span class="vscode-key">Alt</span> with <span class="vscode-key">Option</span>.</p>
+
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+P</div><div class="cheat-desc">Quick Open — fuzzy-find any file</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+P</div><div class="cheat-desc">Command Palette</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+`</div><div class="cheat-desc">Toggle Integrated Terminal</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+N</div><div class="cheat-desc">New window</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+W</div><div class="cheat-desc">Close current tab</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Tab</div><div class="cheat-desc">Cycle through open tabs</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+B</div><div class="cheat-desc">Toggle Sidebar</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+J</div><div class="cheat-desc">Toggle Panel</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+D</div><div class="cheat-desc">Select word — press again to multi-select next match</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+L</div><div class="cheat-desc">Select all occurrences of current word</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+/</div><div class="cheat-desc">Toggle line comment</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+A</div><div class="cheat-desc">Toggle block comment</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Alt+↑/↓</div><div class="cheat-desc">Move line up/down</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Alt+Shift+↑/↓</div><div class="cheat-desc">Copy line up/down</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+K</div><div class="cheat-desc">Delete entire line</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+Enter</div><div class="cheat-desc">Insert line above current</div></div>
+      </div>
+    </section>
+
+    <!-- ═══ 5. Command Palette ═══ -->
+    <section id="palette" class="card sect-offset">
+      <h2><span class="section-num">05</span> Command Palette <span class="level level-beginner">Beginner</span></h2>
+
+      <p>The <strong>Command Palette</strong> is the single most important feature in VS Code. Press <span class="vscode-key">Ctrl+Shift+P</span> and start typing to access almost every command in the editor.</p>
+
+      <h3>Common Palette Commands</h3>
+      <pre><code><span class="cm"># Toggle settings</span>
+> Preferences: Open Settings (UI)
+
+<span class="cm"># Install extensions</span>
+> Extensions: Install Extensions
+
+<span class="cm"># Change color theme</span>
+> Preferences: Color Theme
+
+<span class="cm"># Change file icon theme</span>
+> Preferences: File Icon Theme
+
+<span class="cm"># Open keyboard shortcuts</span>
+> Preferences: Open Keyboard Shortcuts
+
+<span class="cm"># Format document</span>
+> Format Document
+
+<span class="cm"># Toggle line numbers</span>
+> View: Toggle Line Numbers
+
+<span class="cm"># Reopen closed tab</span>
+> Workbench: Reopen Closed Editor</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Type <code>?</code> in the palette to see available special prefixes: <code>></code> for commands, <code>@</code> for symbols, <code>:</code> for line numbers, and <code>#</code> for file names.</div>
+
+      <h3>Quick Open (<span class="vscode-key">Ctrl+P</span>)</h3>
+      <p>Press <span class="vscode-key">Ctrl+P</span> and type part of a filename to navigate instantly. Add modifiers:</p>
+      <ul>
+        <li><code>@</code> — go to a symbol within the current file</li>
+        <li><code>:</code> — go to a specific line (e.g., <code>:42</code>)</li>
+        <li><code>#</code> — search across all files for a symbol</li>
+        <li><code>></code> — open the Command Palette (same as <span class="vscode-key">Ctrl+Shift+P</span>)</li>
+      </ul>
+    </section>
+
+    <!-- ═══ 6. Integrated Terminal ═══ -->
+    <section id="terminal" class="card sect-offset">
+      <h2><span class="section-num">06</span> Integrated Terminal <span class="level level-beginner">Beginner</span></h2>
+
+      <p>The integrated terminal gives you a full shell inside VS Code. Open it with <span class="vscode-key">Ctrl+`</span> (backtick).</p>
+
+      <h3>Terminal Management</h3>
+      <pre><code><span class="cm"># Open a new terminal instance</span>
+Ctrl+Shift+`
+
+<span class="cm"># Switch between terminals</span>
+Ctrl+PageUp / Ctrl+PageDown
+
+<span class="cm"># Open terminal in a specific folder</span>
+<span class="cm"># Click + dropdown → Select Default Profile → Choose folder</span>
+
+<span class="cm"># Create a split terminal (side by side)</span>
+<span class="cm"># Right-click terminal tab → Split, or Ctrl+Shift+5</span>
+
+<span class="cm"># Clear terminal</span>
+<span class="cm"># Type 'clear' in the terminal or click trash icon</span>
+
+<span class="cm"># Open file links in terminal output</span>
+<span class="cm"># Ctrl+Click on a file:line in terminal output</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Default Shell</h3>
+      <p>You can change the default shell via the <strong>Command Palette</strong>: <code>Terminal: Select Default Profile</code>. Options include:</p>
+      <ul>
+        <li>bash, zsh, fish (Linux/macOS)</li>
+        <li>PowerShell, Command Prompt, Git Bash (Windows)</li>
+        <li>WSL (Windows Subsystem for Linux)</li>
+      </ul>
+
+      <div class="note"><strong>Pro tip:</strong> You can open a terminal directly at a project root by right-clicking a folder in the Explorer and selecting <strong>Open in Integrated Terminal</strong>.</div>
+    </section>
+
+    <!-- ═══ 7. Extensions ═══ -->
+    <section id="extensions" class="card sect-offset">
+      <h2><span class="section-num">07</span> Extensions <span class="level level-beginner">Beginner</span></h2>
+
+      <p>Extensions are what make VS Code infinitely customizable. Open the Extensions panel with <span class="vscode-key">Ctrl+Shift+X</span>.</p>
+
+      <h3>Essential Extensions</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Prettier</div><div class="cheat-desc">Code formatter for JS/TS, CSS, HTML, JSON, Markdown</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">ESLint</div><div class="cheat-desc">JavaScript/TypeScript linting</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">GitLens</div><div class="cheat-desc">Supercharges Git — blame, history, code lens</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Live Share</div><div class="cheat-desc">Real-time collaborative editing</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Thunder Client</div><div class="cheat-desc">Lightweight REST API client</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">vscode-icons</div><div class="cheat-desc">File-specific icons in the explorer</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Error Lens</div><div class="cheat-desc">Inline error/warning display</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Path Intellisense</div><div class="cheat-desc">Auto-completes file paths</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Remote — SSH</div><div class="cheat-desc">Develop on remote machines via SSH</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Docker</div><div class="cheat-desc">Manage containers, images, compose files</div></div>
+      </div>
+
+      <h3>Extension Management Commands</h3>
+      <pre><code><span class="cm"># Open Extensions panel</span>
+Ctrl+Shift+X
+
+<span class="cm"># Install from command line</span>
+code --install-extension esbenp.prettier-vscode
+
+<span class="cm"># List installed extensions</span>
+code --list-extensions
+
+<span class="cm"># Disable all extensions (troubleshooting)</span>
+code --disable-extensions</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Search extensions by <code>@category:"formatters"</code> or <code>@recommended</code> in the Extensions panel to find curated lists.</div>
+    </section>
+
+    <!-- ═══ 8. Settings ═══ -->
+    <section id="settings" class="card sect-offset">
+      <h2><span class="section-num">08</span> Settings & Customization <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>VS Code settings are stored in <code>settings.json</code>. You can edit them via the UI (<span class="vscode-key">Ctrl+,</span>) or directly in JSON.</p>
+
+      <h3>Open Settings</h3>
+      <pre><code><span class="cm"># Open Settings UI</span>
+Ctrl+,
+
+<span class="cm"># Open settings.json directly</span>
+Ctrl+Shift+P → "Preferences: Open Settings (JSON)"
+
+<span class="cm"># Open workspace settings (project-specific)</span>
+<span class="cm"># .vscode/settings.json in your project root</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Popular Settings</h3>
+      <pre><code>{
+  <span class="cm">// Editor appearance</span>
+  "editor.fontSize": 14,
+  "editor.fontFamily": "'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace",
+  "editor.fontLigatures": true,
+  "editor.lineHeight": 24,
+  "editor.minimap.enabled": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.bracketPairColorization.enabled": true,
+
+  <span class="cm">// Format on save</span>
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  <span class="cm">// Word wrap</span>
+  "editor.wordWrap": "on",
+
+  <span class="cm">// Auto save</span>
+  "files.autoSave": "onFocusChange",
+
+  <span class="cm">// Tab size</span>
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+
+  <span class="cm">// Explorer</span>
+  "explorer.compactFolders": false,
+  "explorer.confirmDragAndDrop": false,
+
+  <span class="cm">// Terminal</span>
+  "terminal.integrated.fontSize": 13,
+  "terminal.integrated.defaultProfile.linux": "bash",
+
+  <span class="cm">// Git</span>
+  "git.enableSmartCommit": true,
+  "git.autofetch": true
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Settings Layers</h3>
+      <ul>
+        <li><strong>User Settings</strong> — apply to every project (global)</li>
+        <li><strong>Workspace Settings</strong> — stored in <code>.vscode/settings.json</code>, shared with the team</li>
+        <li><strong>Folder Settings</strong> — apply to a specific folder in a multi-root workspace</li>
+      </ul>
+
+      <div class="warn"><strong>⚠</strong> Workspace settings override user settings. This is useful for project-specific formatting rules.</div>
+    </section>
+
+    <!-- ═══ 9. Snippets ═══ -->
+    <section id="snippets" class="card sect-offset">
+      <h2><span class="section-num">09</span> Snippets <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Snippets let you insert repetitive code blocks quickly by typing a prefix and pressing <span class="vscode-key">Tab</span>.</p>
+
+      <h3>Built-in Snippets</h3>
+      <p>VS Code comes with built-in snippets for many languages. For example, in JavaScript/TypeScript:</p>
+      <pre><code><span class="cm">// Type 'log' and press Tab</span>
+console.log();
+
+<span class="cm">// Type 'fn' in JS/TS</span>
+function name() {
+
+}
+
+<span class="cm">// Type 'for' → for loop</span>
+for (let index = 0; index &lt; array.length; index++) {
+  const element = array[index];
+}
+
+<span class="cm">// Type 'clg' in JS</span>
+console.log()</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Create Your Own Snippets</h3>
+      <pre><code><span class="cm">// Open: Command Palette → Preferences: Configure User Snippets</span>
+<span class="cm">// Choose a language or create a global one</span>
+
+{
+  <span class="cm">// Example: React functional component snippet</span>
+  "React Functional Component": {
+    "prefix": "rfc",
+    "body": [
+      "import React from 'react';",
+      "",
+      "const ${1:ComponentName} = () => {",
+      "  return (",
+      "    &lt;div&gt;$0&lt;/div&gt;",
+      "  );",
+      "};",
+      "",
+      "export default ${1:ComponentName};"
+    ],
+    "description": "React Functional Component"
+  }
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> <code>$1</code>, <code>$2</code> are tab stops. <code>$0</code> is the final cursor position. <code>${1:default}</code> creates a placeholder with default text. Wrap in <code>${1|a,b|}</code> for a choice list.</div>
+    </section>
+
+    <!-- ═══ 10. Debugging ═══ -->
+    <section id="debugging" class="card sect-offset">
+      <h2><span class="section-num">10</span> Debugging <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>VS Code has a built-in debugger that supports Node.js, Python, Java, C++, and more via extensions.</p>
+
+      <h3>Getting Started</h3>
+      <pre><code><span class="cm"># Open Run and Debug panel</span>
+Ctrl+Shift+D
+
+<span class="cm"># Start debugging (F5)</span>
+F5
+
+<span class="cm"># Toggle breakpoint (click gutter or F9)</span>
+F9
+
+<span class="cm"># Step over</span>
+F10
+
+<span class="cm"># Step into</span>
+F11
+
+<span class="cm"># Step out</span>
+Shift+F11
+
+<span class="cm"># Continue (resume execution)</span>
+F5
+
+<span class="cm"># Stop debugging</span>
+Shift+F5
+
+<span class="cm"># Restart debugging</span>
+Ctrl+Shift+F5</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Launch Configuration</h3>
+      <p>Create a <code>.vscode/launch.json</code> file. Here's an example for Node.js:</p>
+      <pre><code>{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": ["&lt;node_internals&gt;/**"],
+      "program": "${workspaceFolder}/index.js"
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Process",
+      "port": 9229
+    }
+  ]
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="note"><strong>Variable reference:</strong> <code>${workspaceFolder}</code> — current project root, <code>${file}</code> — currently open file, <code>${lineNumber}</code> — current line, <code>${env:VAR}</code> — environment variable.</div>
+
+      <h3>Debug Features</h3>
+      <ul>
+        <li><strong>Watch</strong> — track variable expressions</li>
+        <li><strong>Call Stack</strong> — see the execution path</li>
+        <li><strong>Variables</strong> — inspect local, global, and closure variables</li>
+        <li><strong>Logpoints</strong> — log messages without stopping (right-click gutter → Add Logpoint)</li>
+        <li><strong>Conditional Breakpoints</strong> — break only when an expression is true</li>
+      </ul>
+    </section>
+
+    <!-- ═══ 11. Git Integration ═══ -->
+    <section id="git" class="card sect-offset">
+      <h2><span class="section-num">11</span> Git Integration <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>VS Code has deep Git integration built in. Open the Source Control panel with <span class="vscode-key">Ctrl+Shift+G</span>.</p>
+
+      <h3>Common Git Actions</h3>
+      <pre><code><span class="cm"># Open Source Control panel</span>
+Ctrl+Shift+G
+
+<span class="cm"># Stage file changes (click + next to file)</span>
+<span class="cm"># Stage all: hover "Changes" → click +</span>
+
+<span class="cm"># Commit staged changes</span>
+<span class="cm"># Type message in input box → Ctrl+Enter</span>
+
+<span class="cm"># Pull latest</span>
+<span class="cm"># Click ... → Pull, or run in terminal</span>
+
+<span class="cm"># Push commits</span>
+<span class="cm"># Click ... → Push, or run in terminal</span>
+
+<span class="cm"># View git history for a file</span>
+<span class="cm"># Right-click in editor → Git: View History</span>
+
+<span class="cm"># Open diff view</span>
+<span class="cm"># Click a modified file in Source Control panel</span>
+
+<span class="cm"># Discard changes</span>
+<span class="cm"># Right-click file → Discard Changes</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>GitLens (Recommended Extension)</h3>
+      <p><strong>GitLens</strong> supercharges the Git experience by adding:</p>
+      <ul>
+        <li><strong>Inline blame annotations</strong> — see who last modified each line</li>
+        <li><strong>Code lens</strong> — show commit info above functions</li>
+        <li><strong>File history</strong> — rich timeline view</li>
+        <li><strong>Branch visualization</strong> — interactive rebase UI</li>
+      </ul>
+
+      <div class="tip"><strong>💡 Tip:</strong> Enable <code class="inline-code">"git.enableSmartCommit": true</code> in settings to stage all changes when you type a commit message, skipping the staging step.</div>
+    </section>
+
+    <!-- ═══ 12. Multi-Cursor ═══ -->
+    <section id="multicursor" class="card sect-offset">
+      <h2><span class="section-num">12</span> Multiple Cursors & Selection <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Multi-cursor editing lets you make the same edit in multiple places simultaneously — one of VS Code's most powerful features.</p>
+
+      <h3>Multi-Cursor Techniques</h3>
+      <pre><code><span class="cm"># Add cursor at next occurrence of selection</span>
+Ctrl+D
+
+<span class="cm"># Add cursor at every occurrence of selection</span>
+Ctrl+Shift+L
+
+<span class="cm"># Add cursor above/below</span>
+Ctrl+Alt+↑ / Ctrl+Alt+↓
+
+<span class="cm"># Add cursor at arbitrary locations</span>
+<span class="cm"># Alt+Click to add a cursor wherever you click</span>
+
+<span class="cm"># Undo last cursor action</span>
+Ctrl+U
+
+<span class="cm"># Select all occurrences of current word</span>
+Ctrl+Shift+L
+
+<span class="cm"># Cancel multi-cursor</span>
+Esc</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Practical Workflows</h3>
+      <ul>
+        <li><strong>Rename a variable</strong> — select the variable, press <span class="vscode-key">Ctrl+Shift+L</span>, type the new name</li>
+        <li><strong>Edit multiple lines</strong> — select lines, press <span class="vscode-key">Ctrl+Shift+L</span>, edit all at once</li>
+        <li><strong>Add commas/semicolons</strong> — <span class="vscode-key">Alt+Shift+I</span> to add a cursor at the end of every line in a selection</li>
+        <li><strong>Column selection</strong> — hold <span class="vscode-key">Shift+Alt</span> and drag to select a rectangular block</li>
+      </ul>
+    </section>
+
+    <!-- ═══ 13. Find & Replace ═══ -->
+    <section id="find" class="card sect-offset">
+      <h2><span class="section-num">13</span> Find & Replace <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>In the Current File</h3>
+      <pre><code><span class="cm"># Find</span>
+Ctrl+F
+
+<span class="cm"># Find and replace</span>
+Ctrl+H
+
+<span class="cm"># Toggle case sensitivity  (Aa button)</span>
+Alt+C
+
+<span class="cm"># Toggle whole word match  (Ab button)</span>
+Alt+W
+
+<span class="cm"># Toggle regex mode  (.* button)</span>
+Alt+R
+
+<span class="cm"># Find next / previous</span>
+Enter / Shift+Enter
+
+<span class="cm"># Close find widget</span>
+Esc</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Across All Files (Search)</h3>
+      <pre><code><span class="cm"># Open Search (global find)</span>
+Ctrl+Shift+F
+
+<span class="cm"># Search and replace across files</span>
+Ctrl+Shift+H
+
+<span class="cm"># Include/exclude files (use glob patterns)</span>
+<span class="cm"># In the "files to include" box: src/**/*.js</span>
+<span class="cm"># In the "files to exclude" box: node_modules, dist</span>
+
+<span class="cm"># Toggle search details</span>
+<span class="cm"># Click the ellipsis (...) in the Search panel</span>
+
+<span class="cm"># Preview search results inline</span>
+<span class="cm"># Results show a snippet of matching lines</span></code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Useful Regex Patterns</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">^</div><div class="cheat-desc">Start of a line</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">$</div><div class="cheat-desc">End of a line</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">\s+</div><div class="cheat-desc">One or more whitespace characters</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">\d+</div><div class="cheat-desc">One or more digits</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">(foo|bar)</div><div class="cheat-desc">Match foo OR bar</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">$1, $2</div><div class="cheat-desc">Backreferences in replace</div></div>
+      </div>
+    </section>
+
+    <!-- ═══ 14. Emmet ═══ -->
+    <section id="emmet" class="card sect-offset">
+      <h2><span class="section-num">14</span> Emmet <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Emmet lets you write HTML and CSS at lightning speed using CSS-like abbreviations. Built into VS Code for HTML, CSS, JSX, and more.</p>
+
+      <h3>HTML Abbreviations</h3>
+      <pre><code><span class="cm">// Type and press Tab</span>
+
+<span class="cm">// Basic structure</span>
+!             → &lt;!DOCTYPE html&gt;... (full HTML5 boilerplate)
+
+<span class="cm">// Elements</span>
+div           → &lt;div&gt;&lt;/div&gt;
+p             → &lt;p&gt;&lt;/p&gt;
+a             → &lt;a href=""&gt;&lt;/a&gt;
+img           → &lt;img src="" alt="" /&gt;
+
+<span class="cm">// Nesting</span>
+nav&gt;ul&gt;li   → &lt;nav&gt;&lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/nav&gt;
+
+<span class="cm">// Siblings</span>
+div+p+bq     → &lt;div&gt;&lt;/div&gt;&lt;p&gt;&lt;/p&gt;&lt;blockquote&gt;&lt;/blockquote&gt;
+
+<span class="cm">// Multiplication</span>
+ul&gt;li*5      → &lt;ul&gt;&lt;li&gt;*5&lt;/li&gt;&lt;/ul&gt;
+
+<span class="cm">// IDs and classes</span>
+div#header   → &lt;div id="header"&gt;&lt;/div&gt;
+div.container → &lt;div class="container"&gt;&lt;/div&gt;
+
+<span class="cm">// Attributes</span>
+a[href="https://example.com"] → &lt;a href="https://example.com"&gt;&lt;/a&gt;
+
+<span class="cm">// Text</span>
+p{Hello}     → &lt;p&gt;Hello&lt;/p&gt;
+
+<span class="cm">// Numbered items</span>
+ul&gt;li.item$*3 → &lt;ul&gt;&lt;li class="item1"&gt;&lt;/li&gt;...&lt;/ul&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>CSS Abbreviations</h3>
+      <pre><code><span class="cm">// Properties</span>
+m            → margin: ;
+p            → padding: ;
+c            → color: #000;
+bg           → background: #000;
+bgc          → background-color: #000;
+ff           → font-family: ;
+fs           → font-size: ;
+fw           → font-weight: ;
+ta:c         → text-align: center;
+d:f          → display: flex;
+jc:c         → justify-content: center;
+ai:c         → align-items: center;
+bdrs         → border-radius: ;
+
+<span class="cm">// Vendor prefixes</span>
+<span class="cm">// Many are handled automatically</span></code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Emmet works in JSX too. Open the Command Palette and search <code>Emmet: Wrap with Abbreviation</code> to wrap existing code with an Emmet expression.</div>
+    </section>
+
+    <!-- ═══ 15. Tasks & Build ═══ -->
+    <section id="tasks" class="card sect-offset">
+      <h2><span class="section-num">15</span> Tasks & Build Systems <span class="level level-advanced">Advanced</span></h2>
+
+      <p>Tasks let you run tools like build scripts, linters, test runners, or any shell command directly from VS Code.</p>
+
+      <h3>Create a Task</h3>
+      <p>Create a <code>.vscode/tasks.json</code> file:</p>
+      <pre><code>{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Project",
+      "type": "shell",
+      "command": "npm run build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Run Tests",
+      "type": "shell",
+      "command": "npm test",
+      "group": "test"
+    },
+    {
+      "label": "Lint",
+      "type": "shell",
+      "command": "npm run lint"
+    }
+  ]
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Run a Task</h3>
+      <ul>
+        <li><span class="vscode-key">Ctrl+Shift+B</span> — run the default build task</li>
+        <li><span class="vscode-key">Ctrl+Shift+P</span> → <code>Tasks: Run Task</code> — pick any defined task</li>
+        <li>Tasks output goes to the Terminal panel, with error markers parsed by <code>problemMatcher</code></li>
+      </ul>
+
+      <h3>Problem Matchers</h3>
+      <p>Problem matchers parse compiler/linter output and highlight issues inline. Built-in matchers include:</p>
+      <ul>
+        <li><code>$tsc</code> — TypeScript compiler</li>
+        <li><code>$eslint-compact</code> — ESLint compact format</li>
+        <li><code>$eslint-stylish</code> — ESLint stylish format</li>
+        <li><code>$gcc</code> — GCC/G++</li>
+        <li><code>$jshint</code> — JSHint</li>
+      </ul>
+
+      <div class="note"><strong>Tip:</strong> You can define custom problem matchers using regex patterns in <code>tasks.json</code> <code>problemMatcher</code> object.</div>
+    </section>
+
+    <!-- ═══ 16. Remote Development ═══ -->
+    <section id="remote" class="card sect-offset">
+      <h2><span class="section-num">16</span> Remote Development <span class="level level-advanced">Advanced</span></h2>
+
+      <p>With the <strong>Remote Development</strong> extension pack, VS Code can open folders on remote machines, containers, or WSL as if they were local.</p>
+
+      <h3>Remote Options</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Remote — SSH</div><div class="cheat-desc">Connect to any machine via SSH. Full dev experience with port forwarding.</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Dev Containers</div><div class="cheat-desc">Develop inside Docker containers with full toolchain isolation.</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Remote — WSL</div><div class="cheat-desc">Open Linux projects in WSL with native Windows VS Code UI.</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Remote — Tunnels</div><div class="cheat-desc">Expose your local VS Code securely over the internet.</div></div>
+      </div>
+
+      <h3>Quick Start: SSH Remote</h3>
+      <pre><code><span class="cm"># Install "Remote — SSH" extension</span>
+<span class="cm"># Open Command Palette → Remote-SSH: Connect to Host</span>
+
+<span class="cm"># Or open from terminal</span>
+code --remote ssh-remote+dev.example.com /path/to/project
+
+<span class="cm"># Add SSH hosts to your config (~/.ssh/config)</span>
+Host dev-server
+  HostName 192.168.1.100
+  User ubuntu
+  IdentityFile ~/.ssh/id_ed25519</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Quick Start: Dev Containers</h3>
+      <pre><code><span class="cm"># Create .devcontainer/devcontainer.json in your project</span>
+{
+  "name": "Node.js Dev",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:18",
+  "forwardPorts": [3000],
+  "extensions": ["dbaeumer.vscode-eslint"],
+  "postCreateCommand": "npm install"
+}
+
+<span class="cm"># Open Command Palette</span>
+<span class="cm"># → Dev Containers: Reopen in Container</span></code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠</strong> Remote Development requires the <strong>Remote Development</strong> extension pack from Microsoft. Dev Containers need Docker installed on the host.</div>
+    </section>
+
+    <!-- ═══ 17. Keybinding Reference ═══ -->
+    <section id="keybindings" class="card sect-offset">
+      <h2><span class="section-num">17</span> Keyboard Shortcuts Reference <span class="level level-beginner">Beginner</span></h2>
+
+      <p>Windows/Linux keys shown. macOS: replace <span class="vscode-key">Ctrl</span> → <span class="vscode-key">Cmd</span>, <span class="vscode-key">Alt</span> → <span class="vscode-key">Option</span>.</p>
+
+      <h3>General</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+P</div><div class="cheat-desc">Command Palette</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+P</div><div class="cheat-desc">Quick Open file</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+N</div><div class="cheat-desc">New window</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+W</div><div class="cheat-desc">Close tab</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+,</div><div class="cheat-desc">Open Settings</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+K Ctrl+S</div><div class="cheat-desc">Keyboard Shortcuts</div></div>
+      </div>
+
+      <h3>Editing</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+X</div><div class="cheat-desc">Cut line (empty selection)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+C</div><div class="cheat-desc">Copy line (empty selection)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Alt+↑/↓</div><div class="cheat-desc">Move line</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Alt+Shift+↑/↓</div><div class="cheat-desc">Copy line</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+K</div><div class="cheat-desc">Delete line</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Enter</div><div class="cheat-desc">Insert line below</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+Enter</div><div class="cheat-desc">Insert line above</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+D</div><div class="cheat-desc">Select word / next occurrence</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+L</div><div class="cheat-desc">Select all occurrences</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Alt+↑/↓</div><div class="cheat-desc">Multi-cursor above/below</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+U</div><div class="cheat-desc">Undo last cursor</div></div>
+      </div>
+
+      <h3>Navigation</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+G</div><div class="cheat-desc">Go to line</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+P + @</div><div class="cheat-desc">Go to symbol in file</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+T</div><div class="cheat-desc">Go to symbol in workspace</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">F12</div><div class="cheat-desc">Go to definition</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Alt+F12</div><div class="cheat-desc">Peek definition</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Shift+F12</div><div class="cheat-desc">Find all references</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+O</div><div class="cheat-desc">Go to symbol</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Tab</div><div class="cheat-desc">Navigate editor groups</div></div>
+      </div>
+
+      <h3>Search & Replace</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+F</div><div class="cheat-desc">Find</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+H</div><div class="cheat-desc">Find & Replace</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">F3</div><div class="cheat-desc">Find next</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Shift+F3</div><div class="cheat-desc">Find previous</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+F</div><div class="cheat-desc">Search across files</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+H</div><div class="cheat-desc">Replace across files</div></div>
+      </div>
+
+      <h3>Debugging</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">F5</div><div class="cheat-desc">Start / Continue</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">F9</div><div class="cheat-desc">Toggle breakpoint</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">F10</div><div class="cheat-desc">Step over</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">F11</div><div class="cheat-desc">Step into</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Shift+F11</div><div class="cheat-desc">Step out</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+F5</div><div class="cheat-desc">Restart</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Shift+F5</div><div class="cheat-desc">Stop</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+D</div><div class="cheat-desc">Open Run panel</div></div>
+      </div>
+
+      <h3>Terminal & Panel</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+`</div><div class="cheat-desc">Toggle terminal</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+J</div><div class="cheat-desc">Toggle panel</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+B</div><div class="cheat-desc">Toggle sidebar</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+`</div><div class="cheat-desc">New terminal</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+K</div><div class="cheat-desc">Clear terminal</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+5</div><div class="cheat-desc">Split terminal</div></div>
+      </div>
+    </section>
+
+    <footer><i>Made with ❤ by Laksh. <a href="index.html">⌂ Back to Home</a></i></footer>
+  </main>
+
+  <button id="back-top" title="Back to top">↑</button>
+
+  <script>
+    // ═════════════════════════════════════════════
+    // 1. SIDEBAR TOGGLE (Mobile)
+    // ═════════════════════════════════════════════
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menuBtn');
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    });
+
+    // ═════════════════════════════════════════════
+    // 2. COPY TO CLIPBOARD
+    // ═════════════════════════════════════════════
+    document.querySelectorAll('pre').forEach(pre => {
+      const tip = pre.querySelector('.copy-tip');
+      if (!tip) return;
+      tip.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        try {
+          await navigator.clipboard.writeText(code ? code.innerText : pre.innerText);
+          tip.textContent = 'Copied!';
+          tip.classList.add('copied');
+          setTimeout(() => {
+            tip.textContent = 'Copy';
+            tip.classList.remove('copied');
+          }, 1800);
+        } catch {
+          tip.textContent = 'Failed';
+        }
+      });
+    });
+
+    // ═════════════════════════════════════════════
+    // 3. TYPEWRITER
+    // ═════════════════════════════════════════════
+    (function typewriter() {
+      const el = document.getElementById('typewriter-text');
+      if (!el) return;
+      const text = 'A comprehensive guide to Visual Studio Code — shortcuts, extensions, debugging, Git integration, multi-cursor, Emmet, remote development, and more. Click any code block to copy.';
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          el.textContent += text[i];
+          i++;
+          setTimeout(type, 12 + Math.random() * 16);
+        }
+      }
+      type();
+    })();
+
+    // ═════════════════════════════════════════════
+    // 4. TOC ACTIVE HIGHLIGHT
+    // ═════════════════════════════════════════════
+    const sections = [];
+    document.querySelectorAll('.toc a').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const el = document.querySelector(href);
+        if (el) sections.push({ el, link: a });
+      }
+    });
+    const tocLinks = document.querySelectorAll('.toc a');
+
+    function highlightTOC() {
+      let current = sections[0];
+      for (const s of sections) {
+        const rect = s.el.getBoundingClientRect();
+        if (rect.top <= 120) current = s;
+        else break;
+      }
+      tocLinks.forEach(a => a.classList.remove('active'));
+      if (current) current.link.classList.add('active');
+    }
+    window.addEventListener('scroll', highlightTOC, { passive: true });
+    highlightTOC();
+
+    // ═════════════════════════════════════════════
+    // 5. BACK TO TOP
+    // ═════════════════════════════════════════════
+    const backTop = document.getElementById('back-top');
+    window.addEventListener('scroll', () => {
+      backTop.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // ═════════════════════════════════════════════
+    // 6. SCROLL REVEAL
+    // ═════════════════════════════════════════════
+    (function scrollReveal() {
+      const cards = document.querySelectorAll('.card');
+      if (!cards.length || !('IntersectionObserver' in window)) {
+        cards.forEach(c => c.classList.add('visible'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      cards.forEach(card => observer.observe(card));
+    })();
+
+    // ═════════════════════════════════════════════
+    // 7. 3D TILT
+    // ═════════════════════════════════════════════
+    (function tiltEffect() {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -5;
+          const rotateY = ((x - centerX) / centerX) * 5;
+          card.style.transform =
+            `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.005)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    })();
+
+    // ═════════════════════════════════════════════
+    // 8. PARALLAX ORBS
+    // ═════════════════════════════════════════════
+    (function parallaxOrbs() {
+      const orbs = document.querySelectorAll('.orb');
+      if (!orbs.length) return;
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        orbs.forEach((orb, i) => {
+          const speed = 5 + i * 3;
+          orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+        });
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
