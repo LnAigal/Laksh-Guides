@@ -295,6 +295,16 @@
       transform:translateX(5px); color:var(--accent-light);
     }
 
+    .guide-card.visited{ border-color:rgba(99,102,241,0.25); }
+    .guide-card.visited .card-icon-wrap{ border-color:rgba(99,102,241,0.2); background:rgba(99,102,241,0.05); }
+    .guide-card.visited::before{ opacity:0.5; }
+    .guide-card.visited .visited-dot{
+      display:inline-block; width:6px; height:6px; border-radius:50%;
+      background:var(--accent-light); flex-shrink:0;
+      animation:pulse-glow 2s ease infinite;
+    }
+    @keyframes pulse-glow{ 0%,100%{ box-shadow:0 0 0 0 rgba(99,102,241,0.4); } 50%{ box-shadow:0 0 0 4px rgba(99,102,241,0); } }
+
     .empty-state{ display:none; text-align:center; padding:48px 24px; color:var(--text-muted); }
     .empty-state.visible{ display:block; }
 
@@ -489,39 +499,39 @@
   <div class="container">
     <div class="section-label">Available Guides</div>
     <div class="guide-grid" id="guideGrid">
-      <a href="GithubGuide.html" class="guide-card" data-title="Git & GitHub Guide">
+      <a href="GithubGuide.html" class="guide-card" data-id="github" data-title="Git & GitHub Guide">
         <div class="card-icon-wrap"><span class="icon-svg github accent" style="width:22px;height:22px;"></span></div>
         <div class="card-body">
           <div class="card-title">Git & GitHub Guide</div>
           <div class="card-desc">Version control, branching, remotes, pull requests, and collaboration workflows.</div>
-          <div class="card-footer"><span class="card-badge">Guide</span></div>
+          <div class="card-footer"><span class="visited-dot" style="display:none;"></span><span class="card-badge">Guide</span></div>
         </div>
         <div class="card-arrow">→</div>
       </a>
-      <a href="LinuxGuide.html" class="guide-card" data-title="Linux Guide">
+      <a href="LinuxGuide.html" class="guide-card" data-id="linux" data-title="Linux Guide">
         <div class="card-icon-wrap"><span class="icon-svg linux accent" style="width:22px;height:22px;"></span></div>
         <div class="card-body">
           <div class="card-title">Linux Guide</div>
           <div class="card-desc">Filesystem, permissions, processes, networking, shell scripting, and system administration.</div>
-          <div class="card-footer"><span class="card-badge">Guide</span></div>
+          <div class="card-footer"><span class="visited-dot" style="display:none;"></span><span class="card-badge">Guide</span></div>
         </div>
         <div class="card-arrow">→</div>
       </a>
-      <a href="VSCodeGuide.html" class="guide-card" data-title="VS Code Guide">
+      <a href="VSCodeGuide.html" class="guide-card" data-id="vscode" data-title="VS Code Guide">
         <div class="card-icon-wrap"><span class="icon-svg vscode accent" style="width:22px;height:22px;"></span></div>
         <div class="card-body">
           <div class="card-title">VS Code Guide</div>
           <div class="card-desc">Shortcuts, extensions, debugging, Git integration, multi-cursor, Emmet, and remote development.</div>
-          <div class="card-footer"><span class="card-badge">Guide</span></div>
+          <div class="card-footer"><span class="visited-dot" style="display:none;"></span><span class="card-badge">Guide</span></div>
         </div>
         <div class="card-arrow">→</div>
       </a>
-      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/" class="guide-card" data-title="NMAMIT Notes Hub">
+      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/" class="guide-card" data-id="notes-hub" data-title="NMAMIT Notes Hub">
         <div class="card-icon-wrap"><img src="https://raw.githubusercontent.com/LnAigal/NMAMIT-Notes-Hub/main/nav/nnhicon.jpg" alt="NNHub" /></div>
         <div class="card-body">
           <div class="card-title">NMAMIT-Notes-Hub</div>
           <div class="card-desc">Academic notes and resources for NMAMIT courses, curated for students.</div>
-          <div class="card-footer"><span class="card-badge ext">External</span></div>
+          <div class="card-footer"><span class="visited-dot" style="display:none;"></span><span class="card-badge ext">External</span></div>
         </div>
         <div class="card-arrow">→</div>
       </a>
@@ -630,6 +640,35 @@
         html.setAttribute('data-theme', next);
         localStorage.setItem('theme', next);
         btn.textContent = icons[next];
+      });
+    })();
+
+    // Last visited highlight
+    (function(){
+      const last = localStorage.getItem('lastGuide');
+      if (last) {
+        const card = document.querySelector(`.guide-card[data-id="${last}"]`);
+        if (card) {
+          card.classList.add('visited');
+          const dot = card.querySelector('.visited-dot');
+          if (dot) dot.style.display = 'inline-block';
+        }
+      }
+      const cards = document.querySelectorAll('.guide-card');
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          const id = card.dataset.id;
+          if (!id) return;
+          cards.forEach(c => {
+            c.classList.remove('visited');
+            const d = c.querySelector('.visited-dot');
+            if (d) d.style.display = 'none';
+          });
+          card.classList.add('visited');
+          const dot = card.querySelector('.visited-dot');
+          if (dot) dot.style.display = 'inline-block';
+          localStorage.setItem('lastGuide', id);
+        });
       });
     })();
 
