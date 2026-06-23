@@ -21,9 +21,9 @@
     :root{
       --bg: #0f111a;
       --bg-alt: #161822;
-      --surface: rgba(22,24,36,0.8);
+      --surface: rgba(22,24,36,0.75);
       --surface-hover: rgba(30,34,50,0.9);
-      --nav-bg: rgba(15,17,26,0.85);
+      --nav-bg: rgba(15,17,26,0.82);
       --text: #edf2f7;
       --text-dim: #94a3b8;
       --text-muted: #64748b;
@@ -34,9 +34,9 @@
       --accent-dark: #4f46e5;
       --cyan: #06b6d4;
       --green: #10b981;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-      --shadow: 0 4px 20px rgba(0,0,0,0.3);
-      --shadow-lg: 0 12px 48px rgba(0,0,0,0.4);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+      --shadow: 0 4px 20px rgba(0,0,0,0.35);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.5);
       --glow: 0 0 30px rgba(99,102,241,0.08);
       --radius: 12px;
       --radius-lg: 16px;
@@ -84,7 +84,12 @@
     }
     a{ color:var(--accent-light); text-decoration:none; transition:color 0.2s; }
     a:hover{ color:var(--text); }
-    ::selection{ background:rgba(99,102,241,0.35); color:#fff; }
+    ::selection{ background:rgba(99,102,241,0.4); color:#fff; }
+
+    ::-webkit-scrollbar{ width:6px; }
+    ::-webkit-scrollbar-track{ background:transparent; }
+    ::-webkit-scrollbar-thumb{ background:var(--border-hover); border-radius:3px; }
+    ::-webkit-scrollbar-thumb:hover{ background:var(--accent); }
 
     /* ═══ NAVBAR ═══ */
     nav{
@@ -113,11 +118,13 @@
       font-size:0.85rem; font-weight:500; color:var(--text-dim);
       border:1px solid transparent;
       transition:all 0.2s; white-space:nowrap;
+      display:flex; align-items:center; gap:6px;
     }
     .nav-links a:hover{
       color:var(--text); border-color:var(--border);
       background:var(--surface);
     }
+    .nav-links a:hover .icon-svg{ background:var(--accent-light); }
     .nav-links a.active{
       color:var(--accent-light); border-color:var(--border-hover);
       background:var(--surface);
@@ -140,14 +147,22 @@
 
     /* ═══ HERO ═══ */
     .hero{
-      padding:64px 24px 48px; text-align:center;
+      padding:72px 24px 48px; text-align:center;
       position:relative; overflow:hidden;
     }
     .hero-glow{
-      position:absolute; top:-100px; left:50%; transform:translateX(-50%);
-      width:600px; height:600px; border-radius:50%;
-      background:radial-gradient(circle,rgba(99,102,241,0.06),rgba(168,85,247,0.03),transparent 70%);
+      position:absolute; top:-120px; left:50%; transform:translateX(-50%);
+      width:700px; height:700px; border-radius:50%;
+      background:radial-gradient(circle,rgba(99,102,241,0.07),rgba(168,85,247,0.03),transparent 65%);
       pointer-events:none;
+    }
+    .hero-dots{
+      position:absolute; inset:0;
+      background-image:radial-gradient(var(--border) 1px,transparent 1px);
+      background-size:32px 32px;
+      opacity:0.3; pointer-events:none;
+      mask-image:linear-gradient(to bottom,black,transparent 80%);
+      -webkit-mask-image:linear-gradient(to bottom,black,transparent 80%);
     }
     .hero-content{ position:relative; max-width:720px; margin:0 auto; }
     .hero-title{
@@ -182,21 +197,31 @@
       border-radius:var(--radius-lg); border:1px solid var(--border);
       background:var(--surface); backdrop-filter:blur(12px);
       color:var(--text); font-size:0.9rem; outline:none;
-      transition:all 0.2s; font-family:inherit;
+      transition:all 0.25s; font-family:inherit;
     }
     .hero-controls input:focus{
-      border-color:var(--accent); box-shadow:0 0 0 3px rgba(99,102,241,0.15);
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(99,102,241,0.15), var(--glow);
     }
     .hero-controls input::placeholder{ color:var(--text-muted); }
+    .search-shortcut{
+      position:absolute; right:10px; top:50%; transform:translateY(-50%);
+      font-size:0.65rem; color:var(--text-muted); pointer-events:none;
+      background:var(--bg-alt); padding:2px 7px; border-radius:5px;
+      border:1px solid var(--border); font-weight:500; letter-spacing:0.03em;
+      opacity:0.7;
+    }
+    .hero-controls input:focus ~ .search-shortcut{ opacity:0; }
     .hero-stats{
       display:flex; justify-content:center; gap:24px;
       margin-top:20px; flex-wrap:wrap;
     }
     .hero-stats span{
       font-size:0.8rem; color:var(--text-muted);
-      display:flex; align-items:center; gap:5px;
+      display:flex; align-items:center; gap:6px;
     }
-    .hero-stats .num{ color:var(--text); font-weight:600; }
+    .hero-stats .num{ color:var(--text); font-weight:600; font-variant-numeric:tabular-nums; }
+    .hero-stats .sep{ width:3px; height:3px; border-radius:50%; background:var(--text-muted); opacity:0.35; }
 
     /* ═══ GUIDE GRID ═══ */
     .container{ max-width:1024px; margin:0 auto; padding:0 24px 60px; flex:1; width:100%; }
@@ -224,6 +249,11 @@
       cursor:pointer;
     }
     .guide-card::before{
+      content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+      background:linear-gradient(180deg,var(--accent),var(--accent-light),var(--cyan));
+      opacity:0; transition:opacity 0.4s; border-radius:0 2px 2px 0;
+    }
+    .guide-card::after{
       content:''; position:absolute; inset:0;
       background:linear-gradient(135deg,transparent,rgba(99,102,241,0.03));
       opacity:0; transition:opacity 0.4s;
@@ -234,6 +264,7 @@
       box-shadow:var(--shadow),var(--glow);
     }
     .guide-card:hover::before{ opacity:1; }
+    .guide-card:hover::after{ opacity:1; }
     .card-icon-wrap{
       width:48px; height:48px; border-radius:var(--radius);
       background:var(--bg-alt); border:1px solid var(--border);
@@ -285,12 +316,16 @@
     .section-label{ animation:fade-up 0.5s ease-out 0.5s both; }
 
     .guide-card{
-      opacity:0; transform:translateY(20px);
+      opacity:0; transform:translateY(24px);
       transition:opacity 0.6s cubic-bezier(0.16,1,0.3,1),
                  transform 0.6s cubic-bezier(0.16,1,0.3,1),
                  border-color 0.3s, box-shadow 0.3s;
     }
     .guide-card.visible{ opacity:1; transform:translateY(0); }
+    .guide-card:nth-child(1){ transition-delay:0.05s; }
+    .guide-card:nth-child(2){ transition-delay:0.1s; }
+    .guide-card:nth-child(3){ transition-delay:0.15s; }
+    .guide-card:nth-child(4){ transition-delay:0.2s; }
 
     footer{ animation:fade-in 1s ease-out 0.8s both; }
 
@@ -334,7 +369,6 @@
     .mobile-drawer .drawer-logo{
       font-weight:800; font-size:1rem;
       display:flex; align-items:center; gap:10px;
-      padding-bottom:14px; border-bottom:1px solid var(--border); margin-bottom:4px;
       background:linear-gradient(135deg,var(--accent),var(--accent-light));
       -webkit-background-clip:text; -webkit-text-fill-color:transparent;
       background-clip:text;
@@ -383,7 +417,10 @@
   <div id="overlay"></div>
 
   <div class="mobile-drawer" id="mobileDrawer">
-    <div class="drawer-logo"><span class="dot"></span> Laksh Guides</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:4px;">
+      <div class="drawer-logo"><span class="dot"></span> Laksh Guides</div>
+      <button id="drawerClose" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 6px;border-radius:6px;">✕</button>
+    </div>
     <a href="GithubGuide.html"><span class="icon-svg github accent"></span> Git & GitHub</a>
     <a href="LinuxGuide.html"><span class="icon-svg linux accent"></span> Linux Guide</a>
     <a href="VSCodeGuide.html"><span class="icon-svg vscode accent"></span> VS Code Guide</a>
@@ -407,6 +444,7 @@
 
   <section class="hero">
     <div class="hero-glow"></div>
+    <div class="hero-dots"></div>
     <div class="hero-content">
       <h1 class="hero-title"><span>Laksh Guides</span></h1>
       <p class="hero-sub">Quick, clear references for coding, tools, and academics — built for practical workflows.</p>
@@ -414,11 +452,14 @@
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
           <input type="text" id="searchInput" placeholder="Search guides..." />
+          <span class="search-shortcut">/</span>
         </div>
       </div>
       <div class="hero-stats">
         <span><span class="num" id="guideCount">3</span> guides</span>
+        <span class="sep"></span>
         <span><span class="num">1</span> external</span>
+        <span class="sep"></span>
         <span>updated <span class="num">2026</span></span>
       </div>
     </div>
@@ -491,6 +532,10 @@
         sidebar.classList.remove('active');
         overlay.classList.remove('active');
       });
+    });
+    document.getElementById('drawerClose').addEventListener('click', () => {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
     });
 
     // Search
