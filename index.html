@@ -452,7 +452,7 @@
       <div class="drawer-logo"><span class="dot"></span> Laksh Guides</div>
       <button id="drawerClose" aria-label="Close menu" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 6px;border-radius:6px;">✕</button>
     </div>
-    <a href="GithubGuide.html"><span class="icon-svg github accent"></span> Git & GitHub</a>
+    <a href="GithubGuide.html"><span class="icon-svg github accent"></span> Git &amp; GitHub</a>
     <a href="LinuxGuide.html"><span class="icon-svg linux accent"></span> Linux Guide</a>
     <a href="VSCodeGuide.html"><span class="icon-svg vscode accent"></span> VS Code Guide</a>
     <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon-svg external accent"></span> NMAMIT-Notes-Hub</a>
@@ -465,7 +465,7 @@
       <a href="/" class="nav-logo"><span class="dot"></span> Laksh Guides</a>
     </div>
     <div class="nav-links">
-      <a href="GithubGuide.html"><span class="icon-svg github" style="width:14px;height:14px;" aria-hidden="true"></span> Git & GitHub</a>
+      <a href="GithubGuide.html"><span class="icon-svg github" style="width:14px;height:14px;" aria-hidden="true"></span> Git &amp; GitHub</a>
       <a href="LinuxGuide.html"><span class="icon-svg linux" style="width:14px;height:14px;" aria-hidden="true"></span> Linux</a>
       <a href="VSCodeGuide.html"><span class="icon-svg vscode" style="width:14px;height:14px;" aria-hidden="true"></span> VS Code</a>
       <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon-svg external" style="width:14px;height:14px;" aria-hidden="true"></span> Notes Hub</a>
@@ -499,10 +499,10 @@
   <div class="container">
     <div class="section-label">Available Guides</div>
     <div class="guide-grid" id="guideGrid">
-      <a href="GithubGuide.html" class="guide-card" data-id="github" data-title="Git & GitHub Guide">
+      <a href="GithubGuide.html" class="guide-card" data-id="github" data-title="Git &amp; GitHub Guide">
         <div class="card-icon-wrap"><span class="icon-svg github accent" style="width:22px;height:22px;"></span></div>
         <div class="card-body">
-          <div class="card-title">Git & GitHub Guide</div>
+          <div class="card-title">Git &amp; GitHub Guide</div>
           <div class="card-desc">Version control, branching, remotes, pull requests, and collaboration workflows.</div>
           <div class="card-footer"><span class="visited-dot" style="display:none;"></span><span class="card-badge">Guide</span></div>
         </div>
@@ -694,7 +694,8 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
         e.preventDefault();
-        document.getElementById('searchInput').focus();
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.focus();
       }
     });
   </script>

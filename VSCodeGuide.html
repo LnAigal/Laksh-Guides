@@ -483,9 +483,9 @@
 
     <!-- ═══ 2. Installation ═══ -->
     <section id="install" class="card sect-offset">
-      <h2><span class="section-num">02</span> Installation & First Launch <span class="level level-beginner">Beginner</span></h2>
+      <h2><span class="section-num">02</span> Installation &amp; First Launch <span class="level level-beginner">Beginner</span></h2>
 
-      <h3>Download & Install</h3>
+      <h3>Download &amp; Install</h3>
       <ul>
         <li><strong>Linux (Debian/Ubuntu):</strong> Download <code>.deb</code> from <a href="https://code.visualstudio.com">code.visualstudio.com</a> or use <code class="inline-code">sudo snap install code --classic</code></li>
         <li><strong>Linux (Fedora):</strong> Download <code>.rpm</code> from code.visualstudio.com</li>
@@ -696,7 +696,7 @@ code --disable-extensions</code><span class="copy-tip">Copy</span></pre>
 
     <!-- ═══ 8. Settings ═══ -->
     <section id="settings" class="card sect-offset">
-      <h2><span class="section-num">08</span> Settings & Customization <span class="level level-intermediate">Intermediate</span></h2>
+      <h2><span class="section-num">08</span> Settings &amp; Customization <span class="level level-intermediate">Intermediate</span></h2>
 
       <p>VS Code settings are stored in <code>settings.json</code>. You can edit them via the UI (<span class="vscode-key">Ctrl+,</span>) or directly in JSON.</p>
 
@@ -920,7 +920,7 @@ Ctrl+Shift+G
 
     <!-- ═══ 12. Multi-Cursor ═══ -->
     <section id="multicursor" class="card sect-offset">
-      <h2><span class="section-num">12</span> Multiple Cursors & Selection <span class="level level-intermediate">Intermediate</span></h2>
+      <h2><span class="section-num">12</span> Multiple Cursors &amp; Selection <span class="level level-intermediate">Intermediate</span></h2>
 
       <p>Multi-cursor editing lets you make the same edit in multiple places simultaneously — one of VS Code's most powerful features.</p>
 
@@ -955,9 +955,9 @@ Esc</code><span class="copy-tip">Copy</span></pre>
       </ul>
     </section>
 
-    <!-- ═══ 13. Find & Replace ═══ -->
+    <!-- ═══ 13. Find &amp; Replace ═══ -->
     <section id="find" class="card sect-offset">
-      <h2><span class="section-num">13</span> Find & Replace <span class="level level-beginner">Beginner</span></h2>
+      <h2><span class="section-num">13</span> Find &amp; Replace <span class="level level-beginner">Beginner</span></h2>
 
       <h3>In the Current File</h3>
       <pre><code><span class="cm"># Find</span>
@@ -1073,7 +1073,7 @@ bdrs         → border-radius: ;
 
     <!-- ═══ 15. Tasks & Build ═══ -->
     <section id="tasks" class="card sect-offset">
-      <h2><span class="section-num">15</span> Tasks & Build Systems <span class="level level-advanced">Advanced</span></h2>
+      <h2><span class="section-num">15</span> Tasks &amp; Build Systems <span class="level level-advanced">Advanced</span></h2>
 
       <p>Tasks let you run tools like build scripts, linters, test runners, or any shell command directly from VS Code.</p>
 
@@ -1212,10 +1212,10 @@ Host dev-server
         <div class="cheat-item"><div class="cheat-cmd">Ctrl+Tab</div><div class="cheat-desc">Navigate editor groups</div></div>
       </div>
 
-      <h3>Search & Replace</h3>
+      <h3>Search &amp; Replace</h3>
       <div class="cheat-grid">
         <div class="cheat-item"><div class="cheat-cmd">Ctrl+F</div><div class="cheat-desc">Find</div></div>
-        <div class="cheat-item"><div class="cheat-cmd">Ctrl+H</div><div class="cheat-desc">Find & Replace</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Ctrl+H</div><div class="cheat-desc">Find &amp; Replace</div></div>
         <div class="cheat-item"><div class="cheat-cmd">F3</div><div class="cheat-desc">Find next</div></div>
         <div class="cheat-item"><div class="cheat-cmd">Shift+F3</div><div class="cheat-desc">Find previous</div></div>
         <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+F</div><div class="cheat-desc">Search across files</div></div>
@@ -1234,7 +1234,7 @@ Host dev-server
         <div class="cheat-item"><div class="cheat-cmd">Ctrl+Shift+D</div><div class="cheat-desc">Open Run panel</div></div>
       </div>
 
-      <h3>Terminal & Panel</h3>
+      <h3>Terminal &amp; Panel</h3>
       <div class="cheat-grid">
         <div class="cheat-item"><div class="cheat-cmd">Ctrl+`</div><div class="cheat-desc">Toggle terminal</div></div>
         <div class="cheat-item"><div class="cheat-cmd">Ctrl+J</div><div class="cheat-desc">Toggle panel</div></div>
@@ -1257,18 +1257,22 @@ Host dev-server
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
     const menuBtn = document.getElementById('menuBtn');
-    menuBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-    });
-    overlay.addEventListener('click', () => {
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-    });
+    if (menuBtn) {
+      menuBtn.addEventListener('click', () => {
+        if (sidebar) sidebar.classList.toggle('active');
+        if (overlay) overlay.classList.toggle('active');
+      });
+    }
+    if (overlay) {
+      overlay.addEventListener('click', () => {
+        if (sidebar) sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    }
     document.querySelectorAll('.toc a').forEach(a => {
       a.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
+        if (sidebar) sidebar.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
       });
     });
 
@@ -1342,10 +1346,12 @@ Host dev-server
     // 5. BACK TO TOP
     // ═════════════════════════════════════════════
     const backTop = document.getElementById('back-top');
-    window.addEventListener('scroll', () => {
-      backTop.classList.toggle('visible', window.scrollY > 400);
-    }, { passive: true });
-    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    if (backTop) {
+      window.addEventListener('scroll', () => {
+        backTop.classList.toggle('visible', window.scrollY > 400);
+      }, { passive: true });
+      backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
 
     // ═════════════════════════════════════════════
     // 6. SCROLL REVEAL

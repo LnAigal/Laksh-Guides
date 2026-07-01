@@ -1169,7 +1169,7 @@ blkid                    <span class="cm"># show UUIDs and labels</span></code><
       </details>
 
       <details class="accordion">
-        <summary><span class="arrow">▶</span><span class="tag">mount / umount</span> Attach & detach filesystems</summary>
+        <summary><span class="arrow">▶</span><span class="tag">mount / umount</span> Attach &amp; detach filesystems</summary>
         <pre><code>mount                    <span class="cm"># show all mounted filesystems</span>
 sudo mount /dev/sdb1 /mnt/usb    <span class="cm"># mount a drive</span>
 sudo umount /mnt/usb              <span class="cm"># unmount</span>
@@ -1256,7 +1256,7 @@ exit 0</code><span class="copy-tip">Copy</span></pre>
 ./script.sh              <span class="cm"># run it</span>
 bash script.sh           <span class="cm"># or run with Bash directly</span></code><span class="copy-tip">Copy</span></pre>
 
-      <h3>Conditionals & loops</h3>
+      <h3>Conditionals &amp; loops</h3>
       <pre><code><span class="cm"># If/else</span>
 <span class="kw">if</span> [ -f <span class="str">"$file"</span> ]; <span class="kw">then</span>
     echo <span class="str">"$file exists"</span>
@@ -1318,7 +1318,7 @@ sudo systemctl enable fail2ban --now
       </details>
 
       <details class="accordion">
-        <summary><span class="arrow">▶</span><span class="tag">openssl</span> Generate keys & certificates</summary>
+        <summary><span class="arrow">▶</span><span class="tag">openssl</span> Generate keys &amp; certificates</summary>
         <pre><code><span class="cm"># Generate a private key</span>
 openssl genrsa -out key.pem 2048
 
@@ -1365,7 +1365,7 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
         <div class="cheat-item"><div class="cheat-cmd">touch file</div><div class="cheat-desc">Create empty file</div></div>
       </div>
 
-      <h3>Viewing & Editing</h3>
+      <h3>Viewing &amp; Editing</h3>
       <div class="cheat-grid">
         <div class="cheat-item"><div class="cheat-cmd">cat file</div><div class="cheat-desc">Print file content</div></div>
         <div class="cheat-item"><div class="cheat-cmd">less file</div><div class="cheat-desc">Paginated view (q to quit)</div></div>
@@ -1374,10 +1374,10 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
         <div class="cheat-item"><div class="cheat-cmd">nano file</div><div class="cheat-desc">Simple editor</div></div>
         <div class="cheat-item"><div class="cheat-cmd">vim file</div><div class="cheat-desc">Powerful editor</div></div>
         <div class="cheat-item"><div class="cheat-cmd">grep pattern file</div><div class="cheat-desc">Search for pattern</div></div>
-        <div class="cheat-item"><div class="cheat-cmd">sed 's/old/new/g' file</div><div class="cheat-desc">Find & replace</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">sed 's/old/new/g' file</div><div class="cheat-desc">Find &amp; replace</div></div>
       </div>
 
-      <h3>Permissions & Ownership</h3>
+      <h3>Permissions &amp; Ownership</h3>
       <div class="cheat-grid">
         <div class="cheat-item"><div class="cheat-cmd">chmod 755 file</div><div class="cheat-desc">Set rwxr-xr-x</div></div>
         <div class="cheat-item"><div class="cheat-cmd">chown user:group file</div><div class="cheat-desc">Change owner:group</div></div>
@@ -1492,16 +1492,16 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
     const menuBtn = document.getElementById('menuBtn');
 
     function toggleMenu() {
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
+      if (sidebar) sidebar.classList.toggle('active');
+      if (overlay) overlay.classList.toggle('active');
     }
 
     if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
+    if (overlay) overlay.addEventListener('click', toggleMenu);
     document.querySelectorAll('.toc a').forEach(a => {
       a.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
+        if (sidebar) sidebar.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
       });
     });
 
@@ -1529,10 +1529,12 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
     highlightTOC();
 
     const backTop = document.getElementById('back-top');
-    window.addEventListener('scroll', () => {
-      backTop.classList.toggle('visible', window.scrollY > 400);
-    }, { passive: true });
-    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    if (backTop) {
+      window.addEventListener('scroll', () => {
+        backTop.classList.toggle('visible', window.scrollY > 400);
+      }, { passive: true });
+      backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
 
     (function scrollReveal() {
       const cards = document.querySelectorAll('.card');
