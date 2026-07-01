@@ -609,13 +609,13 @@
   </div>
   <div id="overlay"></div>
   <div id="menu-bar">
-    <button class="menu-btn" id="menuBtn">☰</button>
-    <span class="menu-title"><span class="gh-icon" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> Git & GitHub Guide</span>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">☰</button>
+    <span class="menu-title"><span class="gh-icon" aria-hidden="true" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> Git & GitHub Guide</span>
   </div>
 
   <nav id="sidebar">
     <div class="logo">
-      <span class="mark"></span> <span class="gh-icon gh-icon-accent"></span> Git & GitHub
+      <span class="mark"></span> <span class="gh-icon gh-icon-accent" aria-hidden="true"></span> Git & GitHub
       <a href="index.html" class="home-link" title="Back to home">⌂</a>
     </div>
     <div class="toc" id="toc-menu">
@@ -631,11 +631,11 @@
       <a href="#rebase"><span class="tag-icon">◉</span> Rebasing</a>
       <a href="#cherry-pick"><span class="tag-icon">◌</span> Cherry-Pick</a>
       <a href="#tagging"><span class="tag-icon">⌗</span> Tagging</a>
-      <a href="#remote"><span class="tag-icon"><span class="gh-icon" style="width:14px;height:14px;"></span></span> Remote & GitHub</a>
-      <a href="#collab"><span class="tag-icon"><span class="gh-icon" style="width:14px;height:14px;"></span></span> Collaboration</a>
+      <a href="#remote"><span class="tag-icon"><span class="gh-icon" aria-hidden="true" style="width:14px;height:14px;"></span></span> Remote & GitHub</a>
+      <a href="#collab"><span class="tag-icon"><span class="gh-icon" aria-hidden="true" style="width:14px;height:14px;"></span></span> Collaboration</a>
       <a href="#stash"><span class="tag-icon">◫</span> Stash</a>
       <a href="#recovery"><span class="tag-icon">◎</span> Recovery Tools</a>
-      <a href="#github-features"><span class="tag-icon"><span class="gh-icon" style="width:14px;height:14px;"></span></span> GitHub Features</a>
+      <a href="#github-features"><span class="tag-icon"><span class="gh-icon" aria-hidden="true" style="width:14px;height:14px;"></span></span> GitHub Features</a>
       <a href="#advanced"><span class="tag-icon">◇</span> Advanced</a>
       <a href="#cheatsheet"><span class="tag-icon">☰</span> Command Reference</a>
     </div>
@@ -646,18 +646,18 @@
     <header class="hero">
       <div class="hero-glow"></div>
       <div class="breadcrumb"><a href="index.html">⌂ Home</a> / Git & GitHub Guide</div>
-      <h1 class="title"><span class="gh-icon" style="width:32px;height:32px;background:var(--accent-to);display:inline-block;vertical-align:middle;margin-right:4px;"></span> <span class="animated-gradient">Git & GitHub Guide</span></h1>
+      <h1 class="title"><span class="gh-icon" aria-hidden="true" style="width:32px;height:32px;background:var(--accent-to);display:inline-block;vertical-align:middle;margin-right:4px;"></span> <span class="animated-gradient">Git & GitHub Guide</span></h1>
       <p class="subtitle"><span id="typewriter-text"></span><span class="typewriter-cursor"></span></p>
       <span class="pill">⤒ Click code blocks to copy &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
     </header>
 
     <!-- ═══ 1. Introduction ═══ -->
     <section id="intro" class="card sect-offset">
-      <h2><span class="section-num">01</span> Introduction — What are Git & <span class="gh-icon" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> GitHub?</h2>
+      <h2><span class="section-num">01</span> Introduction — What are Git & <span class="gh-icon" aria-hidden="true" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> GitHub?</h2>
 
       <p><strong>Git</strong> is a tool that tracks changes to your files over time — like a "save history" for your entire project. Every time you decide to save a checkpoint, Git takes a <strong>snapshot</strong> of your files. You can go back to any snapshot later, compare versions, and work on multiple experiments at once without risk.</p>
 
-      <p><span class="gh-icon" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> <strong>GitHub</strong> is a website that hosts Git repositories online. It lets you:</p>
+      <p><span class="gh-icon" aria-hidden="true" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> <strong>GitHub</strong> is a website that hosts Git repositories online. It lets you:</p>
       <ul>
         <li><strong>Back up</strong> your code to the cloud</li>
         <li><strong>Collaborate</strong> with others on the same codebase</li>
@@ -668,7 +668,7 @@
       <div class="flow">
         <div class="step"><strong>Your Computer</strong><br><small>Git (local repo)</small></div>
         <div class="arrow">⟶</div>
-        <div class="step"><strong><span class="gh-icon" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></span> GitHub</strong><br><small>Remote backup</small></div>
+        <div class="step"><strong><span class="gh-icon" aria-hidden="true" style="width:14px;height:14px;display:inline-block;vertical-align:middle;"></span> GitHub</strong><br><small>Remote backup</small></div>
         <div class="arrow">⟶</div>
         <div class="step"><strong>Team</strong><br><small>Collaboration</small></div>
       </div>
@@ -1102,7 +1102,7 @@ git tag -d v1.0.0</code><span class="copy-tip">Copy</span></pre>
 
     <!-- ═══ 13. Remote & GitHub ═══ -->
     <section id="remote" class="card sect-offset">
-      <h2><span class="section-num">13</span> Remote Repositories & <span class="gh-icon" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> GitHub <span class="level level-intermediate">Intermediate</span></h2>
+      <h2><span class="section-num">13</span> Remote Repositories & <span class="gh-icon" aria-hidden="true" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> GitHub <span class="level level-intermediate">Intermediate</span></h2>
 
       <p>A <strong>remote</strong> is a Git repository hosted on a server — typically GitHub. You push your local commits there to back them up and share them.</p>
 
@@ -1154,7 +1154,7 @@ git diff main origin/main      <span class="cm"># see what changed before mergin
 
     <!-- ═══ 14. Collaboration ═══ -->
     <section id="collab" class="card sect-offset">
-      <h2><span class="section-num">14</span> Collaboration on <span class="gh-icon" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> GitHub <span class="level level-intermediate">Intermediate</span></h2>
+      <h2><span class="section-num">14</span> Collaboration on <span class="gh-icon" aria-hidden="true" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> GitHub <span class="level level-intermediate">Intermediate</span></h2>
 
       <h3>Pull Requests (PRs)</h3>
       <p>A <strong>Pull Request</strong> tells others: "I've made changes on a branch — please review and merge them." This is the heart of GitHub collaboration.</p>
@@ -1275,7 +1275,7 @@ git bisect reset</code><span class="copy-tip">Copy</span></pre>
 
     <!-- ═══ 17. GitHub Features ═══ -->
     <section id="github-features" class="card sect-offset">
-      <h2><span class="section-num">17</span> More <span class="gh-icon" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> GitHub Features</h2>
+      <h2><span class="section-num">17</span> More <span class="gh-icon" aria-hidden="true" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> GitHub Features</h2>
 
       <details class="accordion" open>
         <summary><span class="arrow">▶</span><span class="tag">Actions</span> Automate workflows (CI/CD)</summary>

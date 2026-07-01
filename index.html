@@ -450,7 +450,7 @@
   <div class="mobile-drawer" id="mobileDrawer">
     <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:4px;">
       <div class="drawer-logo"><span class="dot"></span> Laksh Guides</div>
-      <button id="drawerClose" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 6px;border-radius:6px;">✕</button>
+      <button id="drawerClose" aria-label="Close menu" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 6px;border-radius:6px;">✕</button>
     </div>
     <a href="GithubGuide.html"><span class="icon-svg github accent"></span> Git & GitHub</a>
     <a href="LinuxGuide.html"><span class="icon-svg linux accent"></span> Linux Guide</a>
@@ -461,14 +461,14 @@
 
   <nav>
     <div style="display:flex;align-items:center;gap:12px;">
-      <button class="menu-btn" id="menuToggle">☰</button>
+      <button class="menu-btn" id="menuToggle" aria-label="Open menu">☰</button>
       <a href="/" class="nav-logo"><span class="dot"></span> Laksh Guides</a>
     </div>
     <div class="nav-links">
-      <a href="GithubGuide.html"><span class="icon-svg github" style="width:14px;height:14px;"></span> Git & GitHub</a>
-      <a href="LinuxGuide.html"><span class="icon-svg linux" style="width:14px;height:14px;"></span> Linux</a>
-      <a href="VSCodeGuide.html"><span class="icon-svg vscode" style="width:14px;height:14px;"></span> VS Code</a>
-      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon-svg external" style="width:14px;height:14px;"></span> Notes Hub</a>
+      <a href="GithubGuide.html"><span class="icon-svg github" style="width:14px;height:14px;" aria-hidden="true"></span> Git & GitHub</a>
+      <a href="LinuxGuide.html"><span class="icon-svg linux" style="width:14px;height:14px;" aria-hidden="true"></span> Linux</a>
+      <a href="VSCodeGuide.html"><span class="icon-svg vscode" style="width:14px;height:14px;" aria-hidden="true"></span> VS Code</a>
+      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon-svg external" style="width:14px;height:14px;" aria-hidden="true"></span> Notes Hub</a>
       <button class="theme-btn-nav" id="themeToggle" title="Toggle theme">🌙</button>
     </div>
   </nav>
@@ -482,7 +482,7 @@
       <div class="hero-controls">
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Search guides..." />
+          <input type="text" id="searchInput" placeholder="Search guides..." aria-label="Search guides" />
           <span class="search-shortcut">/</span>
         </div>
       </div>
