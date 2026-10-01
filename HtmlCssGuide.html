@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NDLH3RKL58');
+</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HTML &amp; CSS Guide — Laksh Guides</title>
+  <meta name="description" content="Comprehensive HTML &amp; CSS guide: document structure, semantic markup, forms, selectors, box model, flexbox, grid, responsive design, animations, and theming." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e34f26'/%3E%3Ctext x='16' y='23' font-family='Inter,sans-serif' font-size='17' font-weight='800' text-anchor='middle' fill='white'%3E%3C/html%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg: #07080e;
+      --bg-alt: #0b0d17;
+      --surface: rgba(18,22,40,0.75);
+      --surface-hover: rgba(28,34,60,0.85);
+      --text: #f1f5f9;
+      --text-dim: #8892b0;
+      --text-muted: #64748b;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.4);
+      --accent-from: #6366f1;
+      --accent-via: #8b5cf6;
+      --accent-to: #a855f7;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --code-bg: #0a0c16;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --glow: 0 0 40px rgba(99,102,241,0.1);
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f8fafc;
+        --bg-alt: #f1f5f9;
+        --surface: rgba(255,255,255,0.85);
+        --surface-hover: rgba(255,255,255,1);
+        --text: #0f172a;
+        --text-dim: #475569;
+        --text-muted: #94a3b8;
+        --border: rgba(99,102,241,0.15);
+        --border-hover: rgba(99,102,241,0.35);
+        --code-bg: #0f172a;
+        --shadow: 0 8px 32px rgba(0,0,0,0.06);
+        --glow: 0 0 40px rgba(99,102,241,0.05);
+      }
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; scroll-padding-top:100px; }
+    html,body{
+      min-height:100%;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      display:grid; grid-template-columns:270px 1fr; gap:0;
+    }
+    a{ color:var(--accent-via); text-decoration:none; }
+
+    ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
+
+    nav{
+      position:sticky; top:0; height:100dvh; overflow-y:auto;
+      padding:28px 16px; background:var(--bg-alt); border-right:1px solid var(--border);
+      display:flex; flex-direction:column; gap:2px;
+      z-index:100;
+    }
+    nav::-webkit-scrollbar{ width:4px; }
+    nav::-webkit-scrollbar-thumb{ background:var(--border); border-radius:9px; }
+
+    .logo{
+      font-weight:800; font-size:1.1rem; display:flex; align-items:center; gap:10px;
+      padding-bottom:16px; border-bottom:1px solid var(--border); flex-shrink:0;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .logo .mark{
+      width:8px; height:8px; border-radius:999px;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-text-fill-color:initial; flex-shrink:0;
+    }
+    .logo .home-link{
+      margin-left:auto; font-size:0.8rem; opacity:0.4;
+      -webkit-text-fill-color:initial; color:var(--text-dim);
+      transition:opacity 0.2s;
+    }
+    .logo .home-link:hover{ opacity:0.8; }
+
+    .toc{ display:flex; flex-direction:column; gap:2px; margin-top:6px; flex:1; }
+    .toc a{
+      display:flex; align-items:center; gap:12px;
+      padding:9px 14px; border-radius:12px;
+      text-decoration:none; color:var(--text-dim);
+      border:1px solid transparent;
+      transition:all 0.2s ease; font-size:0.82rem; font-weight:450;
+      position:relative;
+    }
+    .toc a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+    .toc a.active{
+      color:#fff; border-color:var(--border-hover);
+      background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08));
+      box-shadow:inset 2px 0 0 var(--accent-from);
+    }
+    .toc a .tag-icon{ font-size:0.7rem; width:16px; text-align:center; flex-shrink:0; opacity:0.5; }
+    .toc a.active .tag-icon{ opacity:0.9; }
+
+    .sidebar-footer{
+      padding-top:10px; border-top:1px solid var(--border);
+      font-size:0.7rem; color:var(--text-muted); text-align:center; flex-shrink:0;
+    }
+
+    .level{ font-size:0.55rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:3px 7px; border-radius:6px; margin-left:auto; flex-shrink:0; }
+    .level-beginner{ background:rgba(16,185,129,0.12); color:var(--green); border:1px solid rgba(16,185,129,0.2); }
+    .level-intermediate{ background:rgba(99,102,241,0.12); color:var(--accent-from); border:1px solid rgba(99,102,241,0.2); }
+    .level-advanced{ background:rgba(245,158,11,0.12); color:var(--amber); border:1px solid rgba(245,158,11,0.2); }
+
+    main{ padding:48px 36px 64px; max-width:1000px; }
+
+    header.hero{ margin-bottom:36px; position:relative; }
+    header.hero::after{
+      content:''; position:absolute; bottom:-18px; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,var(--border),transparent);
+    }
+    .breadcrumb{ font-size:0.78rem; color:var(--text-dim); margin-bottom:14px; }
+    .breadcrumb a{ color:var(--text-dim); }
+    .breadcrumb a:hover{ color:var(--accent-from); }
+    .title{
+      font-size: clamp(1.8rem, 1.4rem + 2.2vw, 2.8rem); font-weight:800; margin:0;
+      line-height:1.15; letter-spacing:-0.02em;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .hero-glow{
+      position:absolute; top:-60px; right:-40px;
+      width:200px; height:200px; border-radius:50%;
+      background:radial-gradient(circle,rgba(227,79,38,0.09),transparent 70%);
+      pointer-events:none;
+    }
+    .subtitle{ color:var(--text-dim); margin:10px 0 20px; max-width:70ch; line-height:1.7; font-size:0.95rem; }
+    .pill{
+      display:inline-flex; align-items:center; gap:10px; padding:7px 16px;
+      border-radius:999px; background:var(--surface); backdrop-filter:blur(12px);
+      border:1px solid var(--border); color:var(--text-dim); font-size:0.8rem;
+    }
+
+    section.card{
+      background:var(--surface); backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--border); border-radius:20px;
+      padding:28px 28px 20px; margin-bottom:24px;
+      transition:all 0.3s ease; box-shadow:var(--glow);
+      position:relative; overflow:hidden;
+    }
+    section.card::before{
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,transparent,var(--border-hover),transparent);
+      opacity:0; transition:opacity 0.3s;
+    }
+    section.card:hover{
+      border-color:var(--border-hover); box-shadow:var(--shadow),var(--glow);
+      transform:translateY(-1px);
+    }
+    section.card:hover::before{ opacity:1; }
+
+    section.card h2{ margin:0 0 12px; font-size:1.3rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    section.card h2 .section-num{
+      font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:8px;
+      background:rgba(99,102,241,0.1); color:var(--accent-from);
+      border:1px solid rgba(99,102,241,0.15);
+    }
+    section.card h3{ margin:18px 0 8px; font-size:1rem; color:var(--text); font-weight:600; }
+    section.card p, section.card li{ color:var(--text-dim); line-height:1.75; }
+    section.card p{ margin:0 0 10px; font-size:0.92rem; }
+    section.card ul, section.card ol{ padding-left:22px; margin:0 0 12px; }
+    section.card ul{ list-style-type:none; padding-left:0; }
+    section.card ul li{ padding-left:20px; position:relative; }
+    section.card ul li::before{ content:'▸'; position:absolute; left:0; color:var(--accent-from); opacity:0.6; font-size:0.8rem; }
+    section.card ol li{ color:var(--text-dim); line-height:1.75; margin-bottom:4px; }
+    section.card li strong{ color:var(--text); }
+
+    details.accordion{
+      border:1px solid var(--border); border-radius:14px; padding:16px 18px;
+      background:var(--bg); transition:all 0.25s ease;
+    }
+    details.accordion[open]{ border-color:var(--border-hover); background:rgba(99,102,241,0.02); }
+    details.accordion + details.accordion{ margin-top:10px; }
+    details.accordion:hover:not([open]){ border-color:var(--border-hover); }
+    details.accordion summary{
+      cursor:pointer; list-style:none; display:flex; align-items:center; gap:12px;
+      font-weight:550; user-select:none; font-size:0.93rem;
+    }
+    details.accordion summary::-webkit-details-marker{ display:none; }
+    details.accordion summary .arrow{
+      font-size:0.6rem; color:var(--accent-from); transition:transform 0.25s ease;
+      width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+      border-radius:6px; border:1px solid var(--border);
+      flex-shrink:0;
+    }
+    details.accordion[open] summary .arrow{ transform:rotate(90deg); border-color:var(--border-hover); background:rgba(99,102,241,0.05); }
+    details.accordion pre{ margin-top:14px; }
+    details.accordion p{ margin-top:10px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+
+    .tag{
+      font-size:0.65rem; font-weight:600; letter-spacing:0.02em;
+      background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.15);
+      padding:4px 10px; border-radius:8px; color:var(--accent-from);
+      white-space:nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    pre{
+      background: var(--code-bg); color:#e2e8f0;
+      padding:18px; border-radius:14px; overflow-x:auto;
+      border:1px solid rgba(99,102,241,0.1);
+      font-size:0.85rem; line-height:1.6;
+      position:relative;
+    }
+    code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:0.87rem; }
+    .inline-code{ display:inline; padding:3px 8px; border-radius:6px; background:rgba(99,102,241,0.06); border:1px solid var(--border); font-size:0.85em; color:var(--accent-from); }
+
+    .note{
+      background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(16,185,129,0.02));
+      border:1px solid rgba(16,185,129,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .note strong{ color:var(--green); }
+
+    .warn{
+      background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(245,158,11,0.02));
+      border:1px solid rgba(245,158,11,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .warn strong{ color:var(--amber); }
+
+    .tip{
+      background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(99,102,241,0.02));
+      border:1px solid rgba(6,182,212,0.15);
+      color:var(--text); padding:14px 18px; border-radius:14px; margin:14px 0;
+      line-height:1.65; font-size:0.9rem;
+    }
+    .tip strong{ color:var(--cyan); }
+
+    .try-it{
+      background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.03));
+      border:1px solid rgba(99,102,241,0.15);
+      padding:18px 22px; border-radius:14px; margin:16px 0;
+    }
+    .try-it .try-head{ font-weight:600; font-size:0.8rem; color:var(--accent-from); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+    .try-it p{ margin:0 0 6px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+    .try-it p:last-child{ margin:0; }
+
+    pre .copy-tip{
+      position:absolute; top:10px; right:10px;
+      font-size:0.6rem; padding:5px 11px; border-radius:8px;
+      background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15);
+      color:var(--text-dim); cursor:pointer; opacity:0;
+      transition:all 0.2s; z-index:2; font-weight:500;
+    }
+    pre:hover .copy-tip{ opacity:1; }
+    .copy-tip:hover{ background:rgba(99,102,241,0.2); color:var(--text); }
+    .copy-tip.copied{ background:rgba(16,185,129,0.2); color:var(--green); border-color:rgba(16,185,129,0.3); }
+
+    .cheat-grid{
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:8px; margin:14px 0;
+    }
+    .cheat-item{
+      background:var(--code-bg); border:1px solid rgba(99,102,241,0.08); border-radius:12px; padding:12px 14px;
+      transition:border-color 0.2s;
+    }
+    .cheat-item:hover{ border-color:rgba(99,102,241,0.2); }
+    .cheat-item .cheat-cmd{ font-family:ui-monospace, monospace; font-size:0.8rem; font-weight:600; color:var(--cyan); }
+    .cheat-item .cheat-desc{ font-size:0.75rem; color:var(--text-muted); margin-top:3px; }
+
+    footer{ margin-top:44px; color:var(--text-dim); font-size:0.85rem; text-align:center; padding-top:20px; border-top:1px solid var(--border); }
+    footer a{ color:var(--text-dim); }
+    footer a:hover{ color:var(--accent-from); }
+
+    #back-top{
+      position:fixed; bottom:28px; right:28px;
+      width:46px; height:46px; border-radius:999px;
+      background:var(--surface); backdrop-filter:blur(20px);
+      border:1px solid var(--border); color:var(--text-dim);
+      font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition:all 0.3s; z-index:999;
+      box-shadow:var(--shadow);
+    }
+    #back-top.visible{ opacity:1; pointer-events:auto; }
+    #back-top:hover{ border-color:var(--border-hover); color:var(--text); background:var(--surface-hover); transform:translateY(-2px); }
+
+    @media (max-width: 900px){
+      html,body{ grid-template-columns:minmax(0, 1fr); }
+      nav{
+        position:fixed; left:0; top:0; bottom:0;
+        width:270px; height:100vh;
+        transform:translateX(-100%);
+        padding:24px 14px;
+      }
+      nav.active{ transform:translateX(0); }
+      main{ padding:70px 18px 30px; }
+      #menu-bar{ display:flex !important; }
+      .hero-glow{ display:none; }
+    }
+
+    #menu-bar{
+      display:none;
+      position:fixed; top:0; left:0; right:0; height:52px;
+      background:var(--bg-alt); border-bottom:1px solid var(--border);
+      z-index:50; align-items:center; padding:0 16px;
+      backdrop-filter:blur(20px);
+    }
+    #menu-bar .menu-btn{
+      background:none; border:none; cursor:pointer; color:var(--text);
+      font-size:1.3rem; padding:4px;
+    }
+    #menu-bar .menu-title{
+      margin-left:12px; font-weight:700; font-size:0.95rem;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    #overlay{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
+      backdrop-filter:blur(4px); z-index:99;
+    }
+    @media (max-width: 900px){
+      #overlay.active{ display:block; }
+    }
+
+    .sect-offset{ scroll-margin-top:12px; }
+
+    .badge{ display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; padding:3px 8px; border-radius:6px; font-weight:500; }
+    .badge-green{ background:rgba(16,185,129,0.1); color:var(--green); }
+    .badge-blue{ background:rgba(99,102,241,0.1); color:var(--accent-from); }
+    .badge-amber{ background:rgba(245,158,11,0.1); color:var(--amber); }
+
+    .brand-icon{
+      display:inline-block; width:18px; height:18px;
+      background:var(--text-dim);
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M1.5 0h21l-1.91 21.563L12 24l-8.59-2.437L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M1.5 0h21l-1.91 21.563L12 24l-8.59-2.437L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .brand-icon-accent{ background:#e34f26; }
+
+    pre .hl{ color:var(--cyan); }
+    pre .cm{ color:var(--text-muted); }
+    pre .kw{ color:var(--accent-from); }
+    pre .kbd{ color:var(--green); }
+
+    kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size:0.78em; padding:2px 6px; border-radius:6px;
+      background:var(--code-bg); border:1px solid var(--border);
+      border-bottom-width:2px; color:var(--green); white-space:nowrap;
+    }
+    .visually-hidden{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+    section.card p kbd{ margin:0 1px; }
+
+    @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+    @keyframes pulse-glow{ 0%,100%{ box-shadow:0 0 20px rgba(99,102,241,0.05); } 50%{ box-shadow:0 0 40px rgba(99,102,241,0.12); } }
+    @keyframes gradient-shift{ 0%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+    @keyframes slide-up{ 0%{ opacity:0; transform:translateY(30px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes scale-in{ 0%{ opacity:0; transform:scale(0.9); } 100%{ opacity:1; transform:scale(1); } }
+    @keyframes fade-in{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes orb-drift{ 0%{ transform:translate(0,0); } 50%{ transform:translate(30px,-40px); } 100%{ transform:translate(0,0); } }
+    @keyframes orb-drift-2{ 0%{ transform:translate(0,0); } 50%{ transform:translate(-20px,30px); } 100%{ transform:translate(0,0); } }
+    @keyframes blink-cursor{ 0%,100%{ opacity:1; } 50%{ opacity:0; } }
+    @keyframes title-reveal{ 0%{ opacity:0; transform:translateY(20px) scale(0.95); filter:blur(10px); } 100%{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); } }
+    @keyframes badge-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+    @keyframes wobble{ 0%,100%{ transform:rotate(0deg); } 25%{ transform:rotate(-3deg); } 75%{ transform:rotate(3deg); } }
+
+    .orb-container{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+    .orb{ position:absolute; border-radius:50%; opacity:0.15; filter:blur(60px); }
+    .orb-1{ width:400px; height:400px; background:radial-gradient(circle,var(--accent-from),transparent); top:-100px; right:-100px; animation:orb-drift 20s ease-in-out infinite; }
+    .orb-2{ width:300px; height:300px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-80px; left:-80px; animation:orb-drift-2 25s ease-in-out infinite; }
+    .orb-3{ width:250px; height:250px; background:radial-gradient(circle,var(--cyan),transparent); top:40%; left:50%; animation:orb-drift 18s ease-in-out infinite reverse; opacity:0.08; }
+
+    .hero{ animation:fade-in 0.8s ease-out; }
+    .title{ animation:title-reveal 1s ease-out both; }
+    .title .animated-gradient{
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan),var(--accent-to),var(--accent-from));
+      background-size:300% 300%;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:gradient-shift 6s ease infinite;
+    }
+    .subtitle{ animation:slide-up 0.8s ease-out 0.3s both; }
+    .breadcrumb{ animation:slide-up 0.6s ease-out 0.1s both; }
+    .pill{ animation:scale-in 0.6s ease-out 0.6s both; }
+    .card{ opacity:0; transform:translateY(30px); transition:all 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .card.visible{ opacity:1; transform:translateY(0); }
+    .card:nth-child(2){ transition-delay:0.05s; }
+    .card:nth-child(3){ transition-delay:0.1s; }
+    .card:nth-child(4){ transition-delay:0.15s; }
+    .card:nth-child(5){ transition-delay:0.2s; }
+    .card:hover{ transform:translateY(-4px) scale(1.005); }
+    .card:hover .section-num{ animation:wobble 0.4s ease; }
+    .card:hover::before{ opacity:1; }
+    .badge{ animation:badge-pulse 3s ease-in-out infinite; }
+    .badge-green{ animation-delay:0s; }
+    .badge-blue{ animation-delay:-1s; }
+    .badge-amber{ animation-delay:-2s; }
+    #back-top.visible{ animation:scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+    .typewriter-cursor{
+      display:inline-block; width:2px; height:1.1em;
+      background:var(--accent-from); margin-left:2px;
+      animation:blink-cursor 0.8s step-end infinite;
+      vertical-align:text-bottom;
+    }
+    pre:hover{ border-color:rgba(99,102,241,0.2); box-shadow:0 0 30px rgba(99,102,241,0.05); }
+    .toc a.active{ animation:pulse-glow 3s ease-in-out infinite; }
+
+    @media (prefers-reduced-motion: reduce){
+      .orb,.card{ animation:none !important; }
+      .card{ opacity:1; transform:none; }
+      .title{ animation:none; }
+      .animated-gradient{ background-size:100% 100%; animation:none; }
+      .subtitle,.breadcrumb,.pill{ animation:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div id="overlay"></div>
+  <div id="menu-bar">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">☰</button>
+    <span class="menu-title"><span class="brand-icon" aria-hidden="true" style="width:16px;height:16px;"></span> HTML &amp; CSS Guide</span>
+  </div>
+
+  <nav id="sidebar">
+    <div class="logo">
+      <span class="mark"></span> <span class="brand-icon brand-icon-accent" aria-hidden="true"></span> HTML &amp; CSS
+      <a href="index.html" class="home-link" title="Back to home">⌂</a>
+    </div>
+    <div class="toc" id="toc-menu">
+      <a href="#intro"><span class="tag-icon">●</span> Introduction</a>
+      <a href="#setup"><span class="tag-icon">⚙</span> Setup &amp; Dev Tools</a>
+      <a href="#structure"><span class="tag-icon">▣</span> Document Structure</a>
+      <a href="#text"><span class="tag-icon">≡</span> Text, Links &amp; Media</a>
+      <a href="#forms"><span class="tag-icon">▤</span> Forms &amp; Inputs</a>
+      <a href="#semantic"><span class="tag-icon">◰</span> Semantic Layout</a>
+      <a href="#a11y"><span class="tag-icon">◉</span> Accessibility &amp; SEO</a>
+      <a href="#selectors"><span class="tag-icon">◇</span> Selectors</a>
+      <a href="#cascade"><span class="tag-icon">⇅</span> Cascade &amp; Specificity</a>
+      <a href="#boxmodel"><span class="tag-icon">▭</span> The Box Model</a>
+      <a href="#typography"><span class="tag-icon">❝</span> Colors, Fonts &amp; Units</a>
+      <a href="#flexbox"><span class="tag-icon">⇄</span> Flexbox</a>
+      <a href="#grid"><span class="tag-icon">▦</span> CSS Grid</a>
+      <a href="#positioning"><span class="tag-icon">⊙</span> Positioning</a>
+      <a href="#responsive"><span class="tag-icon">⤢</span> Responsive Design</a>
+      <a href="#animations"><span class="tag-icon">↻</span> Transitions &amp; Animation</a>
+      <a href="#theming"><span class="tag-icon">◐</span> Variables &amp; Theming</a>
+      <a href="#projects"><span class="tag-icon">⚑</span> Practice Projects</a>
+      <a href="#cheatsheet"><span class="tag-icon">⌗</span> Cheat Sheet</a>
+    </div>
+    <div class="sidebar-footer">Laksh Guides</div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="hero-glow"></div>
+      <div class="breadcrumb"><a href="index.html">⌂ Home</a> / HTML &amp; CSS Guide</div>
+      <h1 class="title"><span class="brand-icon" aria-hidden="true" style="width:32px;height:32px;background:#e34f26;"></span> <span class="animated-gradient">HTML &amp; CSS Guide</span></h1>
+      <p class="subtitle"><span id="typewriter-text"></span><span class="typewriter-cursor"></span></p>
+      <span class="pill">⤒ Click code blocks to copy &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
+    </header>
+
+    <!-- ═══ 1. Introduction ═══ -->
+    <section id="intro" class="card sect-offset">
+      <h2><span class="section-num">01</span> Introduction — The Frontend Foundation</h2>
+
+      <p><strong>HTML</strong> (HyperText Markup Language) is the <em>structure</em> of a webpage — headings, paragraphs, images, links, forms. <strong>CSS</strong> (Cascading Style Sheets) is the <em>presentation</em> — color, layout, typography, animation, responsiveness. Together they are the two skills every frontend developer uses daily, and they are the foundation of every framework (React, Vue, Svelte all render HTML and style with CSS).</p>
+
+      <h3>How the browser renders your page</h3>
+      <ul>
+        <li><strong>Parse HTML</strong> → builds the DOM tree (nodes for every element)</li>
+        <li><strong>Parse CSS</strong> → builds the CSSOM tree (every rule)</li>
+        <li><strong>Render tree</strong> → combines DOM + CSSOM, discarding things like <code class="inline-code">display:none</code></li>
+        <li><strong>Layout (reflow)</strong> → computes the exact position and size of every box</li>
+        <li><strong>Paint</strong> → fills pixels on screen</li>
+        <li><strong>Composite</strong> → layers transforms/opacity for smooth animation</li>
+      </ul>
+
+      <div class="note"><strong>Analogy:</strong> HTML is the <em>skeleton and organs</em>; CSS is the <em>skin, clothing and posture</em>. A page can technically work with no CSS at all, but it will look like a document from 1995.</div>
+
+      <h3>Why this still matters in 2026</h3>
+      <ul>
+        <li>Frameworks change constantly — HTML and CSS do not</li>
+        <li>Performance, accessibility and SEO are judged on the final DOM and CSS</li>
+        <li>Tailwind, Bootstrap and every UI kit still compile down to CSS</li>
+        <li>It is the fastest way to become employable — no build step required</li>
+      </ul>
+
+      <div class="tip"><strong>💡 Tip:</strong> Learn <em>layout</em> (flexbox, grid) and <em>the box model</em> deeper than colors and shadows. Layout is what beginners struggle with; colors anyone can copy from a template.</div>
+    </section>
+
+    <!-- ═══ 2. Setup ═══ -->
+    <section id="setup" class="card sect-offset">
+      <h2><span class="section-num">02</span> Setup &amp; Dev Tools <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Your first file — no build step needed</h3>
+      <pre><code><span class="cm">&lt;!-- index.html --&gt;</span>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;My First Page&lt;/title&gt;
+  &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello, World!&lt;/h1&gt;
+  &lt;p&gt;This is my first HTML and CSS page.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <pre><code><span class="cm">/* style.css */</span>
+body{
+  font-family: system-ui, sans-serif;
+  background: #0f172a;
+  color: #f1f5f9;
+  padding: 40px;
+}
+h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠ Always link CSS properly:</strong> <code class="inline-code">&lt;link rel="stylesheet" href="style.css"&gt;</code> lives in <code class="inline-code">&lt;head&gt;</code>. A <code class="inline-code">&lt;style&gt;</code> block inside <code class="inline-code">&lt;body&gt;</code> works but blocks rendering and is considered bad practice.</div>
+
+      <h3>Live Server extension</h3>
+      <ul>
+        <li>Install <strong>Live Server</strong> by Ritwick Dey in VS Code</li>
+        <li>Right-click the HTML file → <strong>Open with Live Server</strong></li>
+        <li>Your page reloads automatically on every save at <code class="inline-code">http://127.0.0.1:5500</code></li>
+      </ul>
+
+      <h3>Browser DevTools — your superpower</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Inspect Element</div><div class="cheat-desc">Right-click any element → Inspect. See the applied CSS</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Device Toolbar</div><div class="cheat-desc">Ctrl+Shift+M — simulate any phone/tablet size</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Edit &amp; Live</div><div class="cheat-desc">Change CSS in DevTools to test ideas instantly</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Flexbox/Grid Overlay</div><div class="cheat-desc">Layout panel → visualize gaps and tracks</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Console</div><div class="cheat-desc">Check for HTML validation and CSS errors</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Rendering tab</div><div class="cheat-desc">Simulate prefers-color-scheme and contrast issues</div></div>
+      </div>
+
+      <div class="tip"><strong>💡 Tip:</strong> In the Elements panel, the Styles tab shows crossed-out rules. A struck-through declaration means a more specific selector overrode it — this instantly explains specificity bugs.</div>
+    </section>
+
+    <!-- ═══ 3. Document Structure ═══ -->
+    <section id="structure" class="card sect-offset">
+      <h2><span class="section-num">03</span> Document Structure &amp; Core Tags <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>The anatomy of an HTML document</h3>
+      <pre><code>&lt;!DOCTYPE html&gt;          <span class="cm">&lt;!-- tells the browser to use modern standards mode --&gt;</span>
+&lt;html lang="en"&gt;      <span class="cm">&lt;!-- root element; lang is required for a11y --&gt;</span>
+  &lt;head&gt;               <span class="cm">&lt;!-- metadata: not visible on the page --&gt;</span>
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Page Title&lt;/title&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt;
+    &lt;script src="app.js" defer&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;               <span class="cm">&lt;!-- everything the user actually sees --&gt;</span>
+    &lt;h1&gt;Heading&lt;/h1&gt;
+    &lt;p&gt;Paragraph&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Elements, tags, attributes, values</h3>
+      <pre><code>&lt;a href="https://developer.mozilla.org" class="link" target="_blank" rel="noopener"&gt;MDN&lt;/a&gt;</code><span class="copy-tip">Copy</span></pre>
+      <ul>
+        <li><strong>Tag</strong> — <code class="inline-code">&lt;a&gt;</code> and <code class="inline-code">&lt;/a&gt;</code></li>
+        <li><strong>Element</strong> — the tag plus its content: <code class="inline-code">&lt;a&gt;MDN&lt;/a&gt;</code></li>
+        <li><strong>Attribute</strong> — <code class="inline-code">href</code></li>
+        <li><strong>Value</strong> — <code class="inline-code">https://developer.mozilla.org</code></li>
+      </ul>
+
+      <h3>Void (self-closing) elements</h3>
+      <p>These have no closing tag and no content:</p>
+      <ul>
+        <li><code class="inline-code">&lt;img&gt;</code> <code class="inline-code">&lt;br&gt;</code> <code class="inline-code">&lt;hr&gt;</code> <code class="inline-code">&lt;input&gt;</code> <code class="inline-code">&lt;meta&gt;</code> <code class="inline-code">&lt;link&gt;</code></li>
+        <li><code class="inline-code">&lt;area&gt;</code> <code class="inline-code">&lt;base&gt;</code> <code class="inline-code">&lt;source&gt;</code> <code class="inline-code">&lt;track&gt;</code> <code class="inline-code">&lt;wbr&gt;</code></li>
+      </ul>
+
+      <h3>Comments and entities</h3>
+      <pre><code>&lt;!-- This is an HTML comment --&gt;
+
+&lt;p&gt;5 &lt; 10 &amp;&amp; 10 &gt; 5&lt;/p&gt;      <span class="cm">&lt;!-- escape &lt; and &gt; --&gt;</span>
+&lt;p&gt;Tom &amp;amp; Jerry          &lt;!-- escape the ampersand itself --&gt;
+&lt;p&gt;&amp;copy; 2026 &amp;mdash; Laksh Guides&lt;/p&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>The heading hierarchy rule</h3>
+      <p>Headings are the <em>outline</em> of your page, not a way to pick font sizes. There must be exactly one <code class="inline-code">&lt;h1&gt;</code>, and levels must not skip.</p>
+
+      <div class="note"><strong>Good practice:</strong> Use CSS (not <code class="inline-code">&lt;h3&gt;</code>) to change the size of a heading. If it looks small, style it small — don't change its semantic level. Screen-reader users navigate pages by heading outline.</div>
+
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">&lt;strong&gt;</div><div class="cheat-desc">Important text — strong emphasis</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;em&gt;</div><div class="cheat-desc">Italic — semantic emphasis</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;mark&gt;</div><div class="cheat-desc">Highlighted text</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;small&gt;</div><div class="cheat-desc">Fine print, side comments</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;sub&gt;/&lt;sup&gt;</div><div class="cheat-desc">H₂O, x²</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;code&gt;</div><div class="cheat-desc">Inline code snippet</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;abbr&gt;</div><div class="cheat-desc">CSS (title="Cascading Style Sheets")</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;q&gt;</div><div class="cheat-desc">Short inline quotation</div></div>
+      </div>
+    </section>
+
+    <!-- ═══ 4. Text, Links, Media ═══ -->
+    <section id="text" class="card sect-offset">
+      <h2><span class="section-num">04</span> Text, Links, Images &amp; Tables <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Lists</h3>
+      <pre><code>&lt;ul&gt;              &lt;!-- unordered (bulleted) --&gt;
+  &lt;li&gt;Flexbox&lt;/li&gt;
+  &lt;li&gt;Grid&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol type="A"&gt;        &lt;!-- ordered (numbered); type="A" / "i" / "1" --&gt;
+  &lt;li&gt;Read HTML&lt;/li&gt;
+  &lt;li&gt;Read CSS&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;dl&gt;              &lt;!-- description list --&gt;
+  &lt;dt&gt;API&lt;/dt&gt;      &lt;!-- term --&gt;
+  &lt;dd&gt;Application Programming Interface&lt;/dd&gt;
+&lt;/dl&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Links — the essentials</h3>
+      <pre><code>&lt;a href="https://developer.mozilla.org"&gt;MDN Web Docs&lt;/a&gt;
+&lt;a href="page.html"&gt;Internal page&lt;/a&gt;
+&lt;a href="#section"&gt;Jump to section&lt;/a&gt;
+&lt;a href="mailto:hello@example.com"&gt;Email me&lt;/a&gt;
+&lt;a href="tel:+919876543210"&gt;Call support&lt;/a&gt;
+&lt;a href="report.pdf" download&gt;Download the PDF&lt;/a&gt;
+&lt;a href="https://example.com" target="_blank" rel="noopener noreferrer"&gt;Open in new tab&lt;/a&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠ Security rule:</strong> <code class="inline-code">target="_blank"</code> gives the new page access to your window via <code class="inline-code">window.opener</code>. Always pair it with <code class="inline-code">rel="noopener"</code>. Never use <code class="inline-code">target="_blank"</code> for internal navigation — it breaks the back button.</div>
+
+      <h3>Images</h3>
+      <pre><code>&lt;img
+  src="images/laksh.jpg"
+  alt="Laksh working at a desk with two monitors"
+  width="600"        &lt;!-- reserve space, prevents layout shift --&gt;
+  height="400"
+  loading="lazy"     &lt;!-- defer offscreen images --&gt;
+  decoding="async"
+&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="note"><strong>Alt text rules:</strong> describe the <em>content and purpose</em> in one sentence for meaningful images (<code class="inline-code">alt="Red bicycle leaning on a brick wall"</code>). For purely decorative images use <code class="inline-code">alt=""</code> — a screen reader then skips it. Never write <code class="inline-code">alt="image"</code> or <code class="inline-code">alt="photo of"</code>.</div>
+
+      <h3>Tables — for tabular data only</h3>
+      <pre><code>&lt;table&gt;
+  &lt;caption&gt;Browser market share, 2026&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th scope="col"&gt;Browser&lt;/th&gt;&lt;th scope="col"&gt;Share&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;th scope="row"&gt;Chrome&lt;/th&gt;&lt;td&gt;66%&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th scope="row"&gt;Safari&lt;/th&gt;&lt;td&gt;18%&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;&lt;td&gt;Total&lt;/td&gt;&lt;td&gt;100%&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠ Common mistake:</strong> never use a table for page layout. Screen readers announce every row and cell, so a layout table produces nonsense like "table, 3 columns, 12 rows". Layout is done with Grid and Flexbox.</div>
+    </section>
+
+    <!-- ═══ 5. Forms ═══ -->
+    <section id="forms" class="card sect-offset">
+      <h2><span class="section-num">05</span> Forms &amp; Inputs <span class="level level-beginner">Beginner</span></h2>
+
+      <p>Forms are how users send data. A good form works even when JavaScript is disabled.</p>
+
+      <pre><code>&lt;form action="/signup" method="post"&gt;
+  &lt;label for="name"&gt;Full name&lt;/label&gt;
+  &lt;input type="text" id="name" name="name" autocomplete="name" required&gt;
+
+  &lt;label for="email"&gt;Email address&lt;/label&gt;
+  &lt;input type="email" id="email" name="email" autocomplete="email" required&gt;
+
+  &lt;label for="pw"&gt;Password&lt;/label&gt;
+  &lt;input type="password" id="pw" name="pw" minlength="8" required&gt;
+
+  &lt;label for="age"&gt;Age&lt;/label&gt;
+  &lt;input type="number" id="age" name="age" min="18" max="100"&gt;
+
+  &lt;label for="birth"&gt;Date of birth&lt;/label&gt;
+  &lt;input type="date" id="birth" name="birth"&gt;
+
+  &lt;label for="color"&gt;Favourite colour&lt;/label&gt;
+  &lt;input type="color" id="color" name="color" value="#e34f26"&gt;
+
+  &lt;label&gt;
+    &lt;input type="checkbox" name="terms" value="yes" required&gt;
+    I accept the terms and conditions
+  &lt;/label&gt;
+
+  &lt;label for="plan"&gt;Plan&lt;/label&gt;
+  &lt;select id="plan" name="plan"&gt;
+    &lt;optgroup label="Personal"&gt;
+      &lt;option value="free"&gt;Free&lt;/option&gt;
+      &lt;option value="pro" selected&gt;Pro&lt;/option&gt;
+    &lt;/optgroup&gt;
+    &lt;option value="team"&gt;Team&lt;/option&gt;
+  &lt;/select&gt;
+
+  &lt;textarea id="bio" name="bio" rows="4" maxlength="500" placeholder="Tell us about yourself"&gt;&lt;/textarea&gt;
+
+  &lt;button type="submit"&gt;Create account&lt;/button&gt;
+  &lt;button type="reset"&gt;Reset&lt;/button&gt;
+&lt;/form&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Input types you'll actually use</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">text</div><div class="cheat-desc">Single-line free text</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">email</div><div class="cheat-desc">Validates an email format, mobile keyboard</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">password</div><div class="cheat-desc">Masked input</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">number</div><div class="cheat-desc">min, max, step spinners</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">tel</div><div class="cheat-desc">Phone number keypad</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">url</div><div class="cheat-desc">Absolute link</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">search</div><div class="cheat-desc">Shows a clear (×) button</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">date / time</div><div class="cheat-desc">Native date and time pickers</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">checkbox</div><div class="cheat-desc">One or many independent options</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">radio</div><div class="cheat-desc">Exactly one option from a group</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">range</div><div class="cheat-desc">Slider with min/max/step</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">file</div><div class="cheat-desc">File picker with accept="image/*"</div></div>
+      </div>
+
+      <h3>The <code class="inline-code">label</code> is not optional</h3>
+      <ul>
+        <li><code class="inline-code">for="id"</code> must match the input's <code class="inline-code">id</code></li>
+        <li>Clicking the label focuses the input</li>
+        <li>Screen readers announce the label instead of "text field, edit, blank"</li>
+        <li>Nesting the input inside the label also works, but <code class="inline-code">for</code> is clearer</li>
+      </ul>
+
+      <div class="warn"><strong>⚠ Pitfalls:</strong> <code class="inline-code">placeholder</code> is not a label — it disappears on typing and often fails contrast tests. Use <code class="inline-code">autocomplete</code> attributes so browsers and password managers can fill fields. Never log the <code class="inline-code">name</code> of a password field to the server.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Always include a submit button. Pressing Enter inside a text input submits the form only if there is exactly one submit button — this is expected behaviour, not a bug.</div>
+    </section>
+
+    <!-- ═══ 6. Semantic Layout ═══ -->
+    <section id="semantic" class="card sect-offset">
+      <h2><span class="section-num">06</span> Semantic Layout <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Semantic elements describe <em>what</em> a piece of content is, not how it looks. They give free SEO, accessibility and correct behaviour, and they make your code readable months later.</p>
+
+      <pre><code>&lt;body&gt;
+  &lt;header&gt;              &lt;!-- site banner: logo, nav --&gt;
+    &lt;nav aria-label="Main navigation"&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href="/" aria-current="page"&gt;Home&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/guides"&gt;Guides&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/about"&gt;About&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main&gt;                &lt;!-- the unique content of this page --&gt;
+    &lt;article&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Understanding Flexbox&lt;/h1&gt;
+        &lt;p&gt;&lt;time datetime="2026-08-14"&gt;14 Aug 2026&lt;/time&gt;&lt;/p&gt;
+      &lt;/header&gt;
+      &lt;section&gt;
+        &lt;h2&gt;Main axis and cross axis&lt;/h2&gt;
+        &lt;p&gt;...&lt;/p&gt;
+      &lt;/section&gt;
+      &lt;aside&gt;Related links&lt;/aside&gt;
+      &lt;footer&gt;Posted by Laksh&lt;/footer&gt;
+    &lt;/article&gt;
+  &lt;/main&gt;
+
+  &lt;aside&gt;              &lt;!-- complementary: sidebar, ads, TOC --&gt;
+  &lt;footer&gt;              &lt;!-- site-wide footer --&gt;
+&lt;/body&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Choosing the right element</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">&lt;div&gt;</div><div class="cheat-desc">Generic container, no meaning</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;span&gt;</div><div class="cheat-desc">Inline generic, no meaning</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;main&gt;</div><div class="cheat-desc">Primary content — only ONE per page</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;section&gt;</div><div class="cheat-desc">Thematic group, usually with a heading</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;article&gt;</div><div class="cheat-desc">Self-contained, reusable content</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;nav&gt;</div><div class="cheat-desc">Navigation links block</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;aside&gt;</div><div class="cheat-desc">Tangent content, sidebar</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;header&gt;/&lt;footer&gt;</div><div class="cheat-desc">Intro/outro of a section or page</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;details&gt;</div><div class="cheat-desc">Expandable FAQ — no JS needed</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;dialog&gt;</div><div class="cheat-desc">Modal popup with built-in focus trap</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&lt;picture&gt;</div><div class="cheat-desc">Art direction + responsive formats</div></div>
+      </div>
+
+      <div class="try-it">
+        <div class="try-head">✍ Try it</div>
+        <p>Take any page you admire, view its source (<kbd>Ctrl</kbd>+<kbd>U</kbd>), and identify which blocks are <code class="inline-code">&lt;header&gt;</code>, <code class="inline-code">&lt;main&gt;</code> and <code class="inline-code">&lt;footer&gt;</code>. Then guess how they built the layout — Grid or Flexbox.</p>
+      </div>
+    </section>
+
+    <!-- ═══ 7. Accessibility & SEO ═══ -->
+    <section id="a11y" class="card sect-offset">
+      <h2><span class="section-num">07</span> Accessibility &amp; SEO Basics <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Accessibility (a11y) means your page works for keyboard users, screen-reader users, and users with low vision, colour blindness or motor impairments. It is a legal requirement for public sites (WCAG 2.2) and it is good engineering.</p>
+
+      <h3>Keyboard first</h3>
+      <ul>
+        <li>Every interactive element must be reachable and operable with <kbd>Tab</kbd>, <kbd>Enter</kbd> and <kbd>Space</kbd></li>
+        <li>Use native <code class="inline-code">&lt;button&gt;</code> and <code class="inline-code">&lt;a&gt;</code> instead of <code class="inline-code">&lt;div onclick&gt;</code></li>
+        <li>Never remove the focus outline — style it instead:
+          <code class="inline-code">:focus-visible{ outline:2px solid #e34f26; outline-offset:2px; }</code></li>
+        <li>Modals must trap focus and close with <kbd>Esc</kbd> (<code class="inline-code">&lt;dialog&gt;</code> does this for free)</li>
+      </ul>
+
+      <h3>ARIA — use sparingly</h3>
+      <pre><code><span class="cm">&lt;!-- Good: a real button needs nothing extra --&gt;</span>
+&lt;button&gt;Open menu&lt;/button&gt;
+
+<span class="cm">&lt;!-- Necessary when you must use a div (e.g. a custom widget) --&gt;</span>
+&lt;div role="button" tabindex="0" aria-pressed="false"
+     aria-label="Toggle navigation menu"&gt;☰&lt;/div&gt;
+
+<span class="cm">&lt;!-- Live region for dynamic messages --&gt;</span>
+&lt;p role="status" aria-live="polite"&gt;Form submitted successfully&lt;/p&gt;
+
+<span class="cm">&lt;!-- Hide decorative icons from screen readers --&gt;</span>
+&lt;span aria-hidden="true"&gt;★&lt;/span&gt;
+&lt;span class="visually-hidden"&gt;5 out of 5 stars&lt;/span&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠ Golden rule:</strong> <em>"No ARIA is better than bad ARIA."</em> ARIA only changes how assistive tech reads your HTML — it does not add functionality. If you add <code class="inline-code">role="button"</code> you must also implement keyboard handlers yourself.</div>
+
+      <h3>SEO essentials</h3>
+      <ul>
+        <li>One descriptive <code class="inline-code">&lt;title&gt;</code> per page (unique, ~60 characters)</li>
+        <li>Meta description (<code class="inline-code">&lt;meta name="description"&gt;</code>) — 120–160 chars</li>
+        <li>Semantic tags give search engines your outline for free</li>
+        <li>Meaningful <code class="inline-code">alt</code> text on images</li>
+        <li>Open Graph tags for link previews on WhatsApp, Slack, X</li>
+        <li>Fast load time and valid HTML — Lighthouse score is a ranking signal</li>
+      </ul>
+
+      <pre><code>&lt;meta name="description" content="Learn HTML and CSS from scratch: semantic markup, flexbox, grid, responsive design, and theming with CSS variables."&gt;
+&lt;meta property="og:type" content="website"&gt;
+&lt;meta property="og:title" content="HTML &amp; CSS Guide"&gt;
+&lt;meta property="og:description" content="From document structure to CSS Grid — the complete frontend foundation."&gt;
+&lt;meta property="og:image" content="https://example.com/og.png"&gt;</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="note"><strong>Test your work:</strong> In Chrome DevTools → <strong>Lighthouse</strong> tab → run Accessibility and SEO audits. Also test with the keyboard only: unplug your mouse and tab through the whole page.</div>
+    </section>
+
+    <!-- ═══ 8. Selectors ═══ -->
+    <section id="selectors" class="card sect-offset">
+      <h2><span class="section-num">08</span> CSS Selectors <span class="level level-beginner">Beginner</span></h2>
+
+      <pre><code><span class="cm">/* Universal + element */</span>
+*                  <span class="cm">/* every element */</span>
+p                  <span class="cm">/* every &lt;p&gt; */</span>
+
+<span class="cm">/* Class and ID */</span>
+.card              <span class="cm">/* any element with class="card" */</span>
+#header            <span class="cm">/* the element with id="header" (unique) */</span>
+
+<span class="cm">/* Compound (no space = same element) */</span>
+nav ul li.active    <span class="cm">/* li that has class active, inside ul inside nav */</span>
+button.primary
+
+<span class="cm">/* Descendant / child / next sibling */</span>
+.card p            <span class="cm">/* p anywhere inside .card */</span>
+.card &gt; p         <span class="cm">/* p that is a DIRECT child of .card */</span>
+.card + p           <span class="cm">/* p immediately after .card */</span>
+.card ~ p           <span class="cm">/* every p AFTER .card */</span>
+
+<span class="cm">/* Attribute */</span>
+a[href^="https"]    <span class="cm">/* external links */</span>
+input[type="text"]
+a[target="_blank"]
+[data-id="42"]
+
+<span class="cm">/* Pseudo-classes */</span>
+a:hover
+a:focus-visible
+li:nth-child(2)         <span class="cm">/* 2nd li */</span>
+li:nth-child(odd)       <span class="cm">/* 1st, 3rd, 5th */</span>
+li:not(.active)         <span class="cm">/* except */</span>
+input:checked           <span class="cm">/* checkbox/radio checked */</span>
+input:required
+input:invalid
+p::placeholder
+div:has(h2)             <span class="cm">/* div containing an h2 */</span>
+::selection            <span class="cm">/* highlighted text */</span>
+
+<span class="cm">/* Pseudo-elements */</span>
+p::before  { content: "→ "; }
+p::after   { content: ""; }
+li::marker { color: #e34f26; }
+::first-letter{ font-size:3rem; float:left; }</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Combinators at a glance</h3>
+      <ul>
+        <li><code class="inline-code">A B</code> — descendant (space)</li>
+        <li><code class="inline-code">A &gt; B</code> — direct child</li>
+        <li><code class="inline-code">A + B</code> — adjacent sibling (immediately after)</li>
+        <li><code class="inline-code">A ~ B</code> — general sibling (anywhere after)</li>
+        <li><code class="inline-code">A, B</code> — group (comma = OR)</li>
+      </ul>
+
+      <div class="note"><strong>Modern CSS worth knowing:</strong> <code class="inline-code">:has()</code>, nesting (<code class="inline-code">.card{ &:hover{ ... } }</code>), and <code class="inline-code">@layer</code> for managing cascade order. All are supported in current browsers.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Prefer classes over IDs and element selectors for styling. IDs are unique, so they carry very high specificity and are painful to override. Classes are reusable and predictable.</div>
+    </section>
+
+    <!-- ═══ 9. Cascade ═══ -->
+    <section id="cascade" class="card sect-offset">
+      <h2><span class="section-num">09</span> The Cascade, Specificity &amp; Inheritance <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>When two rules target the same element, the browser decides which wins using the cascade. The order is:</p>
+      <ol>
+        <li><strong>Origin &amp; importance</strong> — user-agent styles &lt; author styles &lt; <code class="inline-code">!important</code> author &lt; user <code class="inline-code">!important</code></li>
+        <li><strong>@layer</strong> — unlayered styles beat layered ones</li>
+        <li><strong>Specificity</strong> — a numeric score per selector</li>
+        <li><strong>Source order</strong> — if specificity ties, the last rule in the file wins</li>
+      </ol>
+
+      <h3>Specificity scoring (0, a, b, c)</h3>
+      <ul>
+        <li><strong>a</strong> — number of IDs → <code class="inline-code">#header</code> = (1,0,0)</li>
+        <li><strong>b</strong> — number of classes, attributes, pseudo-classes → <code class="inline-code">.card</code> = (0,1,0)</li>
+        <li><strong>c</strong> — number of elements and pseudo-elements → <code class="inline-code">p</code> = (0,0,1)</li>
+      </ul>
+
+      <div class="note"><strong>Compare these — the higher score wins even if it appears earlier:</strong></div>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">p</div><div class="cheat-desc">(0,0,1)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">.intro</div><div class="cheat-desc">(0,1,0)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">nav ul li a</div><div class="cheat-desc">(0,0,4)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">.card .title</div><div class="cheat-desc">(0,2,0)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">a:hover</div><div class="cheat-desc">(0,2,0)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">#header</div><div class="cheat-desc">(1,0,0) — always wins</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">#header .nav-item</div><div class="cheat-desc">(1,1,0)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">style="color:red"</div><div class="cheat-desc">(1,0,0,0) — inline wins</div></div>
+      </div>
+
+      <h3>Inheritance</h3>
+      <p>Some properties inherit down the DOM tree by default — <code class="inline-code">color</code>, <code class="inline-code">font-family</code>, <code class="inline-code">line-height</code>, <code class="inline-code">text-align</code>, <code class="inline-code">visibility</code>. Most others do not — <code class="inline-code">margin</code>, <code class="inline-code">padding</code>, <code class="inline-code">border</code>, <code class="inline-code">width</code>.</p>
+
+      <pre><code><span class="cm">/* Stop inheritance */</span>
+.card *{ all: unset; }        <span class="cm">/* nuclear option — use with care */</span>
+button{ font: inherit; }      <span class="cm">/* forms don't inherit fonts by default */</span></code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠ The classic specificity war:</strong> fighting <code class="inline-code">!important</code> or adding longer selectors to win usually means your architecture is wrong. Fix the root cause — restructure the markup or introduce CSS custom properties instead of writing <code class="inline-code">#main .card h3.title</code>.</div>
+
+      <pre><code><span class="cm">/* Modern solution: @layer makes order explicit — no more specificity wars */</span>
+@layer reset, base, components, utilities;
+
+@layer base{
+  body{ font-family: system-ui, sans-serif; }
+}
+@layer components{
+  .card{ padding: 20px; }   <span class="cm">/* overrides base regardless of file order */</span>
+}
+@layer utilities{
+  .card{ padding: 40px; }   <span class="cm">/* utilities always win */</span>
+}</code><span class="copy-tip">Copy</span></pre>
+    </section>
+
+    <!-- ═══ 10. Box Model ═══ -->
+    <section id="boxmodel" class="card sect-offset">
+      <h2><span class="section-num">10</span> The Box Model <span class="level level-beginner">Beginner</span></h2>
+
+      <p>Every element on a page is a rectangular box with four layers: <strong>content → padding → border → margin</strong>. Margin is outside the border; padding is inside it.</p>
+
+      <pre><code>      ┌──────────── margin (transparent, outside) ────────────┐
+      │  ┌──────── border ────────────────────────────────┐   │
+      │  │  ┌──── padding ──────────────────────────────┐  │   │
+      │  │  │        CONTENT  (width × height)         │  │   │
+      │  │  └───────────────────────────────────────────┘  │   │
+      │  └─────────────────────────────────────────────────┘   │
+      └──────────────────────────────────────────────────────────┘</code><span class="copy-tip">Copy</span></pre>
+
+      <pre><code>.box{
+  width: 200px;
+  height: 100px;
+  padding: 20px;
+  border: 5px solid #e34f26;
+  margin: 30px;
+}
+
+<span class="cm">/* Default: content-box → total width = 200 + 40 + 10 + 60 = 310px */</span>
+
+<span class="cm">/* The fix almost everyone needs: */</span>
+*, *::before, *::after{ box-sizing: border-box; }</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠ The #1 beginner bug:</strong> with <code class="inline-code">content-box</code> (the default), <code class="inline-code">width:200px; padding:20px</code> renders 240px wide. Set <code class="inline-code">box-sizing:border-box</code> globally and <code class="inline-code">width</code> means the total size — padding and border are subtracted automatically.</div>
+
+      <h3>Margin collapse</h3>
+      <p>Vertical margins of adjacent siblings collapse into one — the bigger value wins, they do not add. A child's top margin can also collapse through its parent if the parent has no padding or border.</p>
+
+      <pre><code>.a{ margin-bottom: 30px; }
+.b{ margin-top: 20px; }   <span class="cm">/* gap between them = 30px, NOT 50px */</span></code><span class="copy-tip">Copy</span></pre>
+      <ul>
+        <li>Fix with <strong>gap</strong> in Flexbox/Grid (never collapses)</li>
+        <li>Fix with a flex/grid parent on the container</li>
+        <li>Fix with padding or <code class="inline-code">overflow:hidden</code> on the parent</li>
+      </ul>
+
+      <h3>Width, min and max</h3>
+      <ul>
+        <li><code class="inline-code">width: 50%</code> — percentage of the <em>parent's</em> content width</li>
+        <li><code class="inline-code">max-width: 60ch</code> — caps line length for readability (ideal body text is 45–75 characters)</li>
+        <li><code class="inline-code">min-width</code> — stops flex items shrinking below a usable size</li>
+        <li><code class="inline-code">height: 100vh</code> — viewport height; <code class="inline-code">100%</code> only works if the parent has an explicit height</li>
+        <li><code class="inline-code">aspect-ratio: 16 / 9</code> — modern replacement for padding hacks</li>
+      </ul>
+
+      <div class="note"><strong>Horizontal centring (the classic):</strong> <code class="inline-code">.container{ max-width: 1000px; margin-inline: auto; }</code>. This only works for block elements — for flex items use <code class="inline-code">margin-inline: auto</code> with a fixed width, or <code class="inline-code">justify-content: center</code> on the parent.</div>
+    </section>
+
+    <!-- ═══ 11. Typography, Colors, Units ═══ -->
+    <section id="typography" class="card sect-offset">
+      <h2><span class="section-num">11</span> Colors, Fonts &amp; Units <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Color formats</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">#e34f26</div><div class="cheat-desc">Hex — opaque. 6 digits, #fff shortcut works</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">#e34f2680</div><div class="cheat-desc">Hex with alpha (80 = 50%)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">rgb(227 79 38)</div><div class="cheat-desc">Red green blue</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">rgba(227,79,38,.5)</div><div class="cheat-desc">RGB with alpha 0–1</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">hsl(15 78% 52%)</div><div class="cheat-desc">Hue saturation lightness — best for scaling themes</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">oklch(62% .19 40)</div><div class="cheat-desc">Perceptually uniform — modern pick</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">transparent</div><div class="cheat-desc">Fully transparent, keeps transitions smooth</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">currentColor</div><div class="cheat-desc">Inherits the element's own color value</div></div>
+      </div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Build palettes in <code class="inline-code">hsl()</code> — change one number (lightness) and you get perfect tints and shades for free: <code class="inline-code">hsl(15 78% 52%)</code>, <code class="inline-code">hsl(15 78% 42%)</code>, <code class="inline-code">hsl(15 78% 92%)</code>.</div>
+
+      <h3>Units</h3>
+      <ul>
+        <li><strong>px</strong> — absolute, predictable. Good for borders, icons, small fixed elements</li>
+        <li><strong>rem</strong> — relative to the <em>root</em> font size. Scales with user settings — use for font sizes and spacing</li>
+        <li><strong>em</strong> — relative to the element's own font size. Use for padding that should scale with text</li>
+        <li><strong>%</strong> — relative to the parent. Widths, heights, font sizes</li>
+        <li><strong>vw / vh</strong> — 1% of viewport width/height</li>
+        <li><strong>ch</strong> — width of the "0" glyph. Perfect for <code class="inline-code">max-width</code> on text</li>
+        <li><strong>fr</strong> — fraction of free space. Grid only</li>
+      </ul>
+
+      <h3>Typography that reads well</h3>
+      <pre><code>body{
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1rem;         <span class="cm">/* 16px default */</span>
+  line-height: 1.6;        <span class="cm">/* 1.5–1.8 for body text */</span>
+  color: #475569;
+  max-width: 70ch;         <span class="cm">/* readable line length */</span>
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+h1{ font-size: clamp(1.8rem, 1.4rem + 2vw, 2.8rem); line-height: 1.15; letter-spacing: -0.02em; }
+h2{ font-size: clamp(1.4rem, 1.2rem + 1vw, 1.8rem); }
+
+.btn{
+  font: inherit;           <span class="cm">/* buttons don't inherit fonts by default */</span>
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="note"><strong>Line length matters:</strong> the ideal measure is <strong>45–75 characters</strong> per line. Set <code class="inline-code">max-width: 70ch</code> on prose instead of letting text run the full width of a 1920px monitor. Use <code class="inline-code">text-wrap: balance</code> on headings so lines break evenly.</div>
+
+      <div class="try-it">
+        <div class="try-head">✍ Try it</div>
+        <p>Build one paragraph of body text, then experiment: try <code class="inline-code">line-height: 1.0</code> vs <code class="inline-code">1.8</code>, and width <code class="inline-code">40ch</code> vs <code class="inline-code">120ch</code>. Read both. The difference will click instantly.</p>
+      </div>
+    </section>
+
+    <!-- ═══ 12. Flexbox ═══ -->
+    <section id="flexbox" class="card sect-offset">
+      <h2><span class="section-num">12</span> Flexbox <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Flexbox lays out items in <strong>one direction</strong> — a row or a column. This is the single most-used layout tool on the web: nav bars, button groups, card rows, centering anything.</p>
+
+      <pre><code>.container{
+  display: flex;              <span class="cm">/* row by default */</span>
+  flex-direction: row | row-reverse | column | column-reverse;
+  flex-wrap: wrap | nowrap | wrap-reverse;
+  justify-content: flex-start | center | flex-end | space-between | space-around | space-evenly;
+  align-items: stretch | flex-start | center | flex-end | baseline;
+  align-content: flex-start | center | space-between;  <span class="cm">/* multi-line only */</span>
+  gap: 1rem;
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Main axis vs cross axis</h3>
+      <ul>
+        <li><strong>main axis</strong> — the direction items flow (<code class="inline-code">flex-direction</code>). <code class="inline-code">justify-content</code> distributes along it.</li>
+        <li><strong>cross axis</strong> — perpendicular to it. <code class="inline-code">align-items</code> aligns along it.</li>
+      </ul>
+
+      <div class="note"><strong>The one thing to remember:</strong> <code class="inline-code">justify-content</code> = main axis, <code class="inline-code">align-items</code> = cross axis. Flip <code class="inline-code">flex-direction: column</code> and the two swap roles — this confuses everyone once.</div>
+
+      <h3>Properties on the items</h3>
+      <pre><code>.item{
+  flex-grow: 1;         <span class="cm">/* share leftover space */</span>
+  flex-shrink: 1;       <span class="cm">/* default: allowed to shrink */</span>
+  flex-basis: 200px;    <span class="cm">/* starting size before free space */</span>
+  flex: 1 1 auto;       <span class="cm">/* grow shrink basis shorthand */</span>
+  flex: 0 0 200px;      <span class="cm">/* fixed width, never grow/shrink */</span>
+  align-self: flex-end; <span class="cm">/* override align-items for one item */</span>
+  order: 2;             <span class="cm">/* visual order only — DOM order is unchanged */</span>
+  min-width: 0;         <span class="cm">/* CRITICAL: allows shrinking below content size */</span>
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Pattern 1 — perfect centring</h3>
+      <pre><code>.center{
+  display: flex;
+  justify-content: center;   <span class="cm">/* horizontal */</span>
+  align-items: center;       <span class="cm">/* vertical */</span>
+  min-height: 100vh;
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Pattern 2 — navbar with pushed-right links</h3>
+      <pre><code>.navbar{ display: flex; align-items: center; gap: 1.5rem; }
+.navbar .brand{ margin-right: auto; }   <span class="cm">/* pushes the rest to the right */</span>
+.navbar a{ text-decoration: none; color: #f1f5f9; }
+.navbar a:hover{ color: #e34f26; }
+.navbar a[aria-current="page"]{ color: #e34f26; font-weight: 600; }</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Pattern 3 — wrapping card row</h3>
+      <pre><code>.cards{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  justify-content: center;
+}
+.card{
+  flex: 1 1 260px;      <span class="cm">/* grow, shrink, basis 260px */</span>
+  max-width: 380px;
+  padding: 1.5rem;
+  border: 1px solid #334155;
+  border-radius: 16px;
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠ Overflow trap:</strong> flex items default to <code class="inline-code">min-width:auto</code>, which means they refuse to shrink below their content's width. A long unbroken string overflows its container. Fix: <code class="inline-code">min-width: 0</code> on the item (and <code class="inline-code">overflow-wrap: anywhere</code> on the text).</div>
+
+      <div class="try-it">
+        <div class="try-head">✍ Try it</div>
+        <p>Take your navbar and set <code class="inline-code">flex-direction: column</code>. Predict what breaks before you change it — then verify. Doing this for all four direction values teaches the main/cross axis faster than any tutorial.</p>
+      </div>
+    </section>
+
+    <!-- ═══ 13. Grid ═══ -->
+    <section id="grid" class="card sect-offset">
+      <h2><span class="section-num">13</span> CSS Grid <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Grid lays items out in <strong>two dimensions</strong> at once — rows and columns. Use it for page-level layout and card galleries; use Flexbox for one-dimensional component internals.</p>
+
+      <pre><code>.grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);   <span class="cm">/* 3 equal columns */</span>
+  grid-template-rows: auto 1fr auto;
+  gap: 1.5rem;
+  align-items: start;
+  justify-items: stretch;
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Track sizing</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">1fr</div><div class="cheat-desc">One share of leftover space</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">repeat(auto-fill, minmax(240px, 1fr))</div><div class="cheat-desc">Auto-responsive column count — no media query needed</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">minmax(200px, 1fr)</div><div class="cheat-desc">Minimum size, then share the rest</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">min-content</div><div class="cheat-desc">As narrow as content allows</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">max-content</div><div class="cheat-desc">As wide as the content wants</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">fit-content(30ch)</div><div class="cheat-desc">Content width, capped at 30ch</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">auto</div><div class="cheat-desc">Uses available space, respects content</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">subgrid</div><div class="cheat-desc">Align child grid to parent tracks</div></div>
+      </div>
+
+      <h3>Line-based placement</h3>
+      <pre><code>.layout{
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+}
+header { grid-area: header; }
+aside  { grid-area: sidebar; }
+main   { grid-area: main; }
+footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="note"><strong>Why <code class="inline-code">grid-template-areas</code> is the best layout tool:</strong> the entire page structure becomes visible in the CSS as an ASCII diagram. Reflowing to mobile is a one-line change instead of a pile of overrides.</div>
+
+      <h3>Spanning and alignment</h3>
+      <pre><code>.hero{
+  grid-column: 1 / -1;      <span class="cm">/* span all columns */</span>
+  grid-row: span 2;
+}
+.card{ align-self: start; justify-self: center; }
+.grid{ place-items: center; }          <span class="cm">/* align + justify shorthand */</span>
+.grid{ place-content: center; }        <span class="cm">/* for the whole grid */</span>
+
+<span class="cm">/* Dense packing — fills holes left by spans */</span>
+.gallery{ grid-auto-flow: row dense; }</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Pattern — responsive gallery with zero media queries</h3>
+      <pre><code>.gallery{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+  gap: 1rem;
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> The <code class="inline-code">min()</code> wrapper is what stops a 240px minimum from overflowing a 320px phone. Add <code class="inline-code">min(240px, 100%)</code> to every auto-fill grid and it becomes bulletproof.</div>
+
+      <div class="try-it">
+        <div class="try-head">✍ Try it</div>
+        <p>Build a classic dashboard: header, sidebar, main content and footer using <code class="inline-code">grid-template-areas</code>. Then resize the window and confirm nothing breaks. This exact layout is what you will build in every framework tutorial.</p>
+      </div>
+    </section>
+
+    <!-- ═══ 14. Positioning ═══ -->
+    <section id="positioning" class="card sect-offset">
+      <h2><span class="section-num">14</span> Positioning <span class="level level-intermediate">Intermediate</span></h2>
+
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">static</div><div class="cheat-desc">Default. top/right/bottom/left are ignored</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">relative</div><div class="cheat-desc">Offset from its normal spot; still takes space in flow</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">absolute</div><div class="cheat-desc">Removed from flow, positioned vs nearest positioned ancestor</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">fixed</div><div class="cheat-desc">Locked to the viewport; scrolls with the page</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">sticky</div><div class="cheat-desc">Scrolls until a threshold, then sticks</div></div>
+      </div>
+
+      <h3>Relative + absolute</h3>
+      <pre><code>.card{ position: relative; }        <span class="cm">/* becomes the containing block */</span>
+.badge{
+  position: absolute;
+  top: -8px; right: -8px;
+  background: #e34f26;
+  color: white;
+  border-radius: 999px;
+  padding: 2px 8px;
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠ Critical:</strong> an <code class="inline-code">absolute</code> element is positioned relative to its nearest ancestor that has <code class="inline-code">position</code> set to anything other than <code class="inline-code">static</code> (or <code class="inline-code">transform</code> / <code class="inline-code">filter</code> / <code class="inline-code">contain</code>). If it lands in the wrong place, look for an unexpected <code class="inline-code">position:relative</code> up the tree.</div>
+
+      <h3>Centring with absolute positioning</h3>
+      <pre><code>.overlay{
+  position: absolute;
+  inset: 0;                  <span class="cm">/* top/right/bottom/left all 0 = fill parent */</span>
+  display: grid;
+  place-items: center;       <span class="cm">/* cleaner than top:50% + translate */</span>
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Sticky navbar</h3>
+      <pre><code>header{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  background: rgba(15, 23, 42, 0.85);
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Fixed toast notification</h3>
+      <pre><code>.toast{
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 1000;
+  padding: 14px 20px;
+  border-radius: 12px;
+  background: #10b981;
+  color: #04140d;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="note"><strong>Sticky gotcha:</strong> <code class="inline-code">position: sticky</code> fails if any ancestor has <code class="inline-code">overflow: hidden</code>, <code class="inline-code">auto</code> or <code class="inline-code">scroll</code>. Also, the element needs room to move within its parent — it cannot leave its parent's box.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> z-index only competes with other elements that share the same stacking context. One <code class="inline-code">transform</code>, <code class="inline-code">filter</code> or <code class="inline-code">opacity &lt; 1</code> creates a new stacking context and can trap children. When z-index "doesn't work", this is why.</div>
+    </section>
+
+    <!-- ═══ 15. Responsive ═══ -->
+    <section id="responsive" class="card sect-offset">
+      <h2><span class="section-num">15</span> Responsive Design <span class="level level-intermediate">Intermediate</span></h2>
+
+      <h3>Mobile-first is the default</h3>
+      <p>Write the small-screen layout first, then progressively enhance. Your base CSS targets phones; media queries add complexity only where needed.</p>
+
+      <pre><code><span class="cm">/* Base — mobile (no query needed) */</span>
+.cards{ display: grid; gap: 1rem; }
+
+<span class="cm">/* Enhance at 640px */</span>
+@media (min-width: 40rem){
+  .cards{ grid-template-columns: repeat(2, 1fr); }
+}
+
+<span class="cm">/* Enhance at 1024px */</span>
+@media (min-width: 64rem){
+  .cards{ grid-template-columns: repeat(4, 1fr); }
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Media query features</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">min-width / max-width</div><div class="cheat-desc">Viewport width</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">min-height / max-height</div><div class="cheat-desc">Viewport height</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">orientation</div><div class="cheat-desc">portrait | landscape</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">prefers-color-scheme</div><div class="cheat-desc">dark | light</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">prefers-reduced-motion</div><div class="cheat-desc">Respect accessibility settings</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">prefers-contrast</div><div class="cheat-desc">more | less</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">hover / any-hover</div><div class="cheat-desc">Only style hover on real pointers</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">pointer: coarse</div><div class="cheat-desc">Touch devices — enlarge tap targets</div></div>
+      </div>
+
+      <h3>Fluid typography and spacing</h3>
+      <pre><code>h1{
+  <span class="cm">/* min | preferred | max — scales smoothly with viewport */</span>
+  font-size: clamp(1.8rem, 1.2rem + 3vw, 3.5rem);
+}
+
+.container{
+  width: min(100% - 2rem, 1200px);   <span class="cm">/* fluid with a max */</span>
+  margin-inline: auto;
+}
+
+.grid{ gap: clamp(0.75rem, 2vw, 1.5rem); }</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="note"><strong>Avoid <code class="inline-code">vw</code> for font sizes</strong> on mobile — Chrome zooms text when it exceeds 20px. Use <code class="inline-code">clamp()</code> with a <code class="inline-code">rem</code> minimum instead. Also remember <code class="inline-code">100vw</code> includes the scrollbar width and causes horizontal overflow; <code class="inline-code">100%</code> does not.</div>
+
+      <h3>Respecting user preferences</h3>
+      <pre><code>@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="warn"><strong>⚠ Touch targets:</strong> WCAG requires interactive elements to be at least <strong>44 × 44px</strong>. Nav links are commonly 16px tall on desktop and unusable on a phone. Add padding and <code class="inline-code">min-height: 44px</code> in touch contexts.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Test in DevTools → Device Toolbar at 320px, 375px, 768px, 1024px and 1440px. If it survives all five with no horizontal scrollbar, your layout is solid.</div>
+    </section>
+
+    <!-- ═══ 16. Animations ═══ -->
+    <section id="animations" class="card sect-offset">
+      <h2><span class="section-num">16</span> Transitions, Transforms &amp; Animation <span class="level level-advanced">Advanced</span></h2>
+
+      <h3>Transitions — animate a change</h3>
+      <pre><code>.btn{
+  background: #e34f26;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn:hover{
+  background: #1572b6;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+.btn:active{ transform: translateY(0); }</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="note"><strong>Performance rule:</strong> animate only <code class="inline-code">transform</code>, <code class="inline-code">opacity</code> and <code class="inline-code">filter</code>. Animating <code class="inline-code">width</code>, <code class="inline-code">height</code>, <code class="inline-code">top</code> or <code class="inline-code">margin</code> forces the browser to recompute layout on every frame — this causes jank.</div>
+
+      <h3>Keyframe animations</h3>
+      <pre><code>@keyframes fade-up{
+  0%   { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.card{
+  opacity: 0;
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.card:nth-child(2){ animation-delay: 0.1s; }
+.card:nth-child(3){ animation-delay: 0.2s; }
+
+<span class="cm">/* Infinite loading spinner */</span>
+@keyframes spin{ to{ transform: rotate(360deg); } }
+.spinner{
+  width: 36px; height: 36px;
+  border: 3px solid rgba(255,255,255,0.2);
+  border-top-color: #e34f26;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Scroll-triggered reveal with no JavaScript</h3>
+      <pre><code>@supports (animation-timeline: view()){
+  .card{
+    animation: fade-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 25%;
+  }
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Transforms cheat sheet</h3>
+      <ul>
+        <li><code class="inline-code">translateX(20px)</code> / <code class="inline-code">translateY(-50%)</code> — move</li>
+        <li><code class="inline-code">scale(1.05)</code> — zoom; add <code class="inline-code">transform-origin: center</code> to change the anchor</li>
+        <li><code class="inline-code">rotate(45deg)</code> — spin; <code class="inline-code">rotateY(180deg)</code> — card flip</li>
+        <li><code class="inline-code">skewX(-10deg)</code> — italic slant</li>
+        <li><code class="inline-code">perspective(1000px) rotateY(25deg)</code> — 3D depth</li>
+      </ul>
+
+      <h3>Timing functions</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">ease</div><div class="cheat-desc">Default — gentle in and out</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">linear</div><div class="cheat-desc">Constant speed — spinners only</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">ease-in</div><div class="cheat-desc">Slow start</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">ease-out</div><div class="cheat-desc">Slow end — feels snappy</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">cubic-bezier(.16,1,.3,1)</div><div class="cheat-desc">Smooth deceleration — feels premium</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">steps(4)</div><div class="cheat-desc">Choppy, frame-by-frame</div></div>
+      </div>
+
+      <div class="try-it">
+        <div class="try-head">✍ Try it</div>
+        <p>Build a hover card that lifts up, scales slightly and reveals a hidden description — using only <code class="inline-code">transform</code> and <code class="inline-code">opacity</code>. Then check the Performance panel while hovering to confirm nothing forces reflow.</p>
+      </div>
+    </section>
+
+    <!-- ═══ 17. Theming ═══ -->
+    <section id="theming" class="card sect-offset">
+      <h2><span class="section-num">17</span> CSS Variables &amp; Theming <span class="level level-advanced">Advanced</span></h2>
+
+      <p>Custom properties (<code class="inline-code">--name</code>) store values on an element and cascade exactly like normal properties. They are the foundation of every design system and the cleanest way to build dark mode.</p>
+
+      <pre><code>:root{
+  <span class="cm">/* Brand palette — the only values you ever change */</span>
+  --brand: #e34f26;
+  --brand-dark: #c2410c;
+  --accent: #1572b6;
+
+  /* Semantic tokens */
+  --bg: #07080e;
+  --surface: rgba(18, 22, 40, 0.75);
+  --text: #f1f5f9;
+  --text-dim: #8892b0;
+  --border: rgba(227, 79, 38, 0.15);
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+
+  --radius: 14px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+@media (prefers-color-scheme: light){
+  :root{
+    --bg: #f8fafc;
+    --surface: rgba(255,255,255,0.85);
+    --text: #0f172a;
+    --text-dim: #475569;
+  }
+}
+
+body{
+  background: var(--bg);
+  color: var(--text);
+}
+.card{
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>JavaScript-free dark mode toggle</h3>
+      <pre><code>&lt;!-- inline in &lt;head&gt; — prevents white flash on load --&gt;
+&lt;script&gt;
+  const theme = localStorage.getItem('theme')
+    || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.dataset.theme = theme;
+&lt;/script&gt;
+
+:root[data-theme="light"]{
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --text-dim: #475569;
+}
+:root[data-theme="dark"]{
+  --bg: #07080e;
+  --surface: #121626;
+  --text: #f1f5f9;
+  --text-dim: #8892b0;
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Runtime variables from JS</h3>
+      <pre><code><span class="cm">// JS reads the computed value</span>
+const brand = getComputedStyle(document.documentElement)
+  .getPropertyValue('--brand').trim();   <span class="cm">/* "#e34f26" */</span>
+
+<span class="cm">// JS sets a variable (e.g. reading the user's accent preference)</span>
+document.documentElement.style.setProperty('--brand', '#1572b6');</code><span class="copy-tip">Copy</span></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Use <code class="inline-code">var(--brand, #e34f26)</code> to provide a fallback if the variable is ever missing. Note that custom properties are not typed — <code class="inline-code">--gap: 10</code> is invalid as a length, you must write <code class="inline-code">--gap: 10px</code>.</div>
+
+      <div class="note"><strong>Pro tip:</strong> register properties with <code class="inline-code">@property</code> to give them a type and make them animatable — this is how you animate custom properties without JavaScript.</div>
+    </section>
+
+    <!-- ═══ 18. Projects ═══ -->
+    <section id="projects" class="card sect-offset">
+      <h2><span class="section-num">18</span> Practice Projects <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Reading is not learning. Build these in order — each one introduces exactly one new concept.</p>
+
+      <details class="accordion" open>
+        <summary><span class="arrow">▶</span> 1. Personal Profile Card <span class="tag">Flexbox</span></summary>
+        <p>Center a card vertically and horizontally. Add an avatar, name, role and three social links that highlight on hover. Make the avatar circle on hover with <code class="inline-code">transform: scale()</code>.</p>
+        <pre><code>.profile{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  border-radius: 20px;
+  background: var(--surface);
+}
+.avatar{
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.profile:hover .avatar{ transform: scale(1.05) rotate(3deg); }
+.links{ display: flex; gap: 1rem; }</code><span class="copy-tip">Copy</span></pre>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span> 2. Responsive Navbar with Hamburger <span class="tag">Media queries</span></summary>
+        <p>Horizontal nav on desktop; on mobile it collapses into a ☰ button that toggles a vertical menu. Use <code class="inline-code">aria-expanded</code> and <code class="inline-code">aria-label</code> so it stays accessible.</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span> 3. CSS Grid Photo Gallery <span class="tag">Grid</span></summary>
+        <p>Use <code class="inline-code">auto-fill</code> + <code class="inline-code">minmax</code> for automatic columns. Give the first image <code class="inline-code">grid-column: span 2</code> and <code class="inline-code">grid-row: span 2</code>. Add a lightbox on click using <code class="inline-code">position: fixed</code>.</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span> 4. Dashboard Layout <span class="tag">grid-template-areas</span></summary>
+        <p>Header, 240px sidebar, main area, footer. Below 900px, collapse to a single column with the sidebar hidden behind a toggle. This is the layout behind every admin panel you have ever used.</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span> 5. Landing Page <span class="tag">Full project</span></summary>
+        <p>Hero with gradient text and a CSS-only animated background, a 3-card feature grid, a testimonials grid using <code class="inline-code">auto-fit</code>, an FAQ built with <code class="inline-code">&lt;details&gt;</code>, and a CTA section. Must be responsive, keyboard-navigable and score 95+ in Lighthouse.</p>
+      </details>
+
+      <details class="accordion">
+        <summary><span class="arrow">▶</span> 6. Themed Portfolio with Dark Mode <span class="tag">CSS variables</span></summary>
+        <p>Define a full token set in <code class="inline-code">:root</code>, then a toggle button that swaps <code class="inline-code">data-theme</code> on <code class="inline-code">&lt;html&gt;</code>. Persist the choice in <code class="inline-code">localStorage</code> and add a smooth <code class="inline-code">transition: background-color 0.3s</code> to <code class="inline-code">body</code>.</p>
+      </details>
+
+      <div class="note"><strong>How to learn properly:</strong> build it without a tutorial first, then compare with a reference solution. The gap between your attempt and theirs <em>is</em> your learning. Rebuild from memory a week later.</div>
+    </section>
+
+    <!-- ═══ 19. Cheat Sheet ═══ -->
+    <section id="cheatsheet" class="card sect-offset">
+      <h2><span class="section-num">19</span> Cheat Sheet &amp; Best Practices <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Reset you'll actually use</h3>
+      <pre><code>*, *::before, *::after{ box-sizing: border-box; margin: 0; padding: 0; }
+body{ line-height: 1.6; -webkit-font-smoothing: antialiased; }
+img, picture, video{ max-width: 100%; height: auto; display: block; }
+input, button, textarea, select{ font: inherit; }
+ul[class]{ list-style: none; }
+:focus-visible{ outline: 2px solid #e34f26; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{ animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}</code><span class="copy-tip">Copy</span></pre>
+
+      <h3>Layout decision tree</h3>
+      <ul>
+        <li>One direction (row or column) → <strong>Flexbox</strong></li>
+        <li>Rows <em>and</em> columns, or page layout → <strong>Grid</strong></li>
+        <li>Centering anything, known or unknown size → <strong>Grid</strong> with <code class="inline-code">place-items: center</code></li>
+        <li>Element must stay in the document flow → <strong>sticky</strong>, not <code class="inline-code">fixed</code></li>
+        <li>Columns that depend on available width → <code class="inline-code">repeat(auto-fit, minmax(220px, 1fr))</code></li>
+      </ul>
+
+      <h3>Ten rules to remember</h3>
+      <ol>
+        <li>Semantic HTML first; CSS only for presentation</li>
+        <li>One <code class="inline-code">&lt;h1&gt;</code> per page, never skip heading levels</li>
+        <li>Always set <code class="inline-code">box-sizing: border-box</code></li>
+        <li>Use <code class="inline-code">gap</code>, not margin hacks — no collapse surprises</li>
+        <li><code class="inline-code">min-width: 0</code> on flex items that contain text</li>
+        <li>Classes for styling, IDs for anchors and JavaScript hooks</li>
+        <li>Units: <code class="inline-code">rem</code> for type and spacing, <code class="inline-code">%</code>/<code class="inline-code">fr</code> for sizes</li>
+        <li>Mobile-first with <code class="inline-code">min-width</code> queries</li>
+        <li>Animate only <code class="inline-code">transform</code> and <code class="inline-code">opacity</code></li>
+        <li>Test with the keyboard and in DevTools — every time</li>
+      </ol>
+
+      <h3>Resources worth bookmarking</h3>
+      <ul>
+        <li><a href="https://developer.mozilla.org">MDN Web Docs</a> — the reference, not a tutorial site. Start here.</li>
+        <li><a href="https://css-tricks.com/snippets/">CSS-Tricks</a> — Flexbox and Grid guides by A Complete Beginner</li>
+        <li><a href="https://web.dev/learn">web.dev Learn</a> — structured, modern courses from the Chrome team</li>
+        <li><a href="https://flexboxfrogs.com">Flexbox Frogs</a> / <a href="https://gridbyexample.com">Grid by Example</a> — learn by playing</li>
+        <li><a href="https://caniuse.com">Can I Use</a> — check browser support before using a feature</li>
+        <li><a href="https://www.w3.org/WAI/WCAG22/quickref">WCAG Quick Reference</a> — accessibility checklist</li>
+      </ul>
+
+      <div class="note"><strong>🎯 Next step:</strong> Learn enough JavaScript to change a class on click, and you can build interactive components without any framework. That is the whole frontend job in 90% of cases.</div>
+    </section>
+
+    <footer><i>Made with ❤ by Laksh. <a href="index.html">⌂ Back to Home</a></i></footer>
+  </main>
+
+  <button id="back-top" title="Back to top">↑</button>
+
+  <script>
+    // ═════════════════════════════════════════════
+    // 1. SIDEBAR TOGGLE (Mobile)
+    // ═════════════════════════════════════════════
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menuBtn');
+    if (menuBtn) {
+      menuBtn.addEventListener('click', () => {
+        if (sidebar) sidebar.classList.toggle('active');
+        if (overlay) overlay.classList.toggle('active');
+      });
+    }
+    if (overlay) {
+      overlay.addEventListener('click', () => {
+        if (sidebar) sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    }
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.addEventListener('click', () => {
+        if (sidebar) sidebar.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+      });
+    });
+
+    // ═════════════════════════════════════════════
+    // 2. COPY TO CLIPBOARD
+    // ═════════════════════════════════════════════
+    document.querySelectorAll('pre').forEach(pre => {
+      const tip = pre.querySelector('.copy-tip');
+      if (!tip) return;
+      tip.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        try {
+          await navigator.clipboard.writeText(code ? code.innerText : pre.innerText);
+          tip.textContent = 'Copied!';
+          tip.classList.add('copied');
+          setTimeout(() => {
+            tip.textContent = 'Copy';
+            tip.classList.remove('copied');
+          }, 1800);
+        } catch {
+          tip.textContent = 'Failed';
+        }
+      });
+    });
+
+    // ═════════════════════════════════════════════
+    // 3. TYPEWRITER
+    // ═════════════════════════════════════════════
+    (function typewriter() {
+      const el = document.getElementById('typewriter-text');
+      if (!el) return;
+      const text = 'A complete frontend foundation — semantic HTML, forms, the box model, selectors and specificity, flexbox, grid, responsive design, transitions and dark-mode theming. Click any code block to copy it.';
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          el.textContent += text[i];
+          i++;
+          setTimeout(type, 12 + Math.random() * 16);
+        }
+      }
+      type();
+    })();
+
+    // ═════════════════════════════════════════════
+    // 4. TOC ACTIVE HIGHLIGHT
+    // ═════════════════════════════════════════════
+    const sections = [];
+    document.querySelectorAll('.toc a').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const el = document.querySelector(href);
+        if (el) sections.push({ el, link: a });
+      }
+    });
+    const tocLinks = document.querySelectorAll('.toc a');
+
+    function highlightTOC() {
+      let current = sections[0];
+      for (const s of sections) {
+        const rect = s.el.getBoundingClientRect();
+        if (rect.top <= 120) current = s;
+        else break;
+      }
+      tocLinks.forEach(a => a.classList.remove('active'));
+      if (current) current.link.classList.add('active');
+    }
+    window.addEventListener('scroll', highlightTOC, { passive: true });
+    highlightTOC();
+
+    // ═════════════════════════════════════════════
+    // 5. BACK TO TOP
+    // ═════════════════════════════════════════════
+    const backTop = document.getElementById('back-top');
+    if (backTop) {
+      window.addEventListener('scroll', () => {
+        backTop.classList.toggle('visible', window.scrollY > 400);
+      }, { passive: true });
+      backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
+
+    // ═════════════════════════════════════════════
+    // 6. SCROLL REVEAL
+    // ═════════════════════════════════════════════
+    (function scrollReveal() {
+      const cards = document.querySelectorAll('.card');
+      if (!cards.length || !('IntersectionObserver' in window)) {
+        cards.forEach(c => c.classList.add('visible'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      cards.forEach(card => observer.observe(card));
+    })();
+
+    // ═════════════════════════════════════════════
+    // 7. 3D TILT
+    // ═════════════════════════════════════════════
+    (function tiltEffect() {
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -5;
+          const rotateY = ((x - centerX) / centerX) * 5;
+          card.style.transform =
+            `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.005)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    })();
+
+    // ═════════════════════════════════════════════
+    // 8. PARALLAX ORBS
+    // ═════════════════════════════════════════════
+    (function parallaxOrbs() {
+      const orbs = document.querySelectorAll('.orb');
+      if (!orbs.length) return;
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        orbs.forEach((orb, i) => {
+          const speed = 5 + i * 3;
+          orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+        });
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
