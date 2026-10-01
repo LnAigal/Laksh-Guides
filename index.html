@@ -105,6 +105,7 @@
     .nav-logo{
       font-weight:800; font-size:1.1rem;
       display:flex; align-items:center; gap:10px;
+      white-space:nowrap; flex-shrink:0;
       background:linear-gradient(135deg,var(--accent),var(--accent-light));
       -webkit-background-clip:text; -webkit-text-fill-color:transparent;
       background-clip:text;
@@ -368,6 +369,12 @@
     }
 
     /* ═══ RESPONSIVE ═══ */
+    /* laptop/tablet-landscape: tighten nav pills so they never touch the logo */
+    @media (max-width: 1000px) and (min-width: 769px) {
+      nav{ padding:0 18px; }
+      .nav-links{ gap:4px; }
+      .nav-links a{ padding:8px 10px; font-size:0.8rem; gap:5px; }
+    }
     @media (max-width: 768px) {
       .menu-btn{ display:block; }
       .nav-links a:not(.theme-btn-nav){ display:none; }
