@@ -8,6 +8,14 @@
   gtag('js', new Date());
   gtag('config', 'G-NDLH3RKL58');
 </script>
+<script>
+  (function(){
+    try{
+      var t = localStorage.getItem('theme');
+      if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    }catch(e){}
+  })();
+</script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HTML &amp; CSS Guide — Laksh Guides</title>
@@ -37,8 +45,22 @@
       --shadow: 0 8px 32px rgba(0,0,0,0.5);
       --glow: 0 0 40px rgba(99,102,241,0.1);
     }
+    :root[data-theme="light"]{
+      --bg: #f8fafc;
+      --bg-alt: #f1f5f9;
+      --surface: rgba(255,255,255,0.85);
+      --surface-hover: rgba(255,255,255,1);
+      --text: #0f172a;
+      --text-dim: #475569;
+      --text-muted: #94a3b8;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.35);
+      --code-bg: #0f172a;
+      --shadow: 0 8px 32px rgba(0,0,0,0.06);
+      --glow: 0 0 40px rgba(99,102,241,0.05);
+    }
     @media (prefers-color-scheme: light){
-      :root{
+      :root:not([data-theme="dark"]){
         --bg: #f8fafc;
         --bg-alt: #f1f5f9;
         --surface: rgba(255,255,255,0.85);
@@ -96,6 +118,17 @@
       transition:opacity 0.2s;
     }
     .logo .home-link:hover{ opacity:0.8; }
+    .logo .theme-btn{
+      margin-left:auto; font-size:0.85rem; line-height:1; font-family:inherit;
+      background:transparent; border:1px solid var(--border); color:var(--text-dim);
+      width:26px; height:26px; border-radius:8px; cursor:pointer; padding:0;
+      display:inline-flex; align-items:center; justify-content:center;
+      -webkit-text-fill-color:initial;
+      transition:color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .logo .theme-btn:hover{ color:var(--text); border-color:var(--border-hover); background:var(--surface); }
+    .logo .theme-btn + .home-link{ margin-left:6px; }
+    body{ transition: background-color 0.3s ease, color 0.3s ease; }
 
     .toc{ display:flex; flex-direction:column; gap:2px; margin-top:6px; flex:1; }
     .toc a{
@@ -465,6 +498,7 @@
   <nav id="sidebar">
     <div class="logo">
       <span class="mark"></span> <span class="brand-icon brand-icon-accent" aria-hidden="true"></span> HTML &amp; CSS
+      <button class="theme-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
       <a href="index.html" class="home-link" title="Back to home">⌂</a>
     </div>
     <div class="toc" id="toc-menu">
@@ -1804,6 +1838,22 @@ ul[class]{ list-style: none; }
           orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
         });
       }, { passive: true });
+    })();
+  </script>
+  <script>
+    (function themeToggle(){
+      const html = document.documentElement;
+      const btn = document.getElementById('themeToggle');
+      if(!btn) return;
+      const icons = { light:'\u2600\ufe0f', dark:'\ud83c\udf19' };
+      const sys = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      const apply = t => { html.setAttribute('data-theme', t); btn.textContent = icons[t] || icons.dark; };
+      apply(html.getAttribute('data-theme') || sys());
+      btn.addEventListener('click', () => {
+        const next = (html.getAttribute('data-theme') || sys()) === 'light' ? 'dark' : 'light';
+        apply(next);
+        try{ localStorage.setItem('theme', next); }catch(e){}
+      });
     })();
   </script>
 </body>
