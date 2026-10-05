@@ -10,6 +10,7 @@
 </script>
 <script>
   (function(){
+    document.documentElement.classList.add('js');
     try{
       var t = localStorage.getItem('theme');
       if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
@@ -76,7 +77,7 @@
       }
     }
     *{ box-sizing:border-box; margin:0; padding:0; }
-    html{ scroll-behavior:smooth; scroll-padding-top:100px; }
+    html{ scroll-behavior:smooth; scroll-padding-top:16px; }
     html{
       min-height:100%;
       background: var(--bg);
@@ -88,6 +89,7 @@
       display:grid; grid-template-columns:270px minmax(0, 1fr); gap:0;
     }
     a{ color:var(--accent-via); text-decoration:none; }
+    :focus-visible{ outline:2px solid var(--accent-from); outline-offset:2px; border-radius:6px; }
 
     ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
 
@@ -141,7 +143,7 @@
     }
     .toc a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
     .toc a.active{
-      color:#fff; border-color:var(--border-hover);
+      color:var(--text); border-color:var(--border-hover);
       background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08));
       box-shadow:inset 2px 0 0 var(--accent-from);
     }
@@ -188,7 +190,7 @@
       -webkit-backdrop-filter:blur(20px);
       border:1px solid var(--border); border-radius:20px;
       padding:28px 28px 20px; margin-bottom:24px;
-      transition:all 0.3s ease; box-shadow:var(--glow);
+      transition:border-color 0.3s ease, box-shadow 0.3s ease; box-shadow:var(--glow);
       position:relative; overflow:hidden;
     }
     section.card::before{
@@ -198,7 +200,6 @@
     }
     section.card:hover{
       border-color:var(--border-hover); box-shadow:var(--shadow),var(--glow);
-      transform:translateY(-1px);
     }
     section.card:hover::before{ opacity:1; }
 
@@ -306,12 +307,15 @@
 
     pre .copy-tip{
       position:absolute; top:10px; right:10px;
-      font-size:0.6rem; padding:5px 11px; border-radius:8px;
+      font:inherit; font-size:0.6rem; font-weight:500; line-height:1.4;
+      padding:5px 11px; border-radius:8px; font-family:inherit;
       background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15);
       color:var(--text-dim); cursor:pointer; opacity:0;
-      transition:all 0.2s; z-index:2; font-weight:500;
+      transition:opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+      z-index:2;
     }
-    pre:hover .copy-tip{ opacity:1; }
+    pre:hover .copy-tip, pre:focus-within .copy-tip{ opacity:1; }
+    @media (hover:none){ .copy-tip{ opacity:1; } }
     .copy-tip:hover{ background:rgba(99,102,241,0.2); color:var(--text); }
     .copy-tip.copied{ background:rgba(16,185,129,0.2); color:var(--green); border-color:rgba(16,185,129,0.3); }
 
@@ -345,6 +349,7 @@
     #back-top:hover{ border-color:var(--border-hover); color:var(--text); background:var(--surface-hover); transform:translateY(-2px); }
 
     @media (max-width: 900px){
+      html{ scroll-padding-top:64px; }
       html,body{ grid-template-columns:minmax(0, 1fr); }
       nav{
         position:fixed; left:0; top:0; bottom:0;
@@ -383,7 +388,7 @@
       #overlay.active{ display:block; }
     }
 
-    .sect-offset{ scroll-margin-top:12px; }
+    .sect-offset{ scroll-margin-top:16px; }
 
     /* laptop/short-viewport: compact TOC so all items fit without clipping */
     @media (max-height:860px){
@@ -497,26 +502,22 @@
       width:400px; height:400px;
       background:radial-gradient(circle,var(--accent-from),transparent);
       top:-100px; right:-100px;
-      animation:orb-drift 20s ease-in-out infinite;
     }
     .orb-2{
       width:300px; height:300px;
       background:radial-gradient(circle,var(--accent-to),transparent);
       bottom:-80px; left:-80px;
-      animation:orb-drift-2 25s ease-in-out infinite;
     }
     .orb-3{
       width:250px; height:250px;
       background:radial-gradient(circle,var(--cyan),transparent);
       top:40%; left:50%;
-      animation:orb-drift 18s ease-in-out infinite reverse;
       opacity:0.08;
     }
     .orb-4{
       width:200px; height:200px;
       background:radial-gradient(circle,var(--green),transparent);
       top:60%; right:20%;
-      animation:orb-drift-2 22s ease-in-out infinite;
       opacity:0.06;
     }
 
@@ -533,14 +534,9 @@
     .breadcrumb{ animation:slide-up 0.6s ease-out 0.1s both; }
     .pill{ animation:scale-in 0.6s ease-out 0.6s both; }
 
-    .card{ opacity:0; transform:translateY(30px); transition:all 0.7s cubic-bezier(0.16,1,0.3,1); }
-    .card.visible{ opacity:1; transform:translateY(0); }
-    .card:nth-child(2){ transition-delay:0.05s; }
-    .card:nth-child(3){ transition-delay:0.1s; }
-    .card:nth-child(4){ transition-delay:0.15s; }
-    .card:nth-child(5){ transition-delay:0.2s; }
+    .js .card{ opacity:0; transform:translateY(30px); transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .card.visible{ opacity:1; transform:translateY(0); transition:border-color 0.3s ease, box-shadow 0.3s ease; }
 
-    .card:hover{ transform:translateY(-4px) scale(1.005); }
     .card:hover .section-num{ animation:wobble 0.4s ease; }
 
     details.accordion:hover summary .arrow{
@@ -559,16 +555,8 @@
       transform-origin:center;
     }
 
-    .toc a.active{ animation:pulse-glow 3s ease-in-out infinite; }
 
-    .flow .step{ animation:float 6s ease-in-out infinite; }
-    .flow .step:nth-child(3){ animation-delay:-2s; }
-    .flow .step:nth-child(5){ animation-delay:-4s; }
 
-    .badge{ animation:badge-pulse 3s ease-in-out infinite; }
-    .badge-green{ animation-delay:0s; }
-    .badge-blue{ animation-delay:-1s; }
-    .badge-amber{ animation-delay:-2s; }
 
     #back-top.visible{ animation:scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
 
@@ -598,7 +586,7 @@
 
     @media (prefers-reduced-motion: reduce){
       .orb,.card,.flow .step{ animation:none !important; }
-      .card{ opacity:1; transform:none; }
+      .card{ opacity:1; transform:none !important; }
       .title{ animation:none; }
       .animated-gradient{ background-size:100% 100%; animation:none; }
       .subtitle,.breadcrumb,.pill{ animation:none; }
@@ -608,7 +596,7 @@
       .orb{ opacity:0.05; }
       .card:hover{ transform:none; }
     }
-  </style>
+    </style>
 </head>
 <body>
   <div class="orb-container">
@@ -655,8 +643,8 @@
       <div class="hero-glow"></div>
       <div class="breadcrumb"><a href="index.html">⌂ Home</a> / Linux Guide</div>
       <h1 class="title"><span class="linux-icon" aria-hidden="true" style="width:32px;height:32px;background:var(--accent-to);display:inline-block;vertical-align:middle;margin-right:4px;"></span> <span class="animated-gradient">Linux Guide</span></h1>
-      <p class="subtitle"><span id="typewriter-text"></span><span class="typewriter-cursor"></span></p>
-      <span class="pill">⤒ Click code blocks to copy &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
+      <p class="subtitle"><span id="typewriter-text">A comprehensive Linux command-line guide — filesystem navigation, permissions, processes, networking, shell scripting, and more. Every code block has a Copy button.</span><span class="typewriter-cursor"></span></p>
+      <span class="pill">Copy button on each code block &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
     </header>
 
     <!-- ═══ 1. Introduction ═══ -->
@@ -722,7 +710,7 @@
       <details class="accordion" open>
         <summary><span class="arrow">▶</span><span class="tag">pwd</span> Print working directory</summary>
         <pre><code>pwd
-<span class="cm"># Output: /home/username/projects</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm"># Output: /home/username/projects</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -734,7 +722,7 @@ ls -la                 <span class="cm"># long + hidden</span>
 ls -lh                 <span class="cm"># human-readable sizes (KB, MB, GB)</span>
 ls -R                  <span class="cm"># recursive (list subdirectories too)</span>
 ls -t                  <span class="cm"># sort by modification time</span>
-ls -S                  <span class="cm"># sort by file size</span></code><span class="copy-tip">Copy</span></pre>
+ls -S                  <span class="cm"># sort by file size</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -744,14 +732,14 @@ cd ..                  <span class="cm"># go up one level</span>
 cd ~                   <span class="cm"># go to your home directory</span>
 cd -                   <span class="cm"># go to previous directory</span>
 cd /                   <span class="cm"># go to root</span>
-cd ~/Documents          <span class="cm"># go to Documents in home</span></code><span class="copy-tip">Copy</span></pre>
+cd ~/Documents          <span class="cm"># go to Documents in home</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">tree</span> View directory tree</summary>
         <pre><code>tree                   <span class="cm"># show directory structure</span>
 tree -L 2              <span class="cm"># limit depth to 2 levels</span>
-tree -d                <span class="cm"># directories only</span></code><span class="copy-tip">Copy</span></pre>
+tree -d                <span class="cm"># directories only</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p>May need installing: <code>sudo apt install tree</code> (Debian/Ubuntu) or <code>sudo dnf install tree</code> (Fedora).</p>
       </details>
 
@@ -768,14 +756,14 @@ tree -d                <span class="cm"># directories only</span></code><span cl
       <details class="accordion" open>
         <summary><span class="arrow">▶</span><span class="tag">touch</span> Create an empty file</summary>
         <pre><code>touch file.txt         <span class="cm"># create empty file (or update timestamp)</span>
-touch file1.txt file2.txt  <span class="cm"># create multiple files</span></code><span class="copy-tip">Copy</span></pre>
+touch file1.txt file2.txt  <span class="cm"># create multiple files</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">mkdir</span> Create directories</summary>
         <pre><code>mkdir myfolder          <span class="cm"># create a directory</span>
 mkdir -p a/b/c          <span class="cm"># create parent directories as needed</span>
-mkdir -m 755 secure     <span class="cm"># create with specific permissions</span></code><span class="copy-tip">Copy</span></pre>
+mkdir -m 755 secure     <span class="cm"># create with specific permissions</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -784,7 +772,7 @@ mkdir -m 755 secure     <span class="cm"># create with specific permissions</spa
 cp -r myfolder backup               <span class="cm"># copy directory recursively</span>
 cp -i file.txt /target/             <span class="cm"># prompt before overwrite</span>
 cp -v file.txt /target/             <span class="cm"># verbose output</span>
-cp -u file.txt /target/             <span class="cm"># copy only if newer</span></code><span class="copy-tip">Copy</span></pre>
+cp -u file.txt /target/             <span class="cm"># copy only if newer</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -792,7 +780,7 @@ cp -u file.txt /target/             <span class="cm"># copy only if newer</span>
         <pre><code>mv file.txt /new/location/         <span class="cm"># move file</span>
 mv oldname.txt newname.txt          <span class="cm"># rename file</span>
 mv -i file.txt /target/             <span class="cm"># prompt before overwrite</span>
-mv -u file.txt /target/             <span class="cm"># move only if newer</span></code><span class="copy-tip">Copy</span></pre>
+mv -u file.txt /target/             <span class="cm"># move only if newer</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -800,14 +788,14 @@ mv -u file.txt /target/             <span class="cm"># move only if newer</span>
         <pre><code>rm file.txt                         <span class="cm"># delete a file</span>
 rm -r myfolder                      <span class="cm"># delete directory recursively</span>
 rm -f file.txt                      <span class="cm"># force delete (no prompt)</span>
-rm -rf myfolder                     <span class="cm"># ⚠ dangerous — delete without confirmation</span></code><span class="copy-tip">Copy</span></pre>
+rm -rf myfolder                     <span class="cm"># ⚠ dangerous — delete without confirmation</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p><code>rm -rf /</code> will delete your entire system. Double-check before running destructive commands!</p>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">ln</span> Create links</summary>
         <pre><code>ln -s /original/file link-name      <span class="cm"># symbolic (soft) link</span>
-ln /original/file hard-link          <span class="cm"># hard link (same inode)</span></code><span class="copy-tip">Copy</span></pre>
+ln /original/file hard-link          <span class="cm"># hard link (same inode)</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p><strong>Symbolic links</strong> are shortcuts. <strong>Hard links</strong> are additional names for the same file data — deleting one keeps the other.</p>
       </details>
 
@@ -824,7 +812,7 @@ ln /original/file hard-link          <span class="cm"># hard link (same inode)</
 -rw-r--r--  1 alice developers  1024 Jun 15 10:00 file.txt
 <span class="cm"># ^^^^       ^               ^
 # |owner    group           others
-# rw- = read+write, r-- = read-only, r-x = read+execute</span></code><span class="copy-tip">Copy</span></pre>
+# rw- = read+write, r-- = read-only, r-x = read+execute</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <details class="accordion" open>
         <summary><span class="arrow">▶</span><span class="tag">chmod</span> Change permissions</summary>
@@ -844,27 +832,27 @@ chmod 700 private.sh     <span class="cm"># rwx------</span>
 <span class="cm"># 6 = rw- (read+write)</span>
 <span class="cm"># 5 = r-x (read+execute)</span>
 <span class="cm"># 4 = r-- (read only)</span>
-<span class="cm"># 0 = --- (no permissions)</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm"># 0 = --- (no permissions)</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">chown</span> Change owner &amp; group</summary>
         <pre><code>sudo chown bob file.txt         <span class="cm"># change owner to bob</span>
 sudo chown bob:devs file.txt    <span class="cm"># change owner:group</span>
-sudo chown -R bob:devs mydir/   <span class="cm"># recursive</span></code><span class="copy-tip">Copy</span></pre>
+sudo chown -R bob:devs mydir/   <span class="cm"># recursive</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p>Only root (using <code>sudo</code>) can change file ownership.</p>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">chgrp</span> Change group only</summary>
         <pre><code>chgrp devs file.txt             <span class="cm"># change group to devs</span>
-chgrp -R devs mydir/            <span class="cm"># recursive</span></code><span class="copy-tip">Copy</span></pre>
+chgrp -R devs mydir/            <span class="cm"># recursive</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">umask</span> Default permission mask</summary>
         <pre><code>umask                          <span class="cm"># show current mask (e.g., 0022)</span>
-umask 0027                     <span class="cm"># set mask (more restrictive)</span></code><span class="copy-tip">Copy</span></pre>
+umask 0027                     <span class="cm"># set mask (more restrictive)</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p>The <strong>umask</strong> subtracts permissions from the default (666 for files, 777 for directories). A umask of 022 means new files get 644 and new dirs get 755.</p>
       </details>
 
@@ -877,7 +865,7 @@ chmod u+s executable         <span class="cm"># shown as 's' in owner's execute 
 chmod g+s directory          <span class="cm"># new files inherit group</span>
 
 <span class="cm"># Sticky bit — only owner can delete:</span>
-chmod +t /tmp                <span class="cm"># shown as 't' in others' execute field</span></code><span class="copy-tip">Copy</span></pre>
+chmod +t /tmp                <span class="cm"># shown as 't' in others' execute field</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p><strong>Sticky bit</strong> is used on <code>/tmp</code> — anyone can write but only the file owner can delete their own files.</p>
       </details>
 
@@ -897,13 +885,13 @@ ps aux                   <span class="cm"># all processes (BSD style)</span>
 ps -ef                   <span class="cm"># all processes (standard style)</span>
 ps aux --sort=-%mem      <span class="cm"># sorted by memory usage</span>
 ps aux --sort=-%cpu      <span class="cm"># sorted by CPU usage</span>
-ps -u username           <span class="cm"># processes of a specific user</span></code><span class="copy-tip">Copy</span></pre>
+ps -u username           <span class="cm"># processes of a specific user</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">top / htop</span> Real-time process monitor</summary>
         <pre><code>top                      <span class="cm"># real-time view (press q to quit)</span>
-htop                     <span class="cm"># prettier version (install first)</span></code><span class="copy-tip">Copy</span></pre>
+htop                     <span class="cm"># prettier version (install first)</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p>Inside <code>top</code>: press <kbd>P</kbd> to sort by CPU, <kbd>M</kbd> for memory, <kbd>k</kbd> to kill a process, <kbd>q</kbd> to quit.</p>
       </details>
 
@@ -915,7 +903,7 @@ kill -15 PID             <span class="cm"># explicitly send SIGTERM</span>
 kill -2 PID              <span class="cm"># interrupt (SIGINT, like Ctrl+C)</span>
 kill -1 PID              <span class="cm"># hangup — reload config (SIGHUP)</span>
 killall firefox          <span class="cm"># kill all processes named firefox</span>
-pkill -f "pattern"       <span class="cm"># kill by pattern match</span></code><span class="copy-tip">Copy</span></pre>
+pkill -f "pattern"       <span class="cm"># kill by pattern match</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -928,13 +916,13 @@ long-command &amp;
 
 jobs                     <span class="cm"># list background jobs</span>
 bg %1                    <span class="cm"># resume job 1 in background</span>
-fg %2                    <span class="cm"># bring job 2 to foreground</span></code><span class="copy-tip">Copy</span></pre>
+fg %2                    <span class="cm"># bring job 2 to foreground</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">nohup / disown</span> Keep processes running after logout</summary>
         <pre><code>nohup long-command &amp;     <span class="cm"># ignore HUP signal</span>
-long-command &amp; disown    <span class="cm"># remove from shell job control</span></code><span class="copy-tip">Copy</span></pre>
+long-command &amp; disown    <span class="cm"># remove from shell job control</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <div class="note"><strong>Process states:</strong> <code>R</code> (running), <code>S</code> (sleeping), <code>D</code> (uninterruptible sleep), <code>Z</code> (zombie), <code>T</code> (stopped).</div>
@@ -954,24 +942,24 @@ sudo apt remove firefox      <span class="cm"># remove a package</span>
 sudo apt purge firefox       <span class="cm"># remove package + config files</span>
 sudo apt autoremove          <span class="cm"># remove unused dependencies</span>
 apt search keyword           <span class="cm"># search for a package</span>
-apt show firefox             <span class="cm"># show package details</span></code><span class="copy-tip">Copy</span></pre>
+apt show firefox             <span class="cm"># show package details</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Fedora / RHEL (dnf)</h3>
       <pre><code>sudo dnf install firefox     <span class="cm"># install</span>
 sudo dnf remove firefox      <span class="cm"># remove</span>
 sudo dnf update              <span class="cm"># update all</span>
 sudo dnf search keyword      <span class="cm"># search</span>
-sudo dnf info firefox        <span class="cm"># package info</span></code><span class="copy-tip">Copy</span></pre>
+sudo dnf info firefox        <span class="cm"># package info</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Arch Linux (pacman)</h3>
       <pre><code>sudo pacman -S firefox       <span class="cm"># install</span>
 sudo pacman -R firefox       <span class="cm"># remove</span>
 sudo pacman -Syu             <span class="cm"># sync + upgrade (full update)</span>
-sudo pacman -Ss keyword      <span class="cm"># search</span></code><span class="copy-tip">Copy</span></pre>
+sudo pacman -Ss keyword      <span class="cm"># search</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Snap &amp; Flatpak (universal)</h3>
       <pre><code>sudo snap install firefox    <span class="cm"># Snap package</span>
-flatpak install flathub org.mozilla.firefox  <span class="cm"># Flatpak</span></code><span class="copy-tip">Copy</span></pre>
+flatpak install flathub org.mozilla.firefox  <span class="cm"># Flatpak</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>Tip:</strong> Always run <code>sudo apt update</code> (or equivalent) before installing — it refreshes the list of available packages and versions.</div>
     </section>
@@ -987,21 +975,21 @@ ip a                     <span class="cm"># shorthand</span>
 ip link                  <span class="cm"># show interface status</span>
 ip route                 <span class="cm"># show routing table</span>
 ip link set eth0 up      <span class="cm"># bring interface up</span>
-ip link set eth0 down    <span class="cm"># bring interface down</span></code><span class="copy-tip">Copy</span></pre>
+ip link set eth0 down    <span class="cm"># bring interface down</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">ping</span> Test network connectivity</summary>
         <pre><code>ping google.com          <span class="cm"># ping until Ctrl+C</span>
 ping -c 4 google.com     <span class="cm"># ping 4 times then stop</span>
-ping -4 8.8.8.8          <span class="cm"># ping by IP (Google DNS)</span></code><span class="copy-tip">Copy</span></pre>
+ping -4 8.8.8.8          <span class="cm"># ping by IP (Google DNS)</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">ss</span> Socket statistics</summary>
         <pre><code>ss -tulpn                <span class="cm"># show listening ports and processes</span>
 ss -tua                  <span class="cm"># all TCP/UDP connections</span>
-ss -tuln                 <span class="cm"># numeric ports only (no DNS)</span></code><span class="copy-tip">Copy</span></pre>
+ss -tuln                 <span class="cm"># numeric ports only (no DNS)</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p>Replaces the older <code>netstat</code>. Use <code>-p</code> to see which process owns each socket (requires sudo).</p>
       </details>
 
@@ -1013,7 +1001,7 @@ curl -o myfile.zip https://...        <span class="cm"># download with custom na
 
 wget https://example.com/file.zip     <span class="cm"># download file</span>
 wget -c https://...                   <span class="cm"># resume interrupted download</span>
-wget -r https://example.com           <span class="cm"># recursive download</span></code><span class="copy-tip">Copy</span></pre>
+wget -r https://example.com           <span class="cm"># recursive download</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1021,14 +1009,14 @@ wget -r https://example.com           <span class="cm"># recursive download</spa
         <pre><code>ssh user@192.168.1.100               <span class="cm"># connect to remote machine</span>
 ssh -p 2222 user@host                 <span class="cm"># custom port</span>
 ssh -i ~/.ssh/id_rsa user@host        <span class="cm"># use specific key</span>
-ssh -J jump@gateway user@target       <span class="cm"># via jump host</span></code><span class="copy-tip">Copy</span></pre>
+ssh -J jump@gateway user@target       <span class="cm"># via jump host</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">scp</span> Secure copy (over SSH)</summary>
         <pre><code>scp file.txt user@host:/remote/path/     <span class="cm"># copy to remote</span>
 scp user@host:/remote/file.txt .         <span class="cm"># copy from remote</span>
-scp -r myfolder/ user@host:/path/        <span class="cm"># recursive directory copy</span></code><span class="copy-tip">Copy</span></pre>
+scp -r myfolder/ user@host:/path/        <span class="cm"># recursive directory copy</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <div class="tip"><strong>Common ports:</strong> 22 (SSH), 80 (HTTP), 443 (HTTPS), 3306 (MySQL), 5432 (PostgreSQL), 8080 (alternative HTTP).</div>
@@ -1048,7 +1036,7 @@ scp -r myfolder/ user@host:/path/        <span class="cm"># recursive directory 
 <span class="cm"># Ctrl+W  → Search</span>
 <span class="cm"># Ctrl+K  → Cut line</span>
 <span class="cm"># Ctrl+U  → Paste line</span>
-<span class="cm"># Ctrl+G  → Help</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm"># Ctrl+G  → Help</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p>Nano shows available commands at the bottom of the screen. <code>^</code> means the <kbd>Ctrl</kbd> key.</p>
       </details>
 
@@ -1073,14 +1061,14 @@ dd             <span class="cm"># delete (cut) current line</span>
 yy             <span class="cm"># yank (copy) current line</span>
 p              <span class="cm"># paste below</span>
 u              <span class="cm"># undo</span>
-Ctrl+r         <span class="cm"># redo</span></code><span class="copy-tip">Copy</span></pre>
+Ctrl+r         <span class="cm"># redo</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p>Vim has a steep learning curve but is incredibly efficient. Run <code>vimtutor</code> for a built-in 30-minute tutorial.</p>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">VS Code</span> Graphical editor (GUI)</summary>
         <pre><code>code file.txt            <span class="cm"># open file in VS Code</span>
-code .                   <span class="cm"># open current directory</span></code><span class="copy-tip">Copy</span></pre>
+code .                   <span class="cm"># open current directory</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p>Not terminal-based but invaluable for larger projects. Install via your package manager.</p>
       </details>
     </section>
@@ -1101,7 +1089,7 @@ ls file?.txt             <span class="cm"># file1.txt, fileA.txt, but not file10
 
 <span class="cm"># [] matches a set of characters</span>
 ls file[0-9].txt         <span class="cm"># file0.txt through file9.txt</span>
-ls [abc]*.txt            <span class="cm"># files starting with a, b, or c</span></code><span class="copy-tip">Copy</span></pre>
+ls [abc]*.txt            <span class="cm"># files starting with a, b, or c</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Redirection &amp; pipes</h3>
       <pre><code><span class="cm"># Redirect output to a file (overwrite)</span>
@@ -1117,7 +1105,7 @@ command 2&gt; error.log
 ls -la | grep ".txt"               <span class="cm"># filter list</span>
 ps aux | grep firefox              <span class="cm"># find process</span>
 dmesg | tail -20                   <span class="cm"># last 20 kernel messages</span>
-cat file.txt | wc -l               <span class="cm"># count lines</span></code><span class="copy-tip">Copy</span></pre>
+cat file.txt | wc -l               <span class="cm"># count lines</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Command chaining</h3>
       <pre><code><span class="cm"># && — run next only if previous succeeds</span>
@@ -1127,7 +1115,7 @@ mkdir project &amp;&amp; cd project &amp;&amp; git init
 cd /nonexistent || echo "Directory not found"
 
 <span class="cm"># ; — run sequentially regardless</span>
-echo "start" ; echo "middle" ; echo "end"</code><span class="copy-tip">Copy</span></pre>
+echo "start" ; echo "middle" ; echo "end"</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Command history</h3>
       <pre><code>history                  <span class="cm"># show command history</span>
@@ -1135,7 +1123,7 @@ echo "start" ; echo "middle" ; echo "end"</code><span class="copy-tip">Copy</spa
 !100                     <span class="cm"># repeat command #100 from history</span>
 Ctrl+r                   <span class="cm"># search history (type to filter)</span>
 !$                       <span class="cm"># last argument of previous command</span>
-!ls                      <span class="cm"># repeat last ls command</span></code><span class="copy-tip">Copy</span></pre>
+!ls                      <span class="cm"># repeat last ls command</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Useful shortcuts</h3>
       <div class="cheat-grid">
@@ -1160,7 +1148,7 @@ Ctrl+r                   <span class="cm"># search history (type to filter)</spa
         <summary><span class="arrow">▶</span><span class="tag">whoami / id</span> Who are you?</summary>
         <pre><code>whoami                   <span class="cm"># current username</span>
 id                       <span class="cm"># uid, gid, groups</span>
-id username              <span class="cm"># info about another user</span></code><span class="copy-tip">Copy</span></pre>
+id username              <span class="cm"># info about another user</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1169,7 +1157,7 @@ id username              <span class="cm"># info about another user</span></code
 sudo passwd newuser             <span class="cm"># set password</span>
 sudo usermod -aG sudo newuser   <span class="cm"># add to sudo group</span>
 sudo usermod -L username        <span class="cm"># lock account</span>
-sudo userdel -r username        <span class="cm"># delete user + home dir</span></code><span class="copy-tip">Copy</span></pre>
+sudo userdel -r username        <span class="cm"># delete user + home dir</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1178,7 +1166,7 @@ sudo userdel -r username        <span class="cm"># delete user + home dir</span>
 sudo groupmod -n newname oldname <span class="cm"># rename group</span>
 sudo groupdel developers         <span class="cm"># delete group</span>
 sudo usermod -aG groupname user  <span class="cm"># add user to group</span>
-groups username                  <span class="cm"># list user's groups</span></code><span class="copy-tip">Copy</span></pre>
+groups username                  <span class="cm"># list user's groups</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1186,7 +1174,7 @@ groups username                  <span class="cm"># list user's groups</span></c
         <pre><code>sudo command               <span class="cm"># run as root</span>
 sudo -i                    <span class="cm"># open root shell</span>
 sudo -u user command        <span class="cm"># run as another user</span>
-sudo -l                    <span class="cm"># list allowed commands</span></code><span class="copy-tip">Copy</span></pre>
+sudo -l                    <span class="cm"># list allowed commands</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p>Use sudo sparingly — only when a command needs elevated privileges. Running everything as root is dangerous.</p>
       </details>
 
@@ -1201,7 +1189,7 @@ sudo -l                    <span class="cm"># list allowed commands</span></code
         <summary><span class="arrow">▶</span><span class="tag">df</span> Disk free space</summary>
         <pre><code>df -h                    <span class="cm"># human-readable disk usage</span>
 df -h /home              <span class="cm"># usage for a specific mount</span>
-df -T                    <span class="cm"># show filesystem type</span></code><span class="copy-tip">Copy</span></pre>
+df -T                    <span class="cm"># show filesystem type</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1209,14 +1197,14 @@ df -T                    <span class="cm"># show filesystem type</span></code><s
         <pre><code>du -sh myfolder          <span class="cm"># total size of folder</span>
 du -sh *                 <span class="cm"># size of each item in current dir</span>
 du -h --max-depth=1      <span class="cm"># show sizes one level deep</span>
-du -ah myfolder          <span class="cm"># show every file's size</span></code><span class="copy-tip">Copy</span></pre>
+du -ah myfolder          <span class="cm"># show every file's size</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">lsblk / blkid</span> List block devices</summary>
         <pre><code>lsblk                    <span class="cm"># show disks and partitions</span>
 lsblk -f                 <span class="cm"># show filesystem info</span>
-blkid                    <span class="cm"># show UUIDs and labels</span></code><span class="copy-tip">Copy</span></pre>
+blkid                    <span class="cm"># show UUIDs and labels</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1224,14 +1212,14 @@ blkid                    <span class="cm"># show UUIDs and labels</span></code><
         <pre><code>mount                    <span class="cm"># show all mounted filesystems</span>
 sudo mount /dev/sdb1 /mnt/usb    <span class="cm"># mount a drive</span>
 sudo umount /mnt/usb              <span class="cm"># unmount</span>
-sudo mount -t tmpfs tmpfs /mnt/ram  <span class="cm"># RAM disk (in memory)</span></code><span class="copy-tip">Copy</span></pre>
+sudo mount -t tmpfs tmpfs /mnt/ram  <span class="cm"># RAM disk (in memory)</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">fdisk / parted</span> Partition disks</summary>
         <pre><code>sudo fdisk -l             <span class="cm"># list all partitions</span>
 sudo fdisk /dev/sda       <span class="cm"># interactively partition</span>
-sudo parted /dev/sda      <span class="cm"># modern partition tool</span></code><span class="copy-tip">Copy</span></pre>
+sudo parted /dev/sda      <span class="cm"># modern partition tool</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
         <p class="warn" style="margin-top:10px"><strong>⚠ Warning:</strong> Repartitioning can <strong>destroy your data</strong>. Only do this on empty or backed-up drives.</p>
       </details>
 
@@ -1247,33 +1235,33 @@ uname -a                 <span class="cm"># all system info (kernel, arch, hostn
 uname -r                 <span class="cm"># kernel release</span>
 hostname                 <span class="cm"># system hostname</span>
 uptime                   <span class="cm"># how long the system has been running</span>
-who                      <span class="cm"># who is logged in</span></code><span class="copy-tip">Copy</span></pre>
+who                      <span class="cm"># who is logged in</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <pre><code><span class="cm"># Memory</span>
 free -h                  <span class="cm"># RAM + swap usage (human-readable)</span>
 free -m                  <span class="cm"># in MB</span>
-vmstat 1                 <span class="cm"># continuous memory/proc stats</span></code><span class="copy-tip">Copy</span></pre>
+vmstat 1                 <span class="cm"># continuous memory/proc stats</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <pre><code><span class="cm"># CPU</span>
 lscpu                    <span class="cm"># CPU architecture info</span>
-nproc                    <span class="cm"># number of CPU cores</span></code><span class="copy-tip">Copy</span></pre>
+nproc                    <span class="cm"># number of CPU cores</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <pre><code><span class="cm"># Hardware (requires lshw or dmidecode)</span>
 sudo lshw                <span class="cm"># full hardware details</span>
 sudo dmidecode           <span class="cm"># DMI/BIOS info</span>
 lsusb                    <span class="cm"># USB devices</span>
-lspci                    <span class="cm"># PCI devices</span></code><span class="copy-tip">Copy</span></pre>
+lspci                    <span class="cm"># PCI devices</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <pre><code><span class="cm"># Date & time</span>
 date                     <span class="cm"># current date/time</span>
 cal                      <span class="cm"># calendar of current month</span>
-timedatectl              <span class="cm"># system time settings</span></code><span class="copy-tip">Copy</span></pre>
+timedatectl              <span class="cm"># system time settings</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <pre><code><span class="cm"># Logs</span>
 journalctl               <span class="cm"># view systemd logs</span>
 journalctl -u ssh        <span class="cm"># logs for a specific service</span>
 journalctl -f            <span class="cm"># follow logs in real time</span>
-journalctl --since yesterday  <span class="cm"># logs since yesterday</span></code><span class="copy-tip">Copy</span></pre>
+journalctl --since yesterday  <span class="cm"># logs since yesterday</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>Tip:</strong> Use <code>watch -n 2 'command'</code> to run any command every 2 seconds — great for monitoring: <code>watch -n 1 'free -h'</code></div>
     </section>
@@ -1300,12 +1288,12 @@ read username
 echo <span class="str">"Welcome, $username"</span>
 
 <span class="cm"># Exit with a status:</span>
-exit 0</code><span class="copy-tip">Copy</span></pre>
+exit 0</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Run a script</h3>
       <pre><code>chmod +x script.sh       <span class="cm"># make executable</span>
 ./script.sh              <span class="cm"># run it</span>
-bash script.sh           <span class="cm"># or run with Bash directly</span></code><span class="copy-tip">Copy</span></pre>
+bash script.sh           <span class="cm"># or run with Bash directly</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Conditionals &amp; loops</h3>
       <pre><code><span class="cm"># If/else</span>
@@ -1327,7 +1315,7 @@ count=1
 <span class="kw">while</span> [ <span class="hl">$count</span> -le 5 ]; <span class="kw">do</span>
     echo <span class="str">"Count: $count"</span>
     count=<span class="hl">$((count + 1))</span>
-<span class="kw">done</span></code><span class="copy-tip">Copy</span></pre>
+<span class="kw">done</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Useful test operators</h3>
       <div class="cheat-grid">
@@ -1356,7 +1344,7 @@ sudo ufw allow 22/tcp        <span class="cm"># allow SSH</span>
 sudo ufw allow 80/tcp        <span class="cm"># allow HTTP</span>
 sudo ufw allow 443/tcp       <span class="cm"># allow HTTPS</span>
 sudo ufw deny 23/tcp         <span class="cm"># deny telnet</span>
-sudo ufw delete allow 80     <span class="cm"># remove a rule</span></code><span class="copy-tip">Copy</span></pre>
+sudo ufw delete allow 80     <span class="cm"># remove a rule</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1365,7 +1353,7 @@ sudo ufw delete allow 80     <span class="cm"># remove a rule</span></code><span
 sudo systemctl enable fail2ban --now
 
 <span class="cm"># Configuration: /etc/fail2ban/jail.local</span>
-<span class="cm"># It monitors SSH logs and bans IPs after 5 failed attempts</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm"># It monitors SSH logs and bans IPs after 5 failed attempts</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1377,7 +1365,7 @@ openssl genrsa -out key.pem 2048
 openssl req -new -x509 -key key.pem -out cert.pem -days 365
 
 <span class="cm"># View certificate info</span>
-openssl x509 -in cert.pem -text -noout</code><span class="copy-tip">Copy</span></pre>
+openssl x509 -in cert.pem -text -noout</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1385,14 +1373,14 @@ openssl x509 -in cert.pem -text -noout</code><span class="copy-tip">Copy</span><
         <pre><code>gpg --gen-key                     <span class="cm"># generate a key pair</span>
 gpg -c file.txt                   <span class="cm"># symmetric encryption (password)</span>
 gpg -e -r recipient file.txt       <span class="cm"># encrypt for a recipient</span>
-gpg -d file.txt.gpg               <span class="cm"># decrypt</span></code><span class="copy-tip">Copy</span></pre>
+gpg -d file.txt.gpg               <span class="cm"># decrypt</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
         <summary><span class="arrow">▶</span><span class="tag">chkrootkit / rkhunter</span> Rootkit detection</summary>
         <pre><code>sudo apt install chkrootkit rkhunter
 sudo chkrootkit
-sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
+sudo rkhunter --check</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <div class="warn"><strong>⚠ Security rule #1:</strong> Keep your system updated: <code>sudo apt update &amp;&amp; sudo apt upgrade</code> (or equivalent). Most attacks exploit <em>known</em> vulnerabilities with available patches.</div>
@@ -1489,7 +1477,7 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
         e.stopPropagation();
         const code = pre.querySelector('code');
         try {
-          await navigator.clipboard.writeText(code ? code.innerText : pre.innerText);
+          await navigator.clipboard.writeText(code ? code.innerText : pre.textContent);
           btn.textContent = 'Copied!';
           btn.classList.add('copied');
           spawnConfetti(btn);
@@ -1525,7 +1513,13 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
     (function typewriter() {
       const el = document.getElementById('typewriter-text');
       if (!el) return;
-      const text = 'A comprehensive Linux command-line guide — filesystem navigation, permissions, processes, networking, shell scripting, and more. Click any code block to copy.';
+      const text = el.textContent.trim();
+      const cursor = el.parentElement.querySelector('.typewriter-cursor');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (cursor) cursor.style.display = 'none';
+        return;
+      }
+      el.textContent = '';
       let i = 0;
       function tick() {
         if (i < text.length) {
@@ -1533,6 +1527,8 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
           i++;
           const delay = text.charAt(i - 1) === '.' || text.charAt(i - 1) === ',' ? 60 : 20;
           setTimeout(tick, delay);
+        } else if (cursor) {
+          cursor.style.display = 'none';
         }
       }
       setTimeout(tick, 800);
@@ -1542,18 +1538,25 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
     const overlay = document.getElementById('overlay');
     const menuBtn = document.getElementById('menuBtn');
 
-    function toggleMenu() {
-      if (sidebar) sidebar.classList.toggle('active');
-      if (overlay) overlay.classList.toggle('active');
+    function setMenu(open) {
+      if (sidebar) sidebar.classList.toggle('active', open);
+      if (overlay) overlay.classList.toggle('active', open);
+      if (menuBtn) menuBtn.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
     }
 
-    if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
-    if (overlay) overlay.addEventListener('click', toggleMenu);
-    document.querySelectorAll('.toc a').forEach(a => {
-      a.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
+    if (menuBtn) {
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.addEventListener('click', () => {
+        setMenu(!(sidebar && sidebar.classList.contains('active')));
       });
+    }
+    if (overlay) overlay.addEventListener('click', () => setMenu(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) setMenu(false);
+    });
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.addEventListener('click', () => setMenu(false));
     });
 
     const tocLinks = document.querySelectorAll('.toc a');
@@ -1576,13 +1579,24 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
       tocLinks.forEach(a => a.classList.remove('active'));
       if (current) current.link.classList.add('active');
     }
-    window.addEventListener('scroll', highlightTOC, { passive: true });
+    let tocTicking = false;
+    window.addEventListener('scroll', () => {
+      if (tocTicking) return;
+      tocTicking = true;
+      requestAnimationFrame(() => { tocTicking = false; highlightTOC(); });
+    }, { passive: true });
     highlightTOC();
 
     const backTop = document.getElementById('back-top');
     if (backTop) {
+      let backTicking = false;
       window.addEventListener('scroll', () => {
-        backTop.classList.toggle('visible', window.scrollY > 400);
+        if (backTicking) return;
+        backTicking = true;
+        requestAnimationFrame(() => {
+          backTop.classList.toggle('visible', window.scrollY > 400);
+          backTicking = false;
+        });
       }, { passive: true });
       backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
@@ -1605,6 +1619,7 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
     })();
 
     (function tiltEffect() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const cards = document.querySelectorAll('.card');
       cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
@@ -1625,6 +1640,7 @@ sudo rkhunter --check</code><span class="copy-tip">Copy</span></pre>
     })();
 
     (function parallaxOrbs() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const orbs = document.querySelectorAll('.orb');
       if (!orbs.length) return;
       document.addEventListener('mousemove', (e) => {

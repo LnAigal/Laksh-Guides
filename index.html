@@ -16,6 +16,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <script>
+    (function(){
+      document.documentElement.classList.add('js');
+      try{
+        var t = localStorage.getItem('theme');
+        if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      }catch(e){}
+    })();
+  </script>
   <style>
     *{ box-sizing:border-box; margin:0; padding:0; }
     html{ scroll-behavior:smooth; }
@@ -86,6 +95,7 @@
     }
     a{ color:var(--accent-light); text-decoration:none; transition:color 0.2s; }
     a:hover{ color:var(--text); }
+    :focus-visible{ outline:2px solid var(--accent-light); outline-offset:3px; border-radius:8px; }
     ::selection{ background:rgba(99,102,241,0.4); color:#fff; }
 
     ::-webkit-scrollbar{ width:6px; }
@@ -246,7 +256,6 @@
       background:var(--surface); backdrop-filter:blur(20px);
       -webkit-backdrop-filter:blur(20px);
       display:flex; gap:16px;
-      transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
       text-decoration:none; color:var(--text);
       position:relative; overflow:hidden;
       cursor:pointer;
@@ -310,6 +319,10 @@
 
     .empty-state{ display:none; text-align:center; padding:48px 24px; color:var(--text-muted); }
     .empty-state.visible{ display:block; }
+    .hero-sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+    }
 
     /* ═══ BACK TO TOP ═══ */
     .back-top{
@@ -349,17 +362,21 @@
     .hero-stats{ animation:fade-up 0.7s ease-out 0.4s both; }
     .section-label{ animation:fade-up 0.5s ease-out 0.5s both; }
 
-    .guide-card{
+    .js .guide-card{
       opacity:0; transform:translateY(24px);
       transition:opacity 0.6s cubic-bezier(0.16,1,0.3,1),
                  transform 0.6s cubic-bezier(0.16,1,0.3,1),
                  border-color 0.3s, box-shadow 0.3s;
     }
-    .guide-card.visible{ opacity:1; transform:translateY(0); }
-    .guide-card:nth-child(1){ transition-delay:0.05s; }
-    .guide-card:nth-child(2){ transition-delay:0.1s; }
-    .guide-card:nth-child(3){ transition-delay:0.15s; }
-    .guide-card:nth-child(4){ transition-delay:0.2s; }
+    .guide-card.visible{
+      opacity:1; transform:translateY(0);
+      transition:border-color 0.3s, box-shadow 0.3s;
+    }
+    .js .guide-card:nth-child(1){ transition-delay:0.05s; }
+    .js .guide-card:nth-child(2){ transition-delay:0.1s; }
+    .js .guide-card:nth-child(3){ transition-delay:0.15s; }
+    .js .guide-card:nth-child(4){ transition-delay:0.2s; }
+    .js .guide-card:nth-child(5){ transition-delay:0.25s; }
 
     .footer{ animation:fade-in 1s ease-out 0.8s both; }
 
@@ -495,12 +512,13 @@
       <div class="hero-controls">
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
-          <input type="text" id="searchInput" placeholder="Search guides..." aria-label="Search guides" />
+          <input type="search" id="searchInput" placeholder="Search guides..." aria-label="Search guides" aria-describedby="searchHint" />
           <span class="search-shortcut">/</span>
         </div>
       </div>
-      <div class="hero-stats">
-        <span><span class="num" id="guideCount">4</span> guides</span>
+      <p id="searchHint" class="hero-sr-only">Type to filter guides by name or topic. Press the slash key to focus the search box from anywhere on the page.</p>
+      <div class="hero-stats" role="status" aria-live="polite">
+        <span><span class="num" id="guideCount">4</span> <span id="guideCountLabel">guides</span></span>
         <span class="sep"></span>
         <span><span class="num">1</span> external</span>
         <span class="sep"></span>
@@ -512,7 +530,7 @@
   <div class="container">
     <div class="section-label">Available Guides</div>
     <div class="guide-grid" id="guideGrid">
-      <a href="GithubGuide.html" class="guide-card" data-id="github" data-title="Git &amp; GitHub Guide">
+      <a href="GithubGuide.html" class="guide-card" data-id="github" data-title="Git &amp; GitHub Guide" data-keywords="git github version control branch merge rebase pull request commit remote ssh stash tag repository">
         <div class="card-icon-wrap"><span class="icon-svg github accent" style="width:22px;height:22px;"></span></div>
         <div class="card-body">
           <div class="card-title">Git &amp; GitHub Guide</div>
@@ -521,7 +539,7 @@
         </div>
         <div class="card-arrow">→</div>
       </a>
-      <a href="LinuxGuide.html" class="guide-card" data-id="linux" data-title="Linux Guide">
+      <a href="LinuxGuide.html" class="guide-card" data-id="linux" data-title="Linux Guide" data-keywords="linux terminal shell bash command line filesystem permissions chmod process systemctl networking ssh cron user service">
         <div class="card-icon-wrap"><span class="icon-svg linux accent" style="width:22px;height:22px;"></span></div>
         <div class="card-body">
           <div class="card-title">Linux Guide</div>
@@ -530,7 +548,7 @@
         </div>
         <div class="card-arrow">→</div>
       </a>
-      <a href="HtmlCssGuide.html" class="guide-card" data-id="htmlcss" data-title="HTML &amp; CSS Guide">
+      <a href="HtmlCssGuide.html" class="guide-card" data-id="htmlcss" data-title="HTML &amp; CSS Guide" data-keywords="html css markup semantic forms selectors specificity box model flexbox grid responsive animation theming variables accessibility seo">
         <div class="card-icon-wrap"><span class="icon-svg htmlcss accent" style="width:22px;height:22px;"></span></div>
         <div class="card-body">
           <div class="card-title">HTML &amp; CSS Guide</div>
@@ -539,7 +557,7 @@
         </div>
         <div class="card-arrow">→</div>
       </a>
-      <a href="VSCodeGuide.html" class="guide-card" data-id="vscode" data-title="VS Code Guide">
+      <a href="VSCodeGuide.html" class="guide-card" data-id="vscode" data-title="VS Code Guide" data-keywords="vscode vs code editor shortcut keybinding extension debugging terminal git multicursor emmet snippet remote dev settings palette">
         <div class="card-icon-wrap"><span class="icon-svg vscode accent" style="width:22px;height:22px;"></span></div>
         <div class="card-body">
           <div class="card-title">VS Code Guide</div>
@@ -548,7 +566,7 @@
         </div>
         <div class="card-arrow">→</div>
       </a>
-      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/" class="guide-card" data-id="notes-hub" data-title="NMAMIT Notes Hub">
+      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/" class="guide-card" data-id="notes-hub" data-title="NMAMIT Notes Hub" data-keywords="notes academics nmamit students curriculum resources external hub">
         <div class="card-icon-wrap"><img src="https://raw.githubusercontent.com/LnAigal/NMAMIT-Notes-Hub/main/nav/nnhicon.jpg" alt="NNHub" /></div>
         <div class="card-body">
           <div class="card-title">NMAMIT-Notes-Hub</div>
@@ -574,23 +592,22 @@
   <script>
     const sidebar = document.getElementById('mobileDrawer');
     const overlay = document.getElementById('overlay');
-    document.getElementById('menuToggle').addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-    });
-    overlay.addEventListener('click', () => {
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-    });
+    const menuToggle = document.getElementById('menuToggle');
+    function setDrawer(open) {
+      sidebar.classList.toggle('active', open);
+      overlay.classList.toggle('active', open);
+      menuToggle.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.addEventListener('click', () => setDrawer(!sidebar.classList.contains('active')));
+    overlay.addEventListener('click', () => setDrawer(false));
     document.querySelectorAll('.mobile-drawer a').forEach(a => {
-      a.addEventListener('click', () => {
-        sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-      });
+      a.addEventListener('click', () => setDrawer(false));
     });
-    document.getElementById('drawerClose').addEventListener('click', () => {
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
+    document.getElementById('drawerClose').addEventListener('click', () => setDrawer(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('active')) setDrawer(false);
     });
 
     // Search
@@ -598,17 +615,25 @@
     const cards = document.querySelectorAll('.guide-card');
     const emptyState = document.getElementById('emptyState');
     const guideCount = document.getElementById('guideCount');
+    const guideCountLabel = document.getElementById('guideCountLabel');
     searchInput.addEventListener('input', () => {
       const q = searchInput.value.toLowerCase().trim();
       let visible = 0;
       cards.forEach(card => {
-        const title = card.dataset.title.toLowerCase();
-        const match = !q || title.includes(q);
+        const haystack = (card.dataset.title + ' ' + card.dataset.keywords).toLowerCase();
+        const match = !q || haystack.includes(q);
         card.style.display = match ? '' : 'none';
         if (match) visible++;
       });
       emptyState.classList.toggle('visible', visible === 0);
       guideCount.textContent = visible;
+      guideCountLabel.textContent = q ? (visible === 1 ? 'match' : 'matches') : 'guides';
+    });
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+      }
     });
 
     // Scroll reveal
@@ -631,6 +656,7 @@
 
     // 3D tilt on guide cards
     (function() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       document.querySelectorAll('.guide-card').forEach(card => {
         card.addEventListener('mousemove', (e) => {
           const rect = card.getBoundingClientRect();

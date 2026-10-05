@@ -10,6 +10,7 @@
 </script>
 <script>
   (function(){
+    document.documentElement.classList.add('js');
     try{
       var t = localStorage.getItem('theme');
       if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
@@ -76,7 +77,7 @@
       }
     }
     *{ box-sizing:border-box; margin:0; padding:0; }
-    html{ scroll-behavior:smooth; scroll-padding-top:100px; }
+    html{ scroll-behavior:smooth; scroll-padding-top:16px; }
     html{
       min-height:100%;
       background: var(--bg);
@@ -88,6 +89,7 @@
       display:grid; grid-template-columns:270px minmax(0, 1fr); gap:0;
     }
     a{ color:var(--accent-via); text-decoration:none; }
+    :focus-visible{ outline:2px solid var(--accent-from); outline-offset:2px; border-radius:6px; }
 
     ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
 
@@ -141,7 +143,7 @@
     }
     .toc a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
     .toc a.active{
-      color:#fff; border-color:var(--border-hover);
+      color:var(--text); border-color:var(--border-hover);
       background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08));
       box-shadow:inset 2px 0 0 var(--accent-from);
     }
@@ -194,7 +196,7 @@
       -webkit-backdrop-filter:blur(20px);
       border:1px solid var(--border); border-radius:20px;
       padding:28px 28px 20px; margin-bottom:24px;
-      transition:all 0.3s ease; box-shadow:var(--glow);
+      transition:border-color 0.3s ease, box-shadow 0.3s ease; box-shadow:var(--glow);
       position:relative; overflow:hidden;
     }
     section.card::before{
@@ -204,7 +206,6 @@
     }
     section.card:hover{
       border-color:var(--border-hover); box-shadow:var(--shadow),var(--glow);
-      transform:translateY(-1px);
     }
     section.card:hover::before{ opacity:1; }
 
@@ -299,12 +300,15 @@
 
     pre .copy-tip{
       position:absolute; top:10px; right:10px;
-      font-size:0.6rem; padding:5px 11px; border-radius:8px;
+      font:inherit; font-size:0.6rem; font-weight:500; line-height:1.4;
+      padding:5px 11px; border-radius:8px; font-family:inherit;
       background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15);
       color:var(--text-dim); cursor:pointer; opacity:0;
-      transition:all 0.2s; z-index:2; font-weight:500;
+      transition:opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+      z-index:2;
     }
-    pre:hover .copy-tip{ opacity:1; }
+    pre:hover .copy-tip, pre:focus-within .copy-tip{ opacity:1; }
+    @media (hover:none){ .copy-tip{ opacity:1; } }
     .copy-tip:hover{ background:rgba(99,102,241,0.2); color:var(--text); }
     .copy-tip.copied{ background:rgba(16,185,129,0.2); color:var(--green); border-color:rgba(16,185,129,0.3); }
 
@@ -338,6 +342,7 @@
     #back-top:hover{ border-color:var(--border-hover); color:var(--text); background:var(--surface-hover); transform:translateY(-2px); }
 
     @media (max-width: 900px){
+      html{ scroll-padding-top:64px; }
       html,body{ grid-template-columns:minmax(0, 1fr); }
       nav{
         position:fixed; left:0; top:0; bottom:0;
@@ -377,7 +382,7 @@
       #overlay.active{ display:block; }
     }
 
-    .sect-offset{ scroll-margin-top:12px; }
+    .sect-offset{ scroll-margin-top:16px; }
 
     /* laptop/short-viewport: compact TOC so all items fit without clipping */
     @media (max-height:860px){
@@ -435,9 +440,9 @@
 
     .orb-container{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
     .orb{ position:absolute; border-radius:50%; opacity:0.15; filter:blur(60px); }
-    .orb-1{ width:400px; height:400px; background:radial-gradient(circle,var(--accent-from),transparent); top:-100px; right:-100px; animation:orb-drift 20s ease-in-out infinite; }
-    .orb-2{ width:300px; height:300px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-80px; left:-80px; animation:orb-drift-2 25s ease-in-out infinite; }
-    .orb-3{ width:250px; height:250px; background:radial-gradient(circle,var(--cyan),transparent); top:40%; left:50%; animation:orb-drift 18s ease-in-out infinite reverse; opacity:0.08; }
+    .orb-1{ width:400px; height:400px; background:radial-gradient(circle,var(--accent-from),transparent); top:-100px; right:-100px; }
+    .orb-2{ width:300px; height:300px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-80px; left:-80px; }
+    .orb-3{ width:250px; height:250px; background:radial-gradient(circle,var(--cyan),transparent); top:40%; left:50%; opacity:0.08; }
 
     .hero{ animation:fade-in 0.8s ease-out; }
     .title{ animation:title-reveal 1s ease-out both; }
@@ -451,19 +456,10 @@
     .subtitle{ animation:slide-up 0.8s ease-out 0.3s both; }
     .breadcrumb{ animation:slide-up 0.6s ease-out 0.1s both; }
     .pill{ animation:scale-in 0.6s ease-out 0.6s both; }
-    .card{ opacity:0; transform:translateY(30px); transition:all 0.7s cubic-bezier(0.16,1,0.3,1); }
-    .card.visible{ opacity:1; transform:translateY(0); }
-    .card:nth-child(2){ transition-delay:0.05s; }
-    .card:nth-child(3){ transition-delay:0.1s; }
-    .card:nth-child(4){ transition-delay:0.15s; }
-    .card:nth-child(5){ transition-delay:0.2s; }
-    .card:hover{ transform:translateY(-4px) scale(1.005); }
+    .js .card{ opacity:0; transform:translateY(30px); transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .card.visible{ opacity:1; transform:translateY(0); transition:border-color 0.3s ease, box-shadow 0.3s ease; }
     .card:hover .section-num{ animation:wobble 0.4s ease; }
     .card:hover::before{ opacity:1; }
-    .badge{ animation:badge-pulse 3s ease-in-out infinite; }
-    .badge-green{ animation-delay:0s; }
-    .badge-blue{ animation-delay:-1s; }
-    .badge-amber{ animation-delay:-2s; }
     #back-top.visible{ animation:scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
     .typewriter-cursor{
       display:inline-block; width:2px; height:1.1em;
@@ -472,11 +468,10 @@
       vertical-align:text-bottom;
     }
     pre:hover{ border-color:rgba(99,102,241,0.2); box-shadow:0 0 30px rgba(99,102,241,0.05); }
-    .toc a.active{ animation:pulse-glow 3s ease-in-out infinite; }
 
     @media (prefers-reduced-motion: reduce){
       .orb,.card{ animation:none !important; }
-      .card{ opacity:1; transform:none; }
+      .card{ opacity:1; transform:none !important; }
       .title{ animation:none; }
       .animated-gradient{ background-size:100% 100%; animation:none; }
       .subtitle,.breadcrumb,.pill{ animation:none; }
@@ -530,8 +525,8 @@
       <div class="hero-glow"></div>
       <div class="breadcrumb"><a href="index.html">⌂ Home</a> / HTML &amp; CSS Guide</div>
       <h1 class="title"><span class="brand-icon" aria-hidden="true" style="width:32px;height:32px;background:#e34f26;"></span> <span class="animated-gradient">HTML &amp; CSS Guide</span></h1>
-      <p class="subtitle"><span id="typewriter-text"></span><span class="typewriter-cursor"></span></p>
-      <span class="pill">⤒ Click code blocks to copy &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
+      <p class="subtitle"><span id="typewriter-text">A complete frontend foundation — semantic HTML, forms, the box model, selectors and specificity, flexbox, grid, responsive design, transitions and dark-mode theming. Every code block has a Copy button.</span><span class="typewriter-cursor"></span></p>
+      <span class="pill">Copy button on each code block &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
     </header>
 
     <!-- ═══ 1. Introduction ═══ -->
@@ -581,7 +576,7 @@
   &lt;h1&gt;Hello, World!&lt;/h1&gt;
   &lt;p&gt;This is my first HTML and CSS page.&lt;/p&gt;
 &lt;/body&gt;
-&lt;/html&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;/html&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <pre><code><span class="cm">/* style.css */</span>
 body{
@@ -590,7 +585,7 @@ body{
   color: #f1f5f9;
   padding: 40px;
 }
-h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
+h1{ color: #f97316; }</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠ Always link CSS properly:</strong> <code class="inline-code">&lt;link rel="stylesheet" href="style.css"&gt;</code> lives in <code class="inline-code">&lt;head&gt;</code>. A <code class="inline-code">&lt;style&gt;</code> block inside <code class="inline-code">&lt;body&gt;</code> works but blocks rendering and is considered bad practice.</div>
 
@@ -632,10 +627,10 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
     &lt;h1&gt;Heading&lt;/h1&gt;
     &lt;p&gt;Paragraph&lt;/p&gt;
   &lt;/body&gt;
-&lt;/html&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;/html&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Elements, tags, attributes, values</h3>
-      <pre><code>&lt;a href="https://developer.mozilla.org" class="link" target="_blank" rel="noopener"&gt;MDN&lt;/a&gt;</code><span class="copy-tip">Copy</span></pre>
+      <pre><code>&lt;a href="https://developer.mozilla.org" class="link" target="_blank" rel="noopener"&gt;MDN&lt;/a&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       <ul>
         <li><strong>Tag</strong> — <code class="inline-code">&lt;a&gt;</code> and <code class="inline-code">&lt;/a&gt;</code></li>
         <li><strong>Element</strong> — the tag plus its content: <code class="inline-code">&lt;a&gt;MDN&lt;/a&gt;</code></li>
@@ -655,7 +650,7 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
 
 &lt;p&gt;5 &lt; 10 &amp;&amp; 10 &gt; 5&lt;/p&gt;      <span class="cm">&lt;!-- escape &lt; and &gt; --&gt;</span>
 &lt;p&gt;Tom &amp;amp; Jerry          &lt;!-- escape the ampersand itself --&gt;
-&lt;p&gt;&amp;copy; 2026 &amp;mdash; Laksh Guides&lt;/p&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;p&gt;&amp;copy; 2026 &amp;mdash; Laksh Guides&lt;/p&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>The heading hierarchy rule</h3>
       <p>Headings are the <em>outline</em> of your page, not a way to pick font sizes. There must be exactly one <code class="inline-code">&lt;h1&gt;</code>, and levels must not skip.</p>
@@ -692,7 +687,7 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
 &lt;dl&gt;              &lt;!-- description list --&gt;
   &lt;dt&gt;API&lt;/dt&gt;      &lt;!-- term --&gt;
   &lt;dd&gt;Application Programming Interface&lt;/dd&gt;
-&lt;/dl&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;/dl&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Links — the essentials</h3>
       <pre><code>&lt;a href="https://developer.mozilla.org"&gt;MDN Web Docs&lt;/a&gt;
@@ -701,7 +696,7 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
 &lt;a href="mailto:hello@example.com"&gt;Email me&lt;/a&gt;
 &lt;a href="tel:+919876543210"&gt;Call support&lt;/a&gt;
 &lt;a href="report.pdf" download&gt;Download the PDF&lt;/a&gt;
-&lt;a href="https://example.com" target="_blank" rel="noopener noreferrer"&gt;Open in new tab&lt;/a&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;a href="https://example.com" target="_blank" rel="noopener noreferrer"&gt;Open in new tab&lt;/a&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠ Security rule:</strong> <code class="inline-code">target="_blank"</code> gives the new page access to your window via <code class="inline-code">window.opener</code>. Always pair it with <code class="inline-code">rel="noopener"</code>. Never use <code class="inline-code">target="_blank"</code> for internal navigation — it breaks the back button.</div>
 
@@ -713,7 +708,7 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
   height="400"
   loading="lazy"     &lt;!-- defer offscreen images --&gt;
   decoding="async"
-&gt;</code><span class="copy-tip">Copy</span></pre>
+&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="note"><strong>Alt text rules:</strong> describe the <em>content and purpose</em> in one sentence for meaningful images (<code class="inline-code">alt="Red bicycle leaning on a brick wall"</code>). For purely decorative images use <code class="inline-code">alt=""</code> — a screen reader then skips it. Never write <code class="inline-code">alt="image"</code> or <code class="inline-code">alt="photo of"</code>.</div>
 
@@ -730,7 +725,7 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
   &lt;tfoot&gt;
     &lt;tr&gt;&lt;td&gt;Total&lt;/td&gt;&lt;td&gt;100%&lt;/td&gt;&lt;/tr&gt;
   &lt;/tfoot&gt;
-&lt;/table&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;/table&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠ Common mistake:</strong> never use a table for page layout. Screen readers announce every row and cell, so a layout table produces nonsense like "table, 3 columns, 12 rows". Layout is done with Grid and Flexbox.</div>
     </section>
@@ -778,7 +773,7 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
 
   &lt;button type="submit"&gt;Create account&lt;/button&gt;
   &lt;button type="reset"&gt;Reset&lt;/button&gt;
-&lt;/form&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;/form&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Input types you'll actually use</h3>
       <div class="cheat-grid">
@@ -843,7 +838,7 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
 
   &lt;aside&gt;              &lt;!-- complementary: sidebar, ads, TOC --&gt;
   &lt;footer&gt;              &lt;!-- site-wide footer --&gt;
-&lt;/body&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;/body&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Choosing the right element</h3>
       <div class="cheat-grid">
@@ -894,7 +889,7 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
 
 <span class="cm">&lt;!-- Hide decorative icons from screen readers --&gt;</span>
 &lt;span aria-hidden="true"&gt;★&lt;/span&gt;
-&lt;span class="visually-hidden"&gt;5 out of 5 stars&lt;/span&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;span class="visually-hidden"&gt;5 out of 5 stars&lt;/span&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠ Golden rule:</strong> <em>"No ARIA is better than bad ARIA."</em> ARIA only changes how assistive tech reads your HTML — it does not add functionality. If you add <code class="inline-code">role="button"</code> you must also implement keyboard handlers yourself.</div>
 
@@ -912,7 +907,7 @@ h1{ color: #f97316; }</code><span class="copy-tip">Copy</span></pre>
 &lt;meta property="og:type" content="website"&gt;
 &lt;meta property="og:title" content="HTML &amp; CSS Guide"&gt;
 &lt;meta property="og:description" content="From document structure to CSS Grid — the complete frontend foundation."&gt;
-&lt;meta property="og:image" content="https://example.com/og.png"&gt;</code><span class="copy-tip">Copy</span></pre>
+&lt;meta property="og:image" content="https://example.com/og.png"&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="note"><strong>Test your work:</strong> In Chrome DevTools → <strong>Lighthouse</strong> tab → run Accessibility and SEO audits. Also test with the keyboard only: unplug your mouse and tab through the whole page.</div>
     </section>
@@ -962,7 +957,7 @@ div:has(h2)             <span class="cm">/* div containing an h2 */</span>
 p::before  { content: "→ "; }
 p::after   { content: ""; }
 li::marker { color: #e34f26; }
-::first-letter{ font-size:3rem; float:left; }</code><span class="copy-tip">Copy</span></pre>
+::first-letter{ font-size:3rem; float:left; }</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Combinators at a glance</h3>
       <ul>
@@ -1014,7 +1009,7 @@ li::marker { color: #e34f26; }
 
       <pre><code><span class="cm">/* Stop inheritance */</span>
 .card *{ all: unset; }        <span class="cm">/* nuclear option — use with care */</span>
-button{ font: inherit; }      <span class="cm">/* forms don't inherit fonts by default */</span></code><span class="copy-tip">Copy</span></pre>
+button{ font: inherit; }      <span class="cm">/* forms don't inherit fonts by default */</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠ The classic specificity war:</strong> fighting <code class="inline-code">!important</code> or adding longer selectors to win usually means your architecture is wrong. Fix the root cause — restructure the markup or introduce CSS custom properties instead of writing <code class="inline-code">#main .card h3.title</code>.</div>
 
@@ -1029,7 +1024,7 @@ button{ font: inherit; }      <span class="cm">/* forms don't inherit fonts by d
 }
 @layer utilities{
   .card{ padding: 40px; }   <span class="cm">/* utilities always win */</span>
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
     </section>
 
     <!-- ═══ 10. Box Model ═══ -->
@@ -1044,7 +1039,7 @@ button{ font: inherit; }      <span class="cm">/* forms don't inherit fonts by d
       │  │  │        CONTENT  (width × height)         │  │   │
       │  │  └───────────────────────────────────────────┘  │   │
       │  └─────────────────────────────────────────────────┘   │
-      └──────────────────────────────────────────────────────────┘</code><span class="copy-tip">Copy</span></pre>
+      └──────────────────────────────────────────────────────────┘</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <pre><code>.box{
   width: 200px;
@@ -1057,7 +1052,7 @@ button{ font: inherit; }      <span class="cm">/* forms don't inherit fonts by d
 <span class="cm">/* Default: content-box → total width = 200 + 40 + 10 + 60 = 310px */</span>
 
 <span class="cm">/* The fix almost everyone needs: */</span>
-*, *::before, *::after{ box-sizing: border-box; }</code><span class="copy-tip">Copy</span></pre>
+*, *::before, *::after{ box-sizing: border-box; }</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠ The #1 beginner bug:</strong> with <code class="inline-code">content-box</code> (the default), <code class="inline-code">width:200px; padding:20px</code> renders 240px wide. Set <code class="inline-code">box-sizing:border-box</code> globally and <code class="inline-code">width</code> means the total size — padding and border are subtracted automatically.</div>
 
@@ -1065,7 +1060,7 @@ button{ font: inherit; }      <span class="cm">/* forms don't inherit fonts by d
       <p>Vertical margins of adjacent siblings collapse into one — the bigger value wins, they do not add. A child's top margin can also collapse through its parent if the parent has no padding or border.</p>
 
       <pre><code>.a{ margin-bottom: 30px; }
-.b{ margin-top: 20px; }   <span class="cm">/* gap between them = 30px, NOT 50px */</span></code><span class="copy-tip">Copy</span></pre>
+.b{ margin-top: 20px; }   <span class="cm">/* gap between them = 30px, NOT 50px */</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       <ul>
         <li>Fix with <strong>gap</strong> in Flexbox/Grid (never collapses)</li>
         <li>Fix with a flex/grid parent on the container</li>
@@ -1131,7 +1126,7 @@ h2{ font-size: clamp(1.4rem, 1.2rem + 1vw, 1.8rem); }
   font: inherit;           <span class="cm">/* buttons don't inherit fonts by default */</span>
   font-weight: 600;
   letter-spacing: 0.01em;
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="note"><strong>Line length matters:</strong> the ideal measure is <strong>45–75 characters</strong> per line. Set <code class="inline-code">max-width: 70ch</code> on prose instead of letting text run the full width of a 1920px monitor. Use <code class="inline-code">text-wrap: balance</code> on headings so lines break evenly.</div>
 
@@ -1155,7 +1150,7 @@ h2{ font-size: clamp(1.4rem, 1.2rem + 1vw, 1.8rem); }
   align-items: stretch | flex-start | center | flex-end | baseline;
   align-content: flex-start | center | space-between;  <span class="cm">/* multi-line only */</span>
   gap: 1rem;
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Main axis vs cross axis</h3>
       <ul>
@@ -1175,7 +1170,7 @@ h2{ font-size: clamp(1.4rem, 1.2rem + 1vw, 1.8rem); }
   align-self: flex-end; <span class="cm">/* override align-items for one item */</span>
   order: 2;             <span class="cm">/* visual order only — DOM order is unchanged */</span>
   min-width: 0;         <span class="cm">/* CRITICAL: allows shrinking below content size */</span>
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Pattern 1 — perfect centring</h3>
       <pre><code>.center{
@@ -1183,14 +1178,14 @@ h2{ font-size: clamp(1.4rem, 1.2rem + 1vw, 1.8rem); }
   justify-content: center;   <span class="cm">/* horizontal */</span>
   align-items: center;       <span class="cm">/* vertical */</span>
   min-height: 100vh;
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Pattern 2 — navbar with pushed-right links</h3>
       <pre><code>.navbar{ display: flex; align-items: center; gap: 1.5rem; }
 .navbar .brand{ margin-right: auto; }   <span class="cm">/* pushes the rest to the right */</span>
 .navbar a{ text-decoration: none; color: #f1f5f9; }
 .navbar a:hover{ color: #e34f26; }
-.navbar a[aria-current="page"]{ color: #e34f26; font-weight: 600; }</code><span class="copy-tip">Copy</span></pre>
+.navbar a[aria-current="page"]{ color: #e34f26; font-weight: 600; }</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Pattern 3 — wrapping card row</h3>
       <pre><code>.cards{
@@ -1205,7 +1200,7 @@ h2{ font-size: clamp(1.4rem, 1.2rem + 1vw, 1.8rem); }
   padding: 1.5rem;
   border: 1px solid #334155;
   border-radius: 16px;
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠ Overflow trap:</strong> flex items default to <code class="inline-code">min-width:auto</code>, which means they refuse to shrink below their content's width. A long unbroken string overflows its container. Fix: <code class="inline-code">min-width: 0</code> on the item (and <code class="inline-code">overflow-wrap: anywhere</code> on the text).</div>
 
@@ -1228,7 +1223,7 @@ h2{ font-size: clamp(1.4rem, 1.2rem + 1vw, 1.8rem); }
   gap: 1.5rem;
   align-items: start;
   justify-items: stretch;
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Track sizing</h3>
       <div class="cheat-grid">
@@ -1255,7 +1250,7 @@ h2{ font-size: clamp(1.4rem, 1.2rem + 1vw, 1.8rem); }
 header { grid-area: header; }
 aside  { grid-area: sidebar; }
 main   { grid-area: main; }
-footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
+footer { grid-area: footer; }</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="note"><strong>Why <code class="inline-code">grid-template-areas</code> is the best layout tool:</strong> the entire page structure becomes visible in the CSS as an ASCII diagram. Reflowing to mobile is a one-line change instead of a pile of overrides.</div>
 
@@ -1269,14 +1264,14 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
 .grid{ place-content: center; }        <span class="cm">/* for the whole grid */</span>
 
 <span class="cm">/* Dense packing — fills holes left by spans */</span>
-.gallery{ grid-auto-flow: row dense; }</code><span class="copy-tip">Copy</span></pre>
+.gallery{ grid-auto-flow: row dense; }</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Pattern — responsive gallery with zero media queries</h3>
       <pre><code>.gallery{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
   gap: 1rem;
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>💡 Tip:</strong> The <code class="inline-code">min()</code> wrapper is what stops a 240px minimum from overflowing a 320px phone. Add <code class="inline-code">min(240px, 100%)</code> to every auto-fill grid and it becomes bulletproof.</div>
 
@@ -1307,7 +1302,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
   color: white;
   border-radius: 999px;
   padding: 2px 8px;
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠ Critical:</strong> an <code class="inline-code">absolute</code> element is positioned relative to its nearest ancestor that has <code class="inline-code">position</code> set to anything other than <code class="inline-code">static</code> (or <code class="inline-code">transform</code> / <code class="inline-code">filter</code> / <code class="inline-code">contain</code>). If it lands in the wrong place, look for an unexpected <code class="inline-code">position:relative</code> up the tree.</div>
 
@@ -1317,7 +1312,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
   inset: 0;                  <span class="cm">/* top/right/bottom/left all 0 = fill parent */</span>
   display: grid;
   place-items: center;       <span class="cm">/* cleaner than top:50% + translate */</span>
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Sticky navbar</h3>
       <pre><code>header{
@@ -1326,7 +1321,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
   z-index: 100;
   backdrop-filter: blur(12px);
   background: rgba(15, 23, 42, 0.85);
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Fixed toast notification</h3>
       <pre><code>.toast{
@@ -1338,7 +1333,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
   background: #10b981;
   color: #04140d;
   box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="note"><strong>Sticky gotcha:</strong> <code class="inline-code">position: sticky</code> fails if any ancestor has <code class="inline-code">overflow: hidden</code>, <code class="inline-code">auto</code> or <code class="inline-code">scroll</code>. Also, the element needs room to move within its parent — it cannot leave its parent's box.</div>
 
@@ -1363,7 +1358,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
 <span class="cm">/* Enhance at 1024px */</span>
 @media (min-width: 64rem){
   .cards{ grid-template-columns: repeat(4, 1fr); }
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Media query features</h3>
       <div class="cheat-grid">
@@ -1388,7 +1383,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
   margin-inline: auto;
 }
 
-.grid{ gap: clamp(0.75rem, 2vw, 1.5rem); }</code><span class="copy-tip">Copy</span></pre>
+.grid{ gap: clamp(0.75rem, 2vw, 1.5rem); }</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="note"><strong>Avoid <code class="inline-code">vw</code> for font sizes</strong> on mobile — Chrome zooms text when it exceeds 20px. Use <code class="inline-code">clamp()</code> with a <code class="inline-code">rem</code> minimum instead. Also remember <code class="inline-code">100vw</code> includes the scrollbar width and causes horizontal overflow; <code class="inline-code">100%</code> does not.</div>
 
@@ -1400,7 +1395,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠ Touch targets:</strong> WCAG requires interactive elements to be at least <strong>44 × 44px</strong>. Nav links are commonly 16px tall on desktop and unusable on a phone. Add padding and <code class="inline-code">min-height: 44px</code> in touch contexts.</div>
 
@@ -1421,7 +1416,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
-.btn:active{ transform: translateY(0); }</code><span class="copy-tip">Copy</span></pre>
+.btn:active{ transform: translateY(0); }</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="note"><strong>Performance rule:</strong> animate only <code class="inline-code">transform</code>, <code class="inline-code">opacity</code> and <code class="inline-code">filter</code>. Animating <code class="inline-code">width</code>, <code class="inline-code">height</code>, <code class="inline-code">top</code> or <code class="inline-code">margin</code> forces the browser to recompute layout on every frame — this causes jank.</div>
 
@@ -1446,7 +1441,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
   border-top-color: #e34f26;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Scroll-triggered reveal with no JavaScript</h3>
       <pre><code>@supports (animation-timeline: view()){
@@ -1455,7 +1450,7 @@ footer { grid-area: footer; }</code><span class="copy-tip">Copy</span></pre>
     animation-timeline: view();
     animation-range: entry 0% cover 25%;
   }
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Transforms cheat sheet</h3>
       <ul>
@@ -1530,7 +1525,7 @@ body{
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: var(--shadow);
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>JavaScript-free dark mode toggle</h3>
       <pre><code>&lt;!-- inline in &lt;head&gt; — prevents white flash on load --&gt;
@@ -1551,7 +1546,7 @@ body{
   --surface: #121626;
   --text: #f1f5f9;
   --text-dim: #8892b0;
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Runtime variables from JS</h3>
       <pre><code><span class="cm">// JS reads the computed value</span>
@@ -1559,7 +1554,7 @@ const brand = getComputedStyle(document.documentElement)
   .getPropertyValue('--brand').trim();   <span class="cm">/* "#e34f26" */</span>
 
 <span class="cm">// JS sets a variable (e.g. reading the user's accent preference)</span>
-document.documentElement.style.setProperty('--brand', '#1572b6');</code><span class="copy-tip">Copy</span></pre>
+document.documentElement.style.setProperty('--brand', '#1572b6');</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>💡 Tip:</strong> Use <code class="inline-code">var(--brand, #e34f26)</code> to provide a fallback if the variable is ever missing. Note that custom properties are not typed — <code class="inline-code">--gap: 10</code> is invalid as a length, you must write <code class="inline-code">--gap: 10px</code>.</div>
 
@@ -1591,7 +1586,7 @@ document.documentElement.style.setProperty('--brand', '#1572b6');</code><span cl
   transition: transform 0.3s ease;
 }
 .profile:hover .avatar{ transform: scale(1.05) rotate(3deg); }
-.links{ display: flex; gap: 1rem; }</code><span class="copy-tip">Copy</span></pre>
+.links{ display: flex; gap: 1rem; }</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
       </details>
 
       <details class="accordion">
@@ -1635,7 +1630,7 @@ ul[class]{ list-style: none; }
 :focus-visible{ outline: 2px solid #e34f26; outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce){
   *, *::before, *::after{ animation-duration: .01ms !important; transition-duration: .01ms !important; }
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Layout decision tree</h3>
       <ul>
@@ -1685,23 +1680,26 @@ ul[class]{ list-style: none; }
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
     const menuBtn = document.getElementById('menuBtn');
+
+    function setMenu(open) {
+      if (sidebar) sidebar.classList.toggle('active', open);
+      if (overlay) overlay.classList.toggle('active', open);
+      if (menuBtn) menuBtn.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
     if (menuBtn) {
+      menuBtn.setAttribute('aria-expanded', 'false');
       menuBtn.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.toggle('active');
-        if (overlay) overlay.classList.toggle('active');
+        setMenu(!(sidebar && sidebar.classList.contains('active')));
       });
     }
-    if (overlay) {
-      overlay.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-      });
-    }
+    if (overlay) overlay.addEventListener('click', () => setMenu(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) setMenu(false);
+    });
     document.querySelectorAll('.toc a').forEach(a => {
-      a.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
-      });
+      a.addEventListener('click', () => setMenu(false));
     });
 
     // ═════════════════════════════════════════════
@@ -1713,7 +1711,7 @@ ul[class]{ list-style: none; }
       tip.addEventListener('click', async () => {
         const code = pre.querySelector('code');
         try {
-          await navigator.clipboard.writeText(code ? code.innerText : pre.innerText);
+          await navigator.clipboard.writeText(code ? code.innerText : pre.textContent);
           tip.textContent = 'Copied!';
           tip.classList.add('copied');
           setTimeout(() => {
@@ -1732,16 +1730,25 @@ ul[class]{ list-style: none; }
     (function typewriter() {
       const el = document.getElementById('typewriter-text');
       if (!el) return;
-      const text = 'A complete frontend foundation — semantic HTML, forms, the box model, selectors and specificity, flexbox, grid, responsive design, transitions and dark-mode theming. Click any code block to copy it.';
+      const text = el.textContent.trim();
+      const cursor = el.parentElement.querySelector('.typewriter-cursor');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (cursor) cursor.style.display = 'none';
+        return;
+      }
+      el.textContent = '';
       let i = 0;
-      function type() {
+      function tick() {
         if (i < text.length) {
-          el.textContent += text[i];
+          el.textContent += text.charAt(i);
           i++;
-          setTimeout(type, 12 + Math.random() * 16);
+          const delay = text.charAt(i - 1) === '.' || text.charAt(i - 1) === ',' ? 60 : 20;
+          setTimeout(tick, delay);
+        } else if (cursor) {
+          cursor.style.display = 'none';
         }
       }
-      type();
+      setTimeout(tick, 800);
     })();
 
     // ═════════════════════════════════════════════
@@ -1767,7 +1774,12 @@ ul[class]{ list-style: none; }
       tocLinks.forEach(a => a.classList.remove('active'));
       if (current) current.link.classList.add('active');
     }
-    window.addEventListener('scroll', highlightTOC, { passive: true });
+    let tocTicking = false;
+    window.addEventListener('scroll', () => {
+      if (tocTicking) return;
+      tocTicking = true;
+      requestAnimationFrame(() => { tocTicking = false; highlightTOC(); });
+    }, { passive: true });
     highlightTOC();
 
     // ═════════════════════════════════════════════
@@ -1775,8 +1787,14 @@ ul[class]{ list-style: none; }
     // ═════════════════════════════════════════════
     const backTop = document.getElementById('back-top');
     if (backTop) {
+      let backTicking = false;
       window.addEventListener('scroll', () => {
-        backTop.classList.toggle('visible', window.scrollY > 400);
+        if (backTicking) return;
+        backTicking = true;
+        requestAnimationFrame(() => {
+          backTop.classList.toggle('visible', window.scrollY > 400);
+          backTicking = false;
+        });
       }, { passive: true });
       backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
@@ -1805,6 +1823,7 @@ ul[class]{ list-style: none; }
     // 7. 3D TILT
     // ═════════════════════════════════════════════
     (function tiltEffect() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const cards = document.querySelectorAll('.card');
       cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
@@ -1828,6 +1847,7 @@ ul[class]{ list-style: none; }
     // 8. PARALLAX ORBS
     // ═════════════════════════════════════════════
     (function parallaxOrbs() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const orbs = document.querySelectorAll('.orb');
       if (!orbs.length) return;
       document.addEventListener('mousemove', (e) => {

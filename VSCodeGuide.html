@@ -10,6 +10,7 @@
 </script>
 <script>
   (function(){
+    document.documentElement.classList.add('js');
     try{
       var t = localStorage.getItem('theme');
       if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
@@ -76,7 +77,7 @@
       }
     }
     *{ box-sizing:border-box; margin:0; padding:0; }
-    html{ scroll-behavior:smooth; scroll-padding-top:100px; }
+    html{ scroll-behavior:smooth; scroll-padding-top:16px; }
     html{
       min-height:100%;
       background: var(--bg);
@@ -88,6 +89,7 @@
       display:grid; grid-template-columns:270px minmax(0, 1fr); gap:0;
     }
     a{ color:var(--accent-via); text-decoration:none; }
+    :focus-visible{ outline:2px solid var(--accent-from); outline-offset:2px; border-radius:6px; }
 
     ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
 
@@ -141,7 +143,7 @@
     }
     .toc a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
     .toc a.active{
-      color:#fff; border-color:var(--border-hover);
+      color:var(--text); border-color:var(--border-hover);
       background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08));
       box-shadow:inset 2px 0 0 var(--accent-from);
     }
@@ -188,7 +190,7 @@
       -webkit-backdrop-filter:blur(20px);
       border:1px solid var(--border); border-radius:20px;
       padding:28px 28px 20px; margin-bottom:24px;
-      transition:all 0.3s ease; box-shadow:var(--glow);
+      transition:border-color 0.3s ease, box-shadow 0.3s ease; box-shadow:var(--glow);
       position:relative; overflow:hidden;
     }
     section.card::before{
@@ -198,7 +200,6 @@
     }
     section.card:hover{
       border-color:var(--border-hover); box-shadow:var(--shadow),var(--glow);
-      transform:translateY(-1px);
     }
     section.card:hover::before{ opacity:1; }
 
@@ -293,12 +294,15 @@
 
     pre .copy-tip{
       position:absolute; top:10px; right:10px;
-      font-size:0.6rem; padding:5px 11px; border-radius:8px;
+      font:inherit; font-size:0.6rem; font-weight:500; line-height:1.4;
+      padding:5px 11px; border-radius:8px; font-family:inherit;
       background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15);
       color:var(--text-dim); cursor:pointer; opacity:0;
-      transition:all 0.2s; z-index:2; font-weight:500;
+      transition:opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+      z-index:2;
     }
-    pre:hover .copy-tip{ opacity:1; }
+    pre:hover .copy-tip, pre:focus-within .copy-tip{ opacity:1; }
+    @media (hover:none){ .copy-tip{ opacity:1; } }
     .copy-tip:hover{ background:rgba(99,102,241,0.2); color:var(--text); }
     .copy-tip.copied{ background:rgba(16,185,129,0.2); color:var(--green); border-color:rgba(16,185,129,0.3); }
 
@@ -332,6 +336,7 @@
     #back-top:hover{ border-color:var(--border-hover); color:var(--text); background:var(--surface-hover); transform:translateY(-2px); }
 
     @media (max-width: 900px){
+      html{ scroll-padding-top:64px; }
       html,body{ grid-template-columns:minmax(0, 1fr); }
       nav{
         position:fixed; left:0; top:0; bottom:0;
@@ -370,7 +375,7 @@
       #overlay.active{ display:block; }
     }
 
-    .sect-offset{ scroll-margin-top:12px; }
+    .sect-offset{ scroll-margin-top:16px; }
 
     /* laptop/short-viewport: compact TOC so all items fit without clipping */
     @media (max-height:860px){
@@ -416,9 +421,9 @@
 
     .orb-container{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
     .orb{ position:absolute; border-radius:50%; opacity:0.15; filter:blur(60px); }
-    .orb-1{ width:400px; height:400px; background:radial-gradient(circle,var(--accent-from),transparent); top:-100px; right:-100px; animation:orb-drift 20s ease-in-out infinite; }
-    .orb-2{ width:300px; height:300px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-80px; left:-80px; animation:orb-drift-2 25s ease-in-out infinite; }
-    .orb-3{ width:250px; height:250px; background:radial-gradient(circle,var(--cyan),transparent); top:40%; left:50%; animation:orb-drift 18s ease-in-out infinite reverse; opacity:0.08; }
+    .orb-1{ width:400px; height:400px; background:radial-gradient(circle,var(--accent-from),transparent); top:-100px; right:-100px; }
+    .orb-2{ width:300px; height:300px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-80px; left:-80px; }
+    .orb-3{ width:250px; height:250px; background:radial-gradient(circle,var(--cyan),transparent); top:40%; left:50%; opacity:0.08; }
 
     .hero{ animation:fade-in 0.8s ease-out; }
     .title{ animation:title-reveal 1s ease-out both; }
@@ -432,19 +437,10 @@
     .subtitle{ animation:slide-up 0.8s ease-out 0.3s both; }
     .breadcrumb{ animation:slide-up 0.6s ease-out 0.1s both; }
     .pill{ animation:scale-in 0.6s ease-out 0.6s both; }
-    .card{ opacity:0; transform:translateY(30px); transition:all 0.7s cubic-bezier(0.16,1,0.3,1); }
-    .card.visible{ opacity:1; transform:translateY(0); }
-    .card:nth-child(2){ transition-delay:0.05s; }
-    .card:nth-child(3){ transition-delay:0.1s; }
-    .card:nth-child(4){ transition-delay:0.15s; }
-    .card:nth-child(5){ transition-delay:0.2s; }
-    .card:hover{ transform:translateY(-4px) scale(1.005); }
+    .js .card{ opacity:0; transform:translateY(30px); transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .card.visible{ opacity:1; transform:translateY(0); transition:border-color 0.3s ease, box-shadow 0.3s ease; }
     .card:hover .section-num{ animation:wobble 0.4s ease; }
     .card:hover::before{ opacity:1; }
-    .badge{ animation:badge-pulse 3s ease-in-out infinite; }
-    .badge-green{ animation-delay:0s; }
-    .badge-blue{ animation-delay:-1s; }
-    .badge-amber{ animation-delay:-2s; }
     #back-top.visible{ animation:scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
     .typewriter-cursor{
       display:inline-block; width:2px; height:1.1em;
@@ -453,11 +449,10 @@
       vertical-align:text-bottom;
     }
     pre:hover{ border-color:rgba(99,102,241,0.2); box-shadow:0 0 30px rgba(99,102,241,0.05); }
-    .toc a.active{ animation:pulse-glow 3s ease-in-out infinite; }
 
     @media (prefers-reduced-motion: reduce){
       .orb,.card{ animation:none !important; }
-      .card{ opacity:1; transform:none; }
+      .card{ opacity:1; transform:none !important; }
       .title{ animation:none; }
       .animated-gradient{ background-size:100% 100%; animation:none; }
       .subtitle,.breadcrumb,.pill{ animation:none; }
@@ -509,8 +504,8 @@
       <div class="hero-glow"></div>
       <div class="breadcrumb"><a href="index.html">⌂ Home</a> / VS Code Guide</div>
       <h1 class="title"><span class="vscode-icon" aria-hidden="true" style="width:32px;height:32px;background:var(--accent-to);display:inline-block;vertical-align:middle;margin-right:4px;"></span> <span class="animated-gradient">VS Code Guide</span></h1>
-      <p class="subtitle"><span id="typewriter-text"></span><span class="typewriter-cursor"></span></p>
-      <span class="pill">⤒ Click code blocks to copy &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
+      <p class="subtitle"><span id="typewriter-text">A comprehensive guide to Visual Studio Code — shortcuts, extensions, debugging, Git integration, multi-cursor, Emmet, remote development, and more. Every code block has a Copy button.</span><span class="typewriter-cursor"></span></p>
+      <span class="pill">Copy button on each code block &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
     </header>
 
     <!-- ═══ 1. Introduction ═══ -->
@@ -555,7 +550,7 @@ code index.js
 code --wait file.txt
 
 <span class="cm"># Open without a window (add to PATH during install on Windows/macOS)</span>
-code --help</code><span class="copy-tip">Copy</span></pre>
+code --help</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>💡 Tip:</strong> On macOS, after installing, open the Command Palette (<span class="vscode-key">Cmd+Shift+P</span>), type <code>Shell Command: Install 'code' command in PATH</code>, and run it to enable the <code class="inline-code">code</code> terminal command.</div>
 
@@ -599,7 +594,7 @@ Ctrl+K Z
 Ctrl+Shift+P → "View: Toggle Minimap"
 
 <span class="cm"># Split editor vertically</span>
-Ctrl+\</code><span class="copy-tip">Copy</span></pre>
+Ctrl+\</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>💡 Tip:</strong> Use <strong>Zen Mode</strong> (<span class="vscode-key">Ctrl+K Z</span>) when you need to focus. Press <span class="vscode-key">Esc Esc</span> to exit.</div>
     </section>
@@ -659,7 +654,7 @@ Ctrl+\</code><span class="copy-tip">Copy</span></pre>
 > View: Toggle Line Numbers
 
 <span class="cm"># Reopen closed tab</span>
-> Workbench: Reopen Closed Editor</code><span class="copy-tip">Copy</span></pre>
+> Workbench: Reopen Closed Editor</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>💡 Tip:</strong> Type <code>?</code> in the palette to see available special prefixes: <code>></code> for commands, <code>@</code> for symbols, <code>:</code> for line numbers, and <code>#</code> for file names.</div>
 
@@ -696,7 +691,7 @@ Ctrl+PageUp / Ctrl+PageDown
 <span class="cm"># Type 'clear' in the terminal or click trash icon</span>
 
 <span class="cm"># Open file links in terminal output</span>
-<span class="cm"># Ctrl+Click on a file:line in terminal output</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm"># Ctrl+Click on a file:line in terminal output</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Default Shell</h3>
       <p>You can change the default shell via the <strong>Command Palette</strong>: <code>Terminal: Select Default Profile</code>. Options include:</p>
@@ -740,7 +735,7 @@ code --install-extension esbenp.prettier-vscode
 code --list-extensions
 
 <span class="cm"># Disable all extensions (troubleshooting)</span>
-code --disable-extensions</code><span class="copy-tip">Copy</span></pre>
+code --disable-extensions</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>💡 Tip:</strong> Search extensions by <code>@category:"formatters"</code> or <code>@recommended</code> in the Extensions panel to find curated lists.</div>
     </section>
@@ -759,7 +754,7 @@ Ctrl+,
 Ctrl+Shift+P → "Preferences: Open Settings (JSON)"
 
 <span class="cm"># Open workspace settings (project-specific)</span>
-<span class="cm"># .vscode/settings.json in your project root</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm"># .vscode/settings.json in your project root</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Popular Settings</h3>
       <pre><code>{
@@ -797,7 +792,7 @@ Ctrl+Shift+P → "Preferences: Open Settings (JSON)"
   <span class="cm">// Git</span>
   "git.enableSmartCommit": true,
   "git.autofetch": true
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Settings Layers</h3>
       <ul>
@@ -831,7 +826,7 @@ for (let index = 0; index &lt; array.length; index++) {
 }
 
 <span class="cm">// Type 'clg' in JS</span>
-console.log()</code><span class="copy-tip">Copy</span></pre>
+console.log()</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Create Your Own Snippets</h3>
       <pre><code><span class="cm">// Open: Command Palette → Preferences: Configure User Snippets</span>
@@ -854,7 +849,7 @@ console.log()</code><span class="copy-tip">Copy</span></pre>
     ],
     "description": "React Functional Component"
   }
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>💡 Tip:</strong> <code>$1</code>, <code>$2</code> are tab stops. <code>$0</code> is the final cursor position. <code>${1:default}</code> creates a placeholder with default text. Wrap in <code>${1|a,b|}</code> for a choice list.</div>
     </section>
@@ -891,7 +886,7 @@ F5
 Shift+F5
 
 <span class="cm"># Restart debugging</span>
-Ctrl+Shift+F5</code><span class="copy-tip">Copy</span></pre>
+Ctrl+Shift+F5</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Launch Configuration</h3>
       <p>Create a <code>.vscode/launch.json</code> file. Here's an example for Node.js:</p>
@@ -912,7 +907,7 @@ Ctrl+Shift+F5</code><span class="copy-tip">Copy</span></pre>
       "port": 9229
     }
   ]
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="note"><strong>Variable reference:</strong> <code>${workspaceFolder}</code> — current project root, <code>${file}</code> — currently open file, <code>${lineNumber}</code> — current line, <code>${env:VAR}</code> — environment variable.</div>
 
@@ -955,7 +950,7 @@ Ctrl+Shift+G
 <span class="cm"># Click a modified file in Source Control panel</span>
 
 <span class="cm"># Discard changes</span>
-<span class="cm"># Right-click file → Discard Changes</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm"># Right-click file → Discard Changes</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>GitLens (Recommended Extension)</h3>
       <p><strong>GitLens</strong> supercharges the Git experience by adding:</p>
@@ -995,7 +990,7 @@ Ctrl+U
 Ctrl+Shift+L
 
 <span class="cm"># Cancel multi-cursor</span>
-Esc</code><span class="copy-tip">Copy</span></pre>
+Esc</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Practical Workflows</h3>
       <ul>
@@ -1030,7 +1025,7 @@ Alt+R
 Enter / Shift+Enter
 
 <span class="cm"># Close find widget</span>
-Esc</code><span class="copy-tip">Copy</span></pre>
+Esc</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Across All Files (Search)</h3>
       <pre><code><span class="cm"># Open Search (global find)</span>
@@ -1047,7 +1042,7 @@ Ctrl+Shift+H
 <span class="cm"># Click the ellipsis (...) in the Search panel</span>
 
 <span class="cm"># Preview search results inline</span>
-<span class="cm"># Results show a snippet of matching lines</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm"># Results show a snippet of matching lines</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Useful Regex Patterns</h3>
       <div class="cheat-grid">
@@ -1098,7 +1093,7 @@ a[href="https://example.com"] → &lt;a href="https://example.com"&gt;&lt;/a&gt;
 p{Hello}     → &lt;p&gt;Hello&lt;/p&gt;
 
 <span class="cm">// Numbered items</span>
-ul&gt;li.item$*3 → &lt;ul&gt;&lt;li class="item1"&gt;&lt;/li&gt;...&lt;/ul&gt;</code><span class="copy-tip">Copy</span></pre>
+ul&gt;li.item$*3 → &lt;ul&gt;&lt;li class="item1"&gt;&lt;/li&gt;...&lt;/ul&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>CSS Abbreviations</h3>
       <pre><code><span class="cm">// Properties</span>
@@ -1117,7 +1112,7 @@ ai:c         → align-items: center;
 bdrs         → border-radius: ;
 
 <span class="cm">// Vendor prefixes</span>
-<span class="cm">// Many are handled automatically</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm">// Many are handled automatically</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="tip"><strong>💡 Tip:</strong> Emmet works in JSX too. Open the Command Palette and search <code>Emmet: Wrap with Abbreviation</code> to wrap existing code with an Emmet expression.</div>
     </section>
@@ -1155,7 +1150,7 @@ bdrs         → border-radius: ;
       "command": "npm run lint"
     }
   ]
-}</code><span class="copy-tip">Copy</span></pre>
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Run a Task</h3>
       <ul>
@@ -1202,7 +1197,7 @@ code --remote ssh-remote+dev.example.com /path/to/project
 Host dev-server
   HostName 192.168.1.100
   User ubuntu
-  IdentityFile ~/.ssh/id_ed25519</code><span class="copy-tip">Copy</span></pre>
+  IdentityFile ~/.ssh/id_ed25519</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Quick Start: Dev Containers</h3>
       <pre><code><span class="cm"># Create .devcontainer/devcontainer.json in your project</span>
@@ -1215,7 +1210,7 @@ Host dev-server
 }
 
 <span class="cm"># Open Command Palette</span>
-<span class="cm"># → Dev Containers: Reopen in Container</span></code><span class="copy-tip">Copy</span></pre>
+<span class="cm"># → Dev Containers: Reopen in Container</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <div class="warn"><strong>⚠</strong> Remote Development requires the <strong>Remote Development</strong> extension pack from Microsoft. Dev Containers need Docker installed on the host.</div>
     </section>
@@ -1308,23 +1303,26 @@ Host dev-server
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
     const menuBtn = document.getElementById('menuBtn');
+
+    function setMenu(open) {
+      if (sidebar) sidebar.classList.toggle('active', open);
+      if (overlay) overlay.classList.toggle('active', open);
+      if (menuBtn) menuBtn.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
     if (menuBtn) {
+      menuBtn.setAttribute('aria-expanded', 'false');
       menuBtn.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.toggle('active');
-        if (overlay) overlay.classList.toggle('active');
+        setMenu(!(sidebar && sidebar.classList.contains('active')));
       });
     }
-    if (overlay) {
-      overlay.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.remove('active');
-        overlay.classList.remove('active');
-      });
-    }
+    if (overlay) overlay.addEventListener('click', () => setMenu(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) setMenu(false);
+    });
     document.querySelectorAll('.toc a').forEach(a => {
-      a.addEventListener('click', () => {
-        if (sidebar) sidebar.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
-      });
+      a.addEventListener('click', () => setMenu(false));
     });
 
     // ═════════════════════════════════════════════
@@ -1336,7 +1334,7 @@ Host dev-server
       tip.addEventListener('click', async () => {
         const code = pre.querySelector('code');
         try {
-          await navigator.clipboard.writeText(code ? code.innerText : pre.innerText);
+          await navigator.clipboard.writeText(code ? code.innerText : pre.textContent);
           tip.textContent = 'Copied!';
           tip.classList.add('copied');
           setTimeout(() => {
@@ -1355,16 +1353,25 @@ Host dev-server
     (function typewriter() {
       const el = document.getElementById('typewriter-text');
       if (!el) return;
-      const text = 'A comprehensive guide to Visual Studio Code — shortcuts, extensions, debugging, Git integration, multi-cursor, Emmet, remote development, and more. Click any code block to copy.';
+      const text = el.textContent.trim();
+      const cursor = el.parentElement.querySelector('.typewriter-cursor');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (cursor) cursor.style.display = 'none';
+        return;
+      }
+      el.textContent = '';
       let i = 0;
-      function type() {
+      function tick() {
         if (i < text.length) {
-          el.textContent += text[i];
+          el.textContent += text.charAt(i);
           i++;
-          setTimeout(type, 12 + Math.random() * 16);
+          const delay = text.charAt(i - 1) === '.' || text.charAt(i - 1) === ',' ? 60 : 20;
+          setTimeout(tick, delay);
+        } else if (cursor) {
+          cursor.style.display = 'none';
         }
       }
-      type();
+      setTimeout(tick, 800);
     })();
 
     // ═════════════════════════════════════════════
@@ -1390,7 +1397,12 @@ Host dev-server
       tocLinks.forEach(a => a.classList.remove('active'));
       if (current) current.link.classList.add('active');
     }
-    window.addEventListener('scroll', highlightTOC, { passive: true });
+    let tocTicking = false;
+    window.addEventListener('scroll', () => {
+      if (tocTicking) return;
+      tocTicking = true;
+      requestAnimationFrame(() => { tocTicking = false; highlightTOC(); });
+    }, { passive: true });
     highlightTOC();
 
     // ═════════════════════════════════════════════
@@ -1398,8 +1410,14 @@ Host dev-server
     // ═════════════════════════════════════════════
     const backTop = document.getElementById('back-top');
     if (backTop) {
+      let backTicking = false;
       window.addEventListener('scroll', () => {
-        backTop.classList.toggle('visible', window.scrollY > 400);
+        if (backTicking) return;
+        backTicking = true;
+        requestAnimationFrame(() => {
+          backTop.classList.toggle('visible', window.scrollY > 400);
+          backTicking = false;
+        });
       }, { passive: true });
       backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
     }
@@ -1428,6 +1446,7 @@ Host dev-server
     // 7. 3D TILT
     // ═════════════════════════════════════════════
     (function tiltEffect() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const cards = document.querySelectorAll('.card');
       cards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
@@ -1451,6 +1470,7 @@ Host dev-server
     // 8. PARALLAX ORBS
     // ═════════════════════════════════════════════
     (function parallaxOrbs() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const orbs = document.querySelectorAll('.orb');
       if (!orbs.length) return;
       document.addEventListener('mousemove', (e) => {
