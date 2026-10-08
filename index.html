@@ -22,7 +22,10 @@
       try{
         var t = localStorage.getItem('theme');
         if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
-      }catch(e){}
+        else document.documentElement.setAttribute('data-theme', 'light');
+      }catch(e){
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
     })();
   </script>
   <style>
@@ -692,9 +695,10 @@
       const html = document.documentElement;
       const stored = localStorage.getItem('theme');
       if (stored) html.setAttribute('data-theme', stored);
+      else html.setAttribute('data-theme', 'light');
       const icons = { dark: '🌙', light: '☀️' };
-      const sys = window.matchMedia('(prefers-color-scheme:light)').matches ? 'light' : 'dark';
-      btn.textContent = icons[html.getAttribute('data-theme') || sys] || icons.dark;
+      const cur = html.getAttribute('data-theme') || 'light';
+      btn.textContent = icons[cur] || icons.light;
       btn.addEventListener('click', () => {
         const cur = html.getAttribute('data-theme');
         const next = cur === 'light' ? 'dark' : 'light';
