@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="utf-8" />
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -8,7 +9,6 @@
   gtag('js', new Date());
   gtag('config', 'G-NDLH3RKL58');
 </script>
-  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Laksh Guides</title>
   <meta name="description" content="Quick, clear references for coding, tools, and academics — built for practical workflows. Git, Linux, VS Code, HTML &amp; CSS, and JavaScript guides." />
@@ -609,8 +609,10 @@
     const sidebar = document.getElementById('mobileDrawer');
     const overlay = document.getElementById('overlay');
     const menuToggle = document.getElementById('menuToggle');
+    sidebar.inert = true;
     function setDrawer(open) {
       sidebar.classList.toggle('active', open);
+      sidebar.inert = !open;
       overlay.classList.toggle('active', open);
       menuToggle.setAttribute('aria-expanded', String(open));
       document.body.style.overflow = open ? 'hidden' : '';

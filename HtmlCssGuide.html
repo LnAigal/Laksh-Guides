@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="utf-8" />
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -14,15 +15,18 @@
     try{
       var t = localStorage.getItem('theme');
       if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
-    }catch(e){}
+      else document.documentElement.setAttribute('data-theme', 'light');
+    }catch(e){
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
   })();
 </script>
-  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HTML &amp; CSS Guide — Laksh Guides</title>
   <meta name="description" content="Comprehensive HTML &amp; CSS guide: document structure, semantic markup, forms, selectors, box model, flexbox, grid, responsive design, animations, and theming." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e34f26'/%3E%3Ctext x='16' y='23' font-family='Inter,sans-serif' font-size='17' font-weight='800' text-anchor='middle' fill='white'%3E%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
   <style>
     :root{
@@ -968,7 +972,7 @@ li::marker { color: #e34f26; }
         <li><code class="inline-code">A, B</code> — group (comma = OR)</li>
       </ul>
 
-      <div class="note"><strong>Modern CSS worth knowing:</strong> <code class="inline-code">:has()</code>, nesting (<code class="inline-code">.card{ &:hover{ ... } }</code>), and <code class="inline-code">@layer</code> for managing cascade order. All are supported in current browsers.</div>
+      <div class="note"><strong>Modern CSS worth knowing:</strong> <code class="inline-code">:has()</code>, nesting (<code class="inline-code">.card{ &amp;:hover{ ... } }</code>), and <code class="inline-code">@layer</code> for managing cascade order. All are supported in current browsers.</div>
 
       <div class="tip"><strong>💡 Tip:</strong> Prefer classes over IDs and element selectors for styling. IDs are unique, so they carry very high specificity and are painful to override. Classes are reusable and predictable.</div>
     </section>
@@ -1686,7 +1690,15 @@ ul[class]{ list-style: none; }
       if (overlay) overlay.classList.toggle('active', open);
       if (menuBtn) menuBtn.setAttribute('aria-expanded', String(open));
       document.body.style.overflow = open ? 'hidden' : '';
+      syncSidebarInert();
     }
+
+    function syncSidebarInert() {
+      if (!sidebar) return;
+      sidebar.toggleAttribute('inert', window.innerWidth <= 900 && !sidebar.classList.contains('active'));
+    }
+    syncSidebarInert();
+    window.addEventListener('resize', syncSidebarInert);
 
     if (menuBtn) {
       menuBtn.setAttribute('aria-expanded', 'false');
