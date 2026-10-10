@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NDLH3RKL58');
+</script>
+<script>
+  (function(){
+    document.documentElement.classList.add('js');
+    try{
+      var t = localStorage.getItem('theme');
+      if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      else document.documentElement.setAttribute('data-theme', 'light');
+    }catch(e){
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Markdown Guide — Laksh Guides</title>
+  <meta name="description" content="Comprehensive Markdown guide: headings, emphasis, lists, links, images, code blocks, tables, blockquotes, GitHub Flavored Markdown, front matter, and README recipes." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 208 128'%3E%3Crect width='208' height='128' rx='18' fill='%23083fa1'/%3E%3Cpath d='M25 98V30h20l15 22l15-22h20v68h-20V59l-15 22l-15-22v39zM145 30h20v35h20l-30 33l-30-33h20z' fill='white'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg: #07080e;
+      --bg-alt: #0b0d17;
+      --surface: rgba(18,22,40,0.75);
+      --surface-hover: rgba(28,34,60,0.85);
+      --text: #f1f5f9;
+      --text-dim: #8892b0;
+      --text-muted: #64748b;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.4);
+      --accent-from: #6366f1;
+      --accent-via: #8b5cf6;
+      --accent-to: #a855f7;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --code-bg: #0a0c16;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --glow: 0 0 40px rgba(99,102,241,0.1);
+    }
+    :root[data-theme="light"]{
+      --bg: #f8fafc;
+      --bg-alt: #f1f5f9;
+      --surface: rgba(255,255,255,0.85);
+      --surface-hover: rgba(255,255,255,1);
+      --text: #0f172a;
+      --text-dim: #475569;
+      --text-muted: #94a3b8;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.35);
+      --code-bg: #0f172a;
+      --shadow: 0 8px 32px rgba(0,0,0,0.06);
+      --glow: 0 0 40px rgba(99,102,241,0.05);
+    }
+    @media (prefers-color-scheme: light){
+      :root:not([data-theme="dark"]){
+        --bg: #f8fafc;
+        --bg-alt: #f1f5f9;
+        --surface: rgba(255,255,255,0.85);
+        --surface-hover: rgba(255,255,255,1);
+        --text: #0f172a;
+        --text-dim: #475569;
+        --text-muted: #94a3b8;
+        --border: rgba(99,102,241,0.15);
+        --border-hover: rgba(99,102,241,0.35);
+        --code-bg: #0f172a;
+        --shadow: 0 8px 32px rgba(0,0,0,0.06);
+        --glow: 0 0 40px rgba(99,102,241,0.05);
+      }
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; scroll-padding-top:16px; }
+    html{
+      min-height:100%;
+      background: var(--bg);
+    }
+    body{
+      min-height:100vh;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      display:grid; grid-template-columns:270px minmax(0, 1fr); gap:0;
+    }
+    a{ color:var(--accent-via); text-decoration:none; }
+    :focus-visible{ outline:2px solid var(--accent-from); outline-offset:2px; border-radius:6px; }
+
+    ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
+
+    nav{
+      position:sticky; top:0; height:100dvh; overflow-y:auto;
+      padding:28px 16px; background:var(--bg-alt); border-right:1px solid var(--border);
+      display:flex; flex-direction:column; gap:2px;
+      z-index:100;
+    }
+    nav::-webkit-scrollbar{ width:4px; }
+    nav::-webkit-scrollbar-thumb{ background:var(--border); border-radius:9px; }
+
+    .logo{
+      font-weight:800; font-size:1.1rem; display:flex; align-items:center; gap:10px;
+      padding-bottom:16px; border-bottom:1px solid var(--border); flex-shrink:0;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .logo .mark{
+      width:8px; height:8px; border-radius:999px;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-text-fill-color:initial; flex-shrink:0;
+    }
+    .logo .home-link{
+      margin-left:auto; font-size:0.8rem; opacity:0.4;
+      -webkit-text-fill-color:initial; color:var(--text-dim);
+      transition:opacity 0.2s;
+    }
+    .logo .home-link:hover{ opacity:0.8; }
+    .logo .theme-btn{
+      margin-left:auto; font-size:0.85rem; line-height:1; font-family:inherit;
+      background:transparent; border:1px solid var(--border); color:var(--text-dim);
+      width:26px; height:26px; border-radius:8px; cursor:pointer; padding:0;
+      display:inline-flex; align-items:center; justify-content:center;
+      -webkit-text-fill-color:initial;
+      transition:color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .logo .theme-btn:hover{ color:var(--text); border-color:var(--border-hover); background:var(--surface); }
+    .logo .theme-btn + .home-link{ margin-left:6px; }
+    body{ transition: background-color 0.3s ease, color 0.3s ease; }
+
+    .toc{ display:flex; flex-direction:column; gap:2px; margin-top:6px; flex:1; }
+    .toc a{
+      display:flex; align-items:center; gap:12px;
+      padding:9px 14px; border-radius:12px;
+      text-decoration:none; color:var(--text-dim);
+      border:1px solid transparent;
+      transition:all 0.2s ease; font-size:0.82rem; font-weight:450;
+      position:relative;
+    }
+    .toc a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+    .toc a.active{
+      color:var(--text); border-color:var(--border-hover);
+      background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08));
+      box-shadow:inset 2px 0 0 var(--accent-from);
+    }
+    .toc a .tag-icon{ font-size:0.7rem; width:16px; text-align:center; flex-shrink:0; opacity:0.5; }
+    .toc a.active .tag-icon{ opacity:0.9; }
+
+    .sidebar-footer{
+      padding-top:10px; border-top:1px solid var(--border);
+      font-size:0.7rem; color:var(--text-muted); text-align:center; flex-shrink:0;
+    }
+
+    .level{ font-size:0.55rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:3px 7px; border-radius:6px; margin-left:auto; flex-shrink:0; }
+    .level-beginner{ background:rgba(16,185,129,0.12); color:var(--green); border:1px solid rgba(16,185,129,0.2); }
+    .level-intermediate{ background:rgba(99,102,241,0.12); color:var(--accent-from); border:1px solid rgba(99,102,241,0.2); }
+    .level-advanced{ background:rgba(245,158,11,0.12); color:var(--amber); border:1px solid rgba(245,158,11,0.2); }
+
+    main{ padding:48px 36px 64px; width:100%; max-width:1000px; justify-self:center; }
+    @media (min-width:1500px){ main{ max-width:1120px; } }
+
+    header.hero{ margin-bottom:36px; position:relative; overflow:hidden; }
+    header.hero::after{
+      content:''; position:absolute; bottom:-18px; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,var(--border),transparent);
+    }
+    .breadcrumb{ font-size:0.78rem; color:var(--text-dim); margin-bottom:14px; }
+    .breadcrumb a{ color:var(--text-dim); }
+    .breadcrumb a:hover{ color:var(--accent-from); }
+    .title{
+      font-size: clamp(1.8rem, 1.4rem + 2.2vw, 2.8rem); font-weight:800; margin:0;
+      line-height:1.15; letter-spacing:-0.02em;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .hero-glow{
+      position:absolute; top:-60px; right:-40px;
+      width:200px; height:200px; border-radius:50%;
+      background:radial-gradient(circle,rgba(8,63,161,0.16),transparent 70%);
+      pointer-events:none;
+    }
+    .subtitle{ color:var(--text-dim); margin:10px 0 20px; max-width:70ch; line-height:1.7; font-size:0.95rem; }
+    .pill{
+      display:inline-flex; align-items:center; gap:10px; padding:7px 16px;
+      border-radius:999px; background:var(--surface); backdrop-filter:blur(12px);
+      border:1px solid var(--border); color:var(--text-dim); font-size:0.8rem;
+    }
+
+    section.card{
+      background:var(--surface); backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--border); border-radius:20px;
+      padding:28px 28px 20px; margin-bottom:24px;
+      transition:border-color 0.3s ease, box-shadow 0.3s ease; box-shadow:var(--glow);
+      position:relative; overflow:hidden;
+    }
+    section.card::before{
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,transparent,var(--border-hover),transparent);
+      opacity:0; transition:opacity 0.3s;
+    }
+    section.card:hover{
+      border-color:var(--border-hover); box-shadow:var(--shadow),var(--glow);
+    }
+    section.card:hover::before{ opacity:1; }
+
+    section.card h2{ margin:0 0 12px; font-size:1.3rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    section.card h2 .section-num{
+      font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:8px;
+      background:rgba(99,102,241,0.1); color:var(--accent-from);
+      border:1px solid rgba(99,102,241,0.15);
+    }
+    section.card h3{ margin:18px 0 8px; font-size:1rem; color:var(--text); font-weight:600; }
+    section.card p, section.card li{ color:var(--text-dim); line-height:1.75; }
+    section.card > p, section.card > ul, section.card > ol{ max-width:80ch; }
+    section.card p{ margin:0 0 10px; font-size:0.92rem; }
+    section.card ul, section.card ol{ padding-left:22px; margin:0 0 12px; }
+    section.card ul{ list-style-type:none; padding-left:0; }
+    section.card ul li{ padding-left:20px; position:relative; }
+    section.card ul li::before{ content:'▸'; position:absolute; left:0; color:var(--accent-from); opacity:0.6; font-size:0.8rem; }
+    section.card ol li{ color:var(--text-dim); line-height:1.75; margin-bottom:4px; }
+    section.card li strong{ color:var(--text); }
+
+    details.accordion{
+      border:1px solid var(--border); border-radius:14px; padding:16px 18px;
+      background:var(--bg); transition:all 0.25s ease;
+    }
+    details.accordion[open]{ border-color:var(--border-hover); background:rgba(99,102,241,0.02); }
+    details.accordion + details.accordion{ margin-top:10px; }
+    details.accordion:hover:not([open]){ border-color:var(--border-hover); }
+    details.accordion summary{
+      cursor:pointer; list-style:none; display:flex; align-items:center; gap:12px;
+      font-weight:550; user-select:none; font-size:0.93rem;
+    }
+    details.accordion summary::-webkit-details-marker{ display:none; }
+    details.accordion summary .arrow{
+      font-size:0.6rem; color:var(--accent-from); transition:transform 0.25s ease;
+      width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+      border-radius:6px; border:1px solid var(--border);
+      flex-shrink:0;
+    }
+    details.accordion[open] summary .arrow{ transform:rotate(90deg); border-color:var(--border-hover); background:rgba(99,102,241,0.05); }
+    details.accordion pre{ margin-top:14px; }
+    details.accordion p{ margin-top:10px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+
+    .tag{
+      font-size:0.65rem; font-weight:600; letter-spacing:0.02em;
+      background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.15);
+      padding:4px 10px; border-radius:8px; color:var(--accent-from);
+      white-space:nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    pre{
+      background: var(--code-bg); color:#e2e8f0;
+      padding:18px; border-radius:14px; overflow-x:auto;
+      border:1px solid rgba(99,102,241,0.1);
+      font-size:0.85rem; line-height:1.6;
+      position:relative;
+    }
+    code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:0.87rem; }
+    .inline-code{ display:inline; padding:3px 8px; border-radius:6px; background:rgba(99,102,241,0.06); border:1px solid var(--border); font-size:0.85em; color:var(--accent-from); }
+
+    .note{
+      background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(16,185,129,0.02));
+      border:1px solid rgba(16,185,129,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .note strong{ color:var(--green); }
+
+    .warn{
+      background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(245,158,11,0.02));
+      border:1px solid rgba(245,158,11,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .warn strong{ color:var(--amber); }
+
+    .tip{
+      background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(99,102,241,0.02));
+      border:1px solid rgba(6,182,212,0.15);
+      color:var(--text); padding:14px 18px; border-radius:14px; margin:14px 0;
+      line-height:1.65; font-size:0.9rem;
+    }
+    .tip strong{ color:var(--cyan); }
+
+    .try-it{
+      background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.03));
+      border:1px solid rgba(99,102,241,0.15);
+      padding:18px 22px; border-radius:14px; margin:16px 0;
+    }
+    .try-it .try-head{ font-weight:600; font-size:0.8rem; color:var(--accent-from); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+    .try-it p{ margin:0 0 6px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+    .try-it p:last-child{ margin:0; }
+
+    pre .copy-tip{
+      position:absolute; top:10px; right:10px;
+      font:inherit; font-size:0.6rem; font-weight:500; line-height:1.4;
+      padding:5px 11px; border-radius:8px; font-family:inherit;
+      background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15);
+      color:var(--text-dim); cursor:pointer; opacity:0;
+      transition:opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+      z-index:2;
+    }
+    pre:hover .copy-tip, pre:focus-within .copy-tip{ opacity:1; }
+    @media (hover:none){ .copy-tip{ opacity:1; } }
+    .copy-tip:hover{ background:rgba(99,102,241,0.2); color:var(--text); }
+    .copy-tip.copied{ background:rgba(16,185,129,0.2); color:var(--green); border-color:rgba(16,185,129,0.3); }
+
+    .cheat-grid{
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:8px; margin:14px 0;
+    }
+    .cheat-item{
+      background:var(--code-bg); border:1px solid rgba(99,102,241,0.08); border-radius:12px; padding:12px 14px;
+      transition:border-color 0.2s;
+    }
+    .cheat-item:hover{ border-color:rgba(99,102,241,0.2); }
+    .cheat-item .cheat-cmd{ font-family:ui-monospace, monospace; font-size:0.8rem; font-weight:600; color:var(--cyan); }
+    .cheat-item .cheat-desc{ font-size:0.75rem; color:var(--text-muted); margin-top:3px; }
+
+    footer{ margin-top:44px; color:var(--text-dim); font-size:0.85rem; text-align:center; padding-top:20px; border-top:1px solid var(--border); }
+    footer a{ color:var(--text-dim); }
+    footer a:hover{ color:var(--accent-from); }
+
+    #back-top{
+      position:fixed; bottom:28px; right:28px;
+      width:46px; height:46px; border-radius:999px;
+      background:var(--surface); backdrop-filter:blur(20px);
+      border:1px solid var(--border); color:var(--text-dim);
+      font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition:all 0.3s; z-index:999;
+      box-shadow:var(--shadow);
+    }
+    #back-top.visible{ opacity:1; pointer-events:auto; }
+    #back-top:hover{ border-color:var(--border-hover); color:var(--text); background:var(--surface-hover); transform:translateY(-2px); }
+
+    @media (max-width: 900px){
+      html{ scroll-padding-top:64px; }
+      html,body{ grid-template-columns:minmax(0, 1fr); }
+      nav{
+        position:fixed; left:0; top:0; bottom:0;
+        width:270px; height:100vh;
+        transform:translateX(-100%);
+        padding:24px 14px;
+      }
+      nav.active{ transform:translateX(0); }
+      main{ padding:70px 18px 30px; }
+      #menu-bar{ display:flex !important; }
+      .hero-glow{ display:none; }
+    }
+
+    #menu-bar{
+      display:none;
+      position:fixed; top:0; left:0; right:0; height:52px;
+      background:var(--bg-alt); border-bottom:1px solid var(--border);
+      z-index:50; align-items:center; padding:0 16px;
+      backdrop-filter:blur(20px);
+    }
+    #menu-bar .menu-btn{
+      background:none; border:none; cursor:pointer; color:var(--text);
+      font-size:1.3rem; padding:4px;
+    }
+    #menu-bar .menu-title{
+      margin-left:12px; font-weight:700; font-size:0.95rem;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    #overlay{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
+      backdrop-filter:blur(4px); z-index:99;
+    }
+    @media (max-width: 900px){
+      #overlay.active{ display:block; }
+    }
+
+    .sect-offset{ scroll-margin-top:16px; }
+
+    /* laptop/short-viewport: compact TOC so all items fit without clipping */
+    @media (max-height:860px){
+      nav{ padding:18px 14px; }
+      .logo{ padding-bottom:12px; }
+      .toc a{ padding:6px 12px; font-size:0.78rem; }
+      .toc a .tag-icon{ font-size:0.64rem; }
+      .sidebar-footer{ padding-top:8px; font-size:0.65rem; }
+    }
+
+    .badge{ display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; padding:3px 8px; border-radius:6px; font-weight:500; }
+    .badge-green{ background:rgba(16,185,129,0.1); color:var(--green); }
+    .badge-blue{ background:rgba(99,102,241,0.1); color:var(--accent-from); }
+    .badge-amber{ background:rgba(245,158,11,0.1); color:var(--amber); }
+
+    .brand-icon{
+      display:inline-block; width:18px; height:18px;
+      background:var(--text-dim);
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 208 128'%3E%3Cpath d='M25 98V30h20l15 22l15-22h20v68h-20V59l-15 22l-15-22v39zM145 30h20v35h20l-30 33l-30-33h20z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 208 128'%3E%3Cpath d='M25 98V30h20l15 22l15-22h20v68h-20V59l-15 22l-15-22v39zM145 30h20v35h20l-30 33l-30-33h20z'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .brand-icon-accent{ background:#083fa1; }
+
+    pre .hl{ color:var(--cyan); }
+    pre .cm{ color:var(--text-muted); }
+    pre .kw{ color:var(--accent-from); }
+    pre .kbd{ color:var(--green); }
+
+    kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size:0.78em; padding:2px 6px; border-radius:6px;
+      background:var(--code-bg); border:1px solid var(--border);
+      border-bottom-width:2px; color:var(--green); white-space:nowrap;
+    }
+    .visually-hidden{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+    section.card p kbd{ margin:0 1px; }
+
+    @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+    @keyframes pulse-glow{ 0%,100%{ box-shadow:0 0 20px rgba(99,102,241,0.05); } 50%{ box-shadow:0 0 40px rgba(99,102,241,0.12); } }
+    @keyframes gradient-shift{ 0%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+    @keyframes slide-up{ 0%{ opacity:0; transform:translateY(30px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes scale-in{ 0%{ opacity:0; transform:scale(0.9); } 100%{ opacity:1; transform:scale(1); } }
+    @keyframes fade-in{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes orb-drift{ 0%{ transform:translate(0,0); } 50%{ transform:translate(30px,-40px); } 100%{ transform:translate(0,0); } }
+    @keyframes orb-drift-2{ 0%{ transform:translate(0,0); } 50%{ transform:translate(-20px,30px); } 100%{ transform:translate(0,0); } }
+    @keyframes blink-cursor{ 0%,100%{ opacity:1; } 50%{ opacity:0; } }
+    @keyframes title-reveal{ 0%{ opacity:0; transform:translateY(20px) scale(0.95); filter:blur(10px); } 100%{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); } }
+    @keyframes badge-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+    @keyframes wobble{ 0%,100%{ transform:rotate(0deg); } 25%{ transform:rotate(-3deg); } 75%{ transform:rotate(3deg); } }
+
+    .orb-container{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+    .orb{ position:absolute; border-radius:50%; opacity:0.15; filter:blur(60px); }
+    .orb-1{ width:400px; height:400px; background:radial-gradient(circle,var(--accent-from),transparent); top:-100px; right:-100px; }
+    .orb-2{ width:300px; height:300px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-80px; left:-80px; }
+    .orb-3{ width:250px; height:250px; background:radial-gradient(circle,var(--cyan),transparent); top:40%; left:50%; opacity:0.08; }
+
+    .hero{ animation:fade-in 0.8s ease-out; }
+    .title{ animation:title-reveal 1s ease-out both; }
+    .title .animated-gradient{
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan),var(--accent-to),var(--accent-from));
+      background-size:300% 300%;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:gradient-shift 6s ease infinite;
+    }
+    .subtitle{ animation:slide-up 0.8s ease-out 0.3s both; }
+    .breadcrumb{ animation:slide-up 0.6s ease-out 0.1s both; }
+    .pill{ animation:scale-in 0.6s ease-out 0.6s both; }
+    .js .card{ opacity:0; transform:translateY(30px); transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .card.visible{ opacity:1; transform:translateY(0); transition:border-color 0.3s ease, box-shadow 0.3s ease; }
+    .card:hover .section-num{ animation:wobble 0.4s ease; }
+    .card:hover::before{ opacity:1; }
+    #back-top.visible{ animation:scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+    .typewriter-cursor{
+      display:inline-block; width:2px; height:1.1em;
+      background:var(--accent-from); margin-left:2px;
+      animation:blink-cursor 0.8s step-end infinite;
+      vertical-align:text-bottom;
+    }
+    pre:hover{ border-color:rgba(99,102,241,0.2); box-shadow:0 0 30px rgba(99,102,241,0.05); }
+
+    @media (prefers-reduced-motion: reduce){
+      .orb,.card{ animation:none !important; }
+      .card{ opacity:1; transform:none !important; }
+      .title{ animation:none; }
+      .animated-gradient{ background-size:100% 100%; animation:none; }
+      .subtitle,.breadcrumb,.pill{ animation:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div id="overlay"></div>
+  <div id="menu-bar">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">☰</button>
+    <span class="menu-title"><span class="brand-icon" aria-hidden="true" style="width:16px;height:16px;"></span> Markdown Guide</span>
+  </div>
+
+  <nav id="sidebar">
+    <div class="logo">
+      <span class="mark"></span> <span class="brand-icon brand-icon-accent" aria-hidden="true"></span> Markdown
+      <button class="theme-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+      <a href="index.html" class="home-link" title="Back to home">⌂</a>
+    </div>
+    <div class="toc" id="toc-menu">
+      <a href="#intro"><span class="tag-icon">●</span> Introduction</a>
+      <a href="#setup"><span class="tag-icon">⚙</span> Setup &amp; Editors</a>
+      <a href="#headings"><span class="tag-icon">▣</span> Headings &amp; Paragraphs</a>
+      <a href="#emphasis"><span class="tag-icon">❝</span> Emphasis &amp; Breaks</a>
+      <a href="#lists"><span class="tag-icon">≡</span> Lists &amp; Task Lists</a>
+      <a href="#links"><span class="tag-icon">🔗</span> Links &amp; Images</a>
+      <a href="#code"><span class="tag-icon">⌨</span> Code &amp; Syntax</a>
+      <a href="#quotes"><span class="tag-icon">❯</span> Quotes &amp; Callouts</a>
+      <a href="#tables"><span class="tag-icon">▦</span> Tables</a>
+      <a href="#escaping"><span class="tag-icon">\</span> Escaping &amp; HTML</a>
+      <a href="#gfm"><span class="tag-icon">★</span> GitHub Flavored MD</a>
+      <a href="#frontmatter"><span class="tag-icon">◧</span> Front Matter</a>
+      <a href="#readme"><span class="tag-icon">⚑</span> README Recipes</a>
+      <a href="#cheatsheet"><span class="tag-icon">⌗</span> Cheat Sheet</a>
+    </div>
+    <div class="sidebar-footer">Laksh Guides</div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="hero-glow"></div>
+      <div class="breadcrumb"><a href="index.html">⌂ Home</a> / Markdown Guide</div>
+      <h1 class="title"><span class="brand-icon" aria-hidden="true" style="width:32px;height:32px;background:#083fa1;"></span> <span class="animated-gradient">Markdown Guide</span></h1>
+      <p class="subtitle"><span id="typewriter-text">Write clean, portable documents — headings, emphasis, lists, links, images, code blocks, tables, blockquotes, GitHub Flavored Markdown, front matter and ready-to-use README recipes. Every code block has a Copy button.</span><span class="typewriter-cursor"></span></p>
+      <span class="pill">Copy button on each code block &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
+    </header>
+
+    <!-- ═══ 1. Introduction ═══ -->
+    <section id="intro" class="card sect-offset">
+      <h2><span class="section-num">01</span> Introduction — Plain Text That Renders</h2>
+
+      <p><strong>Markdown</strong> is a lightweight markup language that lets you write formatted documents in plain text. You add a few symbols — <code class="inline-code">#</code> for a heading, <code class="inline-code">**</code> for bold, <code class="inline-code">-</code> for a list — and any Markdown-aware tool renders it into clean HTML, a PDF, a slide deck, or a documentation site.</p>
+
+      <p>The point is <em>readability</em>: a Markdown file is perfectly understandable even before it is rendered. Compare that to HTML, where a paragraph is buried in <code class="inline-code">&lt;p&gt;</code> tags, and the value becomes obvious.</p>
+
+      <h3>Where you will meet Markdown</h3>
+      <ul>
+        <li><strong>README files</strong> on GitHub, GitLab and Bitbucket</li>
+        <li><strong>Issues, pull requests and comments</strong> — every major code host</li>
+        <li><strong>Documentation</strong> — MkDocs, Docusaurus, Hugo, Jekyll, Astro, VitePress</li>
+        <li><strong>Notes apps</strong> — Obsidian, Notion, Bear, Joplin, Logseq</li>
+        <li><strong>Chat &amp; forums</strong> — Slack, Discord, Reddit, Stack Overflow</li>
+        <li><strong>Books, blogs and slides</strong> — Pandoc, Marp, reveal.js</li>
+      </ul>
+
+      <div class="note"><strong>Analogy:</strong> Markdown is the <em>outline</em> you scribble on a napkin; the renderer is the designer who turns it into a printed page. You write structure and intent, the tool handles the pixels.</div>
+
+      <h3>The two dialects you need to know</h3>
+      <ul>
+        <li><strong>CommonMark</strong> — the strict, unambiguous core specification. Everything else is built on it.</li>
+        <li><strong>GitHub Flavored Markdown (GFM)</strong> — CommonMark <em>plus</em> tables, task lists, strikethrough, autolinks, footnotes and alerts. This is what GitHub, and most people, actually use.</li>
+      </ul>
+
+      <div class="tip"><strong>💡 Tip:</strong> Learn the common core first. Ninety percent of real documents need only headings, emphasis, lists, links, images and code blocks. Everything else is a bonus.</div>
+    </section>
+
+    <!-- ═══ 2. Setup ═══ -->
+    <section id="setup" class="card sect-offset">
+      <h2><span class="section-num">02</span> Setup &amp; Editors <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Your first file — no build step needed</h3>
+      <p>Create a file ending in <code class="inline-code">.md</code> (or <code class="inline-code">.markdown</code>) and start typing. That is the entire setup.</p>
+
+      <pre><code><span class="cm"># My First Markdown File</span>
+
+This is a paragraph. Markdown turns it into a `&lt;p&gt;` on render.
+
+## Why it works
+
+- Plain text, so it survives every editor and every decade
+- Portable — GitHub, VS Code and Pandoc all read the same file
+- Optional: **bold**, *italic*, `code`, [links](https://example.com)</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Editors &amp; live preview</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">VS Code</div><div class="cheat-desc">Built-in preview: Ctrl+Shift+V (or ⌘+Shift+V)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Markdown All in One</div><div class="cheat-desc">Shortcuts, TOC generation, list editing, preview</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Markdown Preview Enhanced</div><div class="cheat-desc">Rich preview, math, diagrams, export to PDF/HTML</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">markdownlint</div><div class="cheat-desc">Flags style issues and inconsistencies as you type</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Typora / Obsidian</div><div class="cheat-desc">WYSIWYG writing with Markdown underneath</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">GitHub / StackEdit</div><div class="cheat-desc">Zero-install: paste Markdown and see it render instantly</div></div>
+      </div>
+
+      <h3>The Markdown pipeline</h3>
+      <p>Almost every tool follows the same three steps. Knowing them explains most “why didn't my formatting work?” moments.</p>
+      <ul>
+        <li><strong>Write</strong> — you author a plain-text <code class="inline-code">.md</code> file</li>
+        <li><strong>Parse</strong> — a Markdown parser (marked, markdown-it, remark, cmark) builds a syntax tree</li>
+        <li><strong>Render</strong> — the tree becomes HTML, a static page, a PDF or slides</li>
+      </ul>
+
+      <div class="warn"><strong>⚠ Empty lines matter:</strong> Markdown uses blank lines to separate blocks. If a list, heading or code fence refuses to render, the missing (or extra) blank line is almost always the culprit.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Install the <em>Markdown All in One</em> extension in VS Code and enable format-on-save. It keeps headings, lists and tables consistently styled without you thinking about it.</div>
+    </section>
+
+    <!-- ═══ 3. Headings & Paragraphs ═══ -->
+    <section id="headings" class="card sect-offset">
+      <h2><span class="section-num">03</span> Headings &amp; Paragraphs <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>ATX headings — the hash style</h3>
+      <p>Prefix a line with <code class="inline-code">#</code> symbols. One hash is an H1, two is an H2, up to six for H6. Always put a space after the hashes.</p>
+
+      <pre><code># Heading 1
+## Heading 2
+### Heading 3
+#### Heading 4
+##### Heading 5
+###### Heading 6</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="note"><strong>Rule of thumb:</strong> Use exactly one <code class="inline-code">#</code> H1 per document — it is the document's title. Use H2 for major sections and H3 for subsections. Never skip a level just to get a smaller font.</div>
+
+      <h3>Setext headings — the underline style</h3>
+      <p>A less common alternative for the first two levels. The number of <code class="inline-code">=</code> or <code class="inline-code">-</code> characters does not need to match the text length.</p>
+
+      <pre><code>Heading 1
+=========
+
+Heading 2
+---------</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Watch out:</strong> A line of dashes under text (<code class="inline-code">---</code>) can be read as a Setext H2 <em>or</em> a horizontal rule, depending on context. Prefer the <code class="inline-code">#</code> style to avoid ambiguity.</div>
+
+      <h3>Paragraphs &amp; line breaks</h3>
+      <p>A block of text with no blank line inside is a single paragraph. Separate paragraphs with one blank line.</p>
+
+      <pre><code>This is the first paragraph.
+It continues on the next line — still one paragraph.
+
+This is a second paragraph, because of the blank line above.</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <p>To force a line break <em>within</em> a paragraph, end the line with two spaces or a backslash.</p>
+
+      <pre><code>Line one with two trailing spaces··
+Line two (new line, same paragraph)
+
+Line one with a backslash\
+Line two (same effect, easier to see)</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Because trailing spaces are invisible, many teams use the backslash <code class="inline-code">\</code> for hard breaks and configure their editor's <em>trim trailing whitespace</em> setting — otherwise a formatter silently removes the spaces and the break disappears.</div>
+    </section>
+
+    <!-- ═══ 4. Emphasis ═══ -->
+    <section id="emphasis" class="card sect-offset">
+      <h2><span class="section-num">04</span> Emphasis, Strikethrough &amp; Rules <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Inline emphasis</h3>
+      <pre><code>*italic*   or   _italic_
+**bold**   or   __bold__
+***bold and italic***
+~~strikethrough~~
+`inline code`</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <p>Mix and nest them freely, but keep markers balanced: <code class="inline-code">**_bold italic_**</code> renders as <strong><em>bold italic</em></strong>.</p>
+
+      <div class="warn"><strong>⚠ Underscores inside words:</strong> <code class="inline-code">snake_case_name</code> will not italicise the middle — good. But <code class="inline-code">_foo_bar_</code> can behave differently across parsers. When in doubt, use <code class="inline-code">*</code> for emphasis.</div>
+
+      <h3>Horizontal rules</h3>
+      <p>Three or more <code class="inline-code">-</code>, <code class="inline-code">*</code> or <code class="inline-code">_</code> on their own line, optionally with spaces between, draw a divider.</p>
+
+      <pre><code>---
+***
+___</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>What is not in the core spec</h3>
+      <ul>
+        <li><strong>Underline</strong> — there is no native underline; use <code class="inline-code">&lt;u&gt;text&lt;/u&gt;</code> HTML if you truly need it.</li>
+        <li><strong>Highlight</strong> — no standard syntax; some notes apps accept <code class="inline-code">==text==</code>.</li>
+        <li><strong>Sub / superscript</strong> — not in core; some parsers accept <code class="inline-code">~sub~</code> and <code class="inline-code">^sup^</code>.</li>
+      </ul>
+
+      <div class="tip"><strong>💡 Tip:</strong> If a feature is not in CommonMark or GFM, assume it only works in the specific app you are using. Portability is Markdown's superpower — do not trade it away lightly.</div>
+    </section>
+
+    <!-- ═══ 5. Lists ═══ -->
+    <section id="lists" class="card sect-offset">
+      <h2><span class="section-num">05</span> Lists &amp; Task Lists <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Unordered lists</h3>
+      <p>Start each item with <code class="inline-code">-</code>, <code class="inline-code">*</code> or <code class="inline-code">+</code>. Pick one and stay consistent.</p>
+
+      <pre><code>- Apples
+- Oranges
+- Bananas</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Ordered lists</h3>
+      <p>Numbered items. The first number sets the start; later numbers are cosmetic — Markdown renumbers automatically.</p>
+
+      <pre><code>1. Wake up
+2. Coffee
+3. Write Markdown</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Nested lists</h3>
+      <p>Indent child items by two to four spaces under the parent.</p>
+
+      <pre><code>- Frontend
+  - HTML
+  - CSS
+  - JavaScript
+- Backend
+  1. Node.js
+  2. Python</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Task lists (GFM)</h3>
+      <p>Use <code class="inline-code">- [ ]</code> for an open task and <code class="inline-code">- [x]</code> for a completed one. GitHub renders these as real checkboxes.</p>
+
+      <pre><code>- [x] Write the outline
+- [x] Draft the introduction
+- [ ] Add code examples
+- [ ] Request review</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="note"><strong>Tight vs loose lists:</strong> If every item is on one line with no blank lines between them, the list is “tight” (no <code class="inline-code">&lt;p&gt;</code> per item). Add blank lines and the list becomes “loose”, wrapping each item in a paragraph. Both are valid — loose lists just add vertical space.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> In VS Code, the <em>Markdown All in One</em> extension continues lists and re-numbers them automatically when you press Enter — no manual sequencing required.</div>
+    </section>
+
+    <!-- ═══ 6. Links & Images ═══ -->
+    <section id="links" class="card sect-offset">
+      <h2><span class="section-num">06</span> Links, Images &amp; Badges <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Inline links</h3>
+      <pre><code>[OpenAI](https://openai.com)
+[OpenAI](https://openai.com "Visit OpenAI")</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+      <p>The text in square brackets is what readers see; the URL is in parentheses. An optional quoted string becomes the tooltip title.</p>
+
+      <h3>Reference links</h3>
+      <p>Define the URL once and reuse it — ideal for documents that link to the same place many times.</p>
+
+      <pre><code>See the [documentation][docs] and the [changelog][log].
+
+[docs]: https://example.com/docs
+[log]: https://example.com/changelog "Release notes"</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Autolinks</h3>
+      <pre><code>&lt;https://example.com&gt;
+&lt;mailto:hello@example.com&gt;
+
+GFM also linkifies bare URLs: https://example.com</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Images</h3>
+      <p>An image is a link with a leading <code class="inline-code">!</code>. The text in brackets is the <em>alt text</em>, shown if the image fails to load and read aloud by screen readers.</p>
+
+      <pre><code>![Alt text describing the image](images/screenshot.png)
+![Logo](https://example.com/logo.svg "Hover title")</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Linking an image</h3>
+      <p>Wrap an image inside a link to make it clickable — the classic pattern for a logo that leads home.</p>
+
+      <pre><code>[![Project logo](logo.png)](https://example.com)
+
+[![Build passing](https://img.shields.io/badge/build-passing-brightgreen)](https://ci.example.com)</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="note"><strong>Badges:</strong> The second example uses <strong>shields.io</strong>, a free service that generates small SVG badges from a URL. Drop a row of them at the top of a README for instant status at a glance.</div>
+
+      <div class="warn"><strong>⚠ Always write meaningful alt text:</strong> “Screenshot” helps nobody. Describe what the image communicates so screen-reader users and search engines understand it.</div>
+    </section>
+
+    <!-- ═══ 7. Code ═══ -->
+    <section id="code" class="card sect-offset">
+      <h2><span class="section-num">07</span> Code &amp; Syntax Highlighting <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Inline code</h3>
+      <p>Wrap short snippets in single backticks. Use double backticks to include a literal backtick inside.</p>
+
+      <pre><code>Use `npm install` to install dependencies.
+To show a backtick: `` `code` ``</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Fenced code blocks</h3>
+      <p>Surround a block with three backticks (or tildes). Add a language name after the opening fence to enable syntax highlighting.</p>
+
+      <pre><code>```js
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+```</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Indented code blocks (legacy)</h3>
+      <p>Indenting four spaces also creates a code block, but fenced blocks are clearer and support highlighting. Prefer fences.</p>
+
+      <pre><code>    This is an indented code block.
+    It still works, but has no language hint.</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Highlighting inside a block</h3>
+      <p>Once you name the language, the renderer colours keywords, strings and comments — no extra markup required.</p>
+
+      <pre><code>```python
+def add(a, b):
+    """Return the sum of two numbers."""
+    return a + b
+```</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Diff blocks</h3>
+      <p>Use the <code class="inline-code">diff</code> language to show added and removed lines with colour.</p>
+
+      <pre><code>```diff
+- old line that was removed
++ new line that was added
+  unchanged context line
+```</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Common language tags are <code class="inline-code">js</code>, <code class="inline-code">ts</code>, <code class="inline-code">py</code>, <code class="inline-code">html</code>, <code class="inline-code">css</code>, <code class="inline-code">bash</code>, <code class="inline-code">json</code>, <code class="inline-code">yaml</code>, <code class="inline-code">sql</code>, <code class="inline-code">diff</code> and <code class="inline-code">text</code>. Use <code class="inline-code">text</code> when you want no highlighting at all.</div>
+    </section>
+
+    <!-- ═══ 8. Quotes ═══ -->
+    <section id="quotes" class="card sect-offset">
+      <h2><span class="section-num">08</span> Blockquotes &amp; Callouts <span class="level level-intermediate">Intermediate</span></h2>
+
+      <h3>Blockquotes</h3>
+      <p>Start a line with <code class="inline-code">&gt;</code> to create a blockquote. Stack them to nest, and leave a <code class="inline-code">&gt;</code> on a blank line to keep a single quote spanning multiple paragraphs.</p>
+
+      <pre><code>&gt; Markdown is a text-to-HTML conversion tool.
+&gt; It is written in plain text.
+
+&gt; Nested quotes:
+&gt;
+&gt; &gt; A quote inside a quote.</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>GitHub alerts</h3>
+      <p>GFM recognises five callout types when you start a blockquote with a special tag. GitHub renders each with its own colour and icon.</p>
+
+      <pre><code>&gt; [!NOTE]
+&gt; Useful information users should know.
+
+&gt; [!TIP]
+&gt; Helpful advice for doing things better.
+
+&gt; [!IMPORTANT]
+&gt; Key information users need to achieve their goal.
+
+&gt; [!WARNING]
+&gt; Urgent info that needs immediate attention.
+
+&gt; [!CAUTION]
+&gt; Advises about risks or negative outcomes.</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Collapsible sections</h3>
+      <p>Raw HTML <code class="inline-code">&lt;details&gt;</code> works on GitHub and most renderers — perfect for long logs or optional detail.</p>
+
+      <pre><code>&lt;details&gt;
+&lt;summary&gt;Click to expand&lt;/summary&gt;
+
+Hidden content goes here, including lists and code.
+
+&lt;/details&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Alerts are GFM-only:</strong> The <code class="inline-code">[!NOTE]</code> syntax renders as an alert on GitHub but appears as an ordinary blockquote elsewhere. Other apps have their own callout syntax — check your renderer.</div>
+    </section>
+
+    <!-- ═══ 9. Tables ═══ -->
+    <section id="tables" class="card sect-offset">
+      <h2><span class="section-num">09</span> Tables <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Tables are a GFM extension. Separate columns with pipes <code class="inline-code">|</code>. The first row is the header; the second row of dashes sets the alignment of each column.</p>
+
+      <pre><code>| Syntax      | Description           | Example       |
+| :---------- | :-------------------: | ------------: |
+| Bold        | Makes text bold       | `**text**`    |
+| Italic      | Makes text italic     | `*text*`      |
+| Strikethrough | Crosses out text    | `~~text~~`    |</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Column alignment</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">:---</div><div class="cheat-desc">Left align (the default)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">:---:</div><div class="cheat-desc">Center align</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">---:</div><div class="cheat-desc">Right align</div></div>
+      </div>
+
+      <h3>Escaping pipes and adding line breaks</h3>
+      <p>A literal pipe inside a cell must be escaped as <code class="inline-code">\|</code>. Tables cannot hold real multi-line cells — use <code class="inline-code">&lt;br&gt;</code> for a break.</p>
+
+      <pre><code>| Expression | Result     |
+| ---------- | ---------- |
+| `a \| b`   | bitwise OR |
+| Line one&lt;br&gt;Line two | two lines |</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> You do not need to align the source pipes — a formatter will tidy the columns for you. In VS Code, the <em>Markdown All in One</em> “Format Document” command reformats tables in one keystroke.</div>
+    </section>
+
+    <!-- ═══ 10. Escaping & HTML ═══ -->
+    <section id="escaping" class="card sect-offset">
+      <h2><span class="section-num">10</span> Escaping &amp; Raw HTML <span class="level level-intermediate">Intermediate</span></h2>
+
+      <h3>Escaping special characters</h3>
+      <p>Put a backslash before a character you want to display literally instead of it being interpreted as Markdown.</p>
+
+      <pre><code>\*not italic\*
+\# not a heading
+\- not a list item
+\`not code\`</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <p>These are the escapable characters: <code class="inline-code">\ ` * _ { } [ ] ( ) # + - . ! | &gt;</code></p>
+
+      <h3>Raw HTML</h3>
+      <p>Most renderers pass through inline HTML, which is useful for the few things Markdown cannot express.</p>
+
+      <pre><code>This is &lt;u&gt;underlined&lt;/u&gt; and this is H&lt;sub&gt;2&lt;/sub&gt;O.
+
+&lt;div align="center"&gt;A centred block&lt;/div&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Comments</h3>
+      <pre><code>&lt;!-- This comment is invisible in the rendered output --&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Security note:</strong> GitHub and most hosting platforms <em>sanitise</em> raw HTML, stripping scripts and dangerous attributes. Never assume embedded HTML or JavaScript will run — and never paste untrusted HTML into a renderer that does not sanitise.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> To display a block of HTML literally, wrap it in a fenced code block with the <code class="inline-code">html</code> language tag so the parser treats it as text, not markup.</div>
+    </section>
+
+    <!-- ═══ 11. GFM ═══ -->
+    <section id="gfm" class="card sect-offset">
+      <h2><span class="section-num">11</span> GitHub Flavored Markdown <span class="level level-advanced">Advanced</span></h2>
+
+      <p>GFM is CommonMark plus the features that make Markdown feel like a platform: tables, task lists, strikethrough, autolinks, footnotes and alerts. It is the dialect used across GitHub, and the one most people mean by “Markdown”.</p>
+
+      <h3>Footnotes</h3>
+      <pre><code>Markdown is portable.[^1] It also scales to whole books.[^book]
+
+[^1]: A reference is rendered as a superscript number.
+[^book]: Pandoc can turn Markdown into EPUB and PDF.</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Emoji</h3>
+      <pre><code>Ship it :rocket:  Nice work :tada:  Looks good :+1:</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Mentions, issues &amp; references</h3>
+      <pre><code>Thanks @octocat — this closes #42 and supersedes commit a1b2c3d.</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+      <p>On GitHub, <code class="inline-code">@user</code> notifies a person, <code class="inline-code">#123</code> links to an issue or PR, and a commit SHA links to the commit.</p>
+
+      <h3>Everything GFM adds at a glance</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Tables</div><div class="cheat-desc">Pipe-delimited rows with alignment</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Task lists</div><div class="cheat-desc">- [ ] and - [x] checkboxes</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Strikethrough</div><div class="cheat-desc">~~text~~</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Autolinks</div><div class="cheat-desc">Bare URLs become links</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Footnotes</div><div class="cheat-desc">[^1] references and definitions</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Alerts</div><div class="cheat-desc">&gt; [!NOTE] callout blocks</div></div>
+      </div>
+
+      <div class="note"><strong>Portability check:</strong> If a document must render identically everywhere (a book, a PDF, a wiki), stick to CommonMark plus tables and links. Save the GFM-only sugar for places you know support it.</div>
+    </section>
+
+    <!-- ═══ 12. Front Matter ═══ -->
+    <section id="frontmatter" class="card sect-offset">
+      <h2><span class="section-num">12</span> Front Matter &amp; Metadata <span class="level level-advanced">Advanced</span></h2>
+
+      <p><strong>Front matter</strong> is a block of metadata at the very top of a file, fenced by three dashes. Static site generators, blog engines and documentation tools read it to set titles, dates, tags and layouts. It is not part of the rendered body.</p>
+
+      <h3>YAML front matter (most common)</h3>
+      <pre><code>---
+title: Getting Started
+description: A short summary used for SEO and previews.
+date: 2026-01-15
+author: Laksh
+tags: [guide, markdown, docs]
+draft: false
+---</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>TOML front matter</h3>
+      <p>Hugo users often prefer TOML, fenced with <code class="inline-code">+++</code>.</p>
+      <pre><code>+++
+title = "Getting Started"
+date = 2026-01-15
+tags = ["guide", "markdown"]
++++</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Who consumes it</h3>
+      <ul>
+        <li><strong>Jekyll</strong> — YAML front matter, the original convention</li>
+        <li><strong>Hugo</strong> — YAML, TOML or JSON front matter</li>
+        <li><strong>Astro / Eleventy</strong> — front matter drives layouts and routing</li>
+        <li><strong>MkDocs / Docusaurus</strong> — page titles, sidebar order, tags</li>
+      </ul>
+
+      <div class="warn"><strong>⚠ One wrong character breaks the block:</strong> YAML is indentation- and punctuation-sensitive. A missing space after a colon, or a tab instead of spaces, can silently invalidate the whole header. Validate with your tool's build output.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Only add front matter when a tool specifically asks for it. Plain GitHub READMEs do not need it — and on GitHub an unstyled <code class="inline-code">---</code> block just shows up as a horizontal rule plus text.</div>
+    </section>
+
+    <!-- ═══ 13. README ═══ -->
+    <section id="readme" class="card sect-offset">
+      <h2><span class="section-num">13</span> README &amp; Documentation Recipes <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>A README is the front door of a project. This is a proven skeleton you can copy and fill in.</p>
+
+      <pre><code># Project Name
+
+&gt; One-line description of what this project does and who it is for.
+
+[![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://ci.example.com)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+## Features
+
+- Fast and dependency-free
+- Works with any Markdown renderer
+- Accessible by default
+
+## Installation
+
+```bash
+npm install project-name
+```
+
+## Usage
+
+```js
+import { project } from "project-name";
+project();
+```
+
+## Contributing
+
+Pull requests are welcome. Please open an issue first.
+
+## License
+
+MIT</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>A table of contents, generated by hand</h3>
+      <p>Anchor links point at the lowercased, hyphenated heading text. Most editors (or <em>Markdown All in One</em>) can generate this list for you.</p>
+
+      <pre><code>## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Collapsing the long parts</h3>
+      <pre><code>&lt;details&gt;
+&lt;summary&gt;Roadmap&lt;/summary&gt;
+
+- [ ] v1.0 — core release
+- [ ] v1.1 — theming
+- [ ] v2.0 — plugins
+
+&lt;/details&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Lead with <em>why</em>, not <em>what</em>. A stranger gives a README about eight seconds. A one-line value statement plus a quick-start code block is worth more than a long architecture essay.</div>
+    </section>
+
+    <!-- ═══ 14. Cheat Sheet ═══ -->
+    <section id="cheatsheet" class="card sect-offset">
+      <h2><span class="section-num">14</span> Cheat Sheet &amp; Best Practices <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Syntax at a glance</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd"># H1</div><div class="cheat-desc">Heading (##, ###, …)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">**bold**</div><div class="cheat-desc">Bold text</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">*italic*</div><div class="cheat-desc">Italic text</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">~~strike~~</div><div class="cheat-desc">Strikethrough (GFM)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">`code`</div><div class="cheat-desc">Inline code</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">- item</div><div class="cheat-desc">Bulleted list</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">1. item</div><div class="cheat-desc">Numbered list</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">- [x] task</div><div class="cheat-desc">Task list (GFM)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">[text](url)</div><div class="cheat-desc">Link</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">![alt](img)</div><div class="cheat-desc">Image</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">```lang</div><div class="cheat-desc">Fenced code block</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">&gt; quote</div><div class="cheat-desc">Blockquote</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">---</div><div class="cheat-desc">Horizontal rule</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">\| col \|</div><div class="cheat-desc">Table row (GFM)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">[^1]</div><div class="cheat-desc">Footnote (GFM)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">\*escape\*</div><div class="cheat-desc">Literal special char</div></div>
+      </div>
+
+      <h3>Best practices</h3>
+      <ul>
+        <li><strong>Blank lines between blocks.</strong> When formatting breaks, this is almost always why.</li>
+        <li><strong>One H1 per document</strong>, then H2 and H3 in order — never skip levels.</li>
+        <li><strong>Write meaningful alt text</strong> for every image.</li>
+        <li><strong>Fence code with a language</strong> so it highlights and stays readable.</li>
+        <li><strong>Prefer reference links</strong> when a URL repeats many times.</li>
+        <li><strong>Stay portable:</strong> use core CommonMark + tables + links unless you know the target renderer supports more.</li>
+        <li><strong>Preview before you commit</strong> — Ctrl+Shift+V in VS Code catches most mistakes in seconds.</li>
+      </ul>
+
+      <div class="note"><strong>Remember:</strong> Markdown is designed to be readable <em>as written</em>. If a raw <code class="inline-code">.md</code> file is scannable and clean, it will render well almost everywhere.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Keep line lengths reasonable (about 80–100 characters) and let your editor soft-wrap. It makes diffs on GitHub far easier to review.</div>
+    </section>
+
+    <footer><i>Made with ❤ by Laksh. <a href="index.html">⌂ Back to Home</a></i></footer>
+  </main>
+
+  <button id="back-top" title="Back to top">↑</button>
+
+  <script>
+    // ═════════════════════════════════════════════
+    // 1. SIDEBAR TOGGLE (Mobile)
+    // ═════════════════════════════════════════════
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menuBtn');
+
+    function setMenu(open) {
+      if (sidebar) sidebar.classList.toggle('active', open);
+      if (overlay) overlay.classList.toggle('active', open);
+      if (menuBtn) menuBtn.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+      syncSidebarInert();
+    }
+
+    function syncSidebarInert() {
+      if (!sidebar) return;
+      sidebar.toggleAttribute('inert', window.innerWidth <= 900 && !sidebar.classList.contains('active'));
+    }
+    syncSidebarInert();
+    window.addEventListener('resize', syncSidebarInert);
+
+    if (menuBtn) {
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.addEventListener('click', () => {
+        setMenu(!(sidebar && sidebar.classList.contains('active')));
+      });
+    }
+    if (overlay) overlay.addEventListener('click', () => setMenu(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) setMenu(false);
+    });
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.addEventListener('click', () => setMenu(false));
+    });
+
+    // ═════════════════════════════════════════════
+    // 2. COPY TO CLIPBOARD
+    // ═════════════════════════════════════════════
+    document.querySelectorAll('pre').forEach(pre => {
+      const tip = pre.querySelector('.copy-tip');
+      if (!tip) return;
+      tip.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        try {
+          await navigator.clipboard.writeText(code ? code.innerText : pre.textContent);
+          tip.textContent = 'Copied!';
+          tip.classList.add('copied');
+          setTimeout(() => {
+            tip.textContent = 'Copy';
+            tip.classList.remove('copied');
+          }, 1800);
+        } catch {
+          tip.textContent = 'Failed';
+        }
+      });
+    });
+
+    // ═════════════════════════════════════════════
+    // 3. TYPEWRITER
+    // ═════════════════════════════════════════════
+    (function typewriter() {
+      const el = document.getElementById('typewriter-text');
+      if (!el) return;
+      const text = el.textContent.trim();
+      const cursor = el.parentElement.querySelector('.typewriter-cursor');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (cursor) cursor.style.display = 'none';
+        return;
+      }
+      el.textContent = '';
+      let i = 0;
+      function tick() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          const delay = text.charAt(i - 1) === '.' || text.charAt(i - 1) === ',' ? 60 : 20;
+          setTimeout(tick, delay);
+        } else if (cursor) {
+          cursor.style.display = 'none';
+        }
+      }
+      setTimeout(tick, 800);
+    })();
+
+    // ═════════════════════════════════════════════
+    // 4. TOC ACTIVE HIGHLIGHT
+    // ═════════════════════════════════════════════
+    const sections = [];
+    document.querySelectorAll('.toc a').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const el = document.querySelector(href);
+        if (el) sections.push({ el, link: a });
+      }
+    });
+    const tocLinks = document.querySelectorAll('.toc a');
+
+    function highlightTOC() {
+      let current = sections[0];
+      for (const s of sections) {
+        const rect = s.el.getBoundingClientRect();
+        if (rect.top <= 120) current = s;
+        else break;
+      }
+      tocLinks.forEach(a => a.classList.remove('active'));
+      if (current) current.link.classList.add('active');
+    }
+    let tocTicking = false;
+    window.addEventListener('scroll', () => {
+      if (tocTicking) return;
+      tocTicking = true;
+      requestAnimationFrame(() => { tocTicking = false; highlightTOC(); });
+    }, { passive: true });
+    highlightTOC();
+
+    // ═════════════════════════════════════════════
+    // 5. BACK TO TOP
+    // ═════════════════════════════════════════════
+    const backTop = document.getElementById('back-top');
+    if (backTop) {
+      let backTicking = false;
+      window.addEventListener('scroll', () => {
+        if (backTicking) return;
+        backTicking = true;
+        requestAnimationFrame(() => {
+          backTop.classList.toggle('visible', window.scrollY > 400);
+          backTicking = false;
+        });
+      }, { passive: true });
+      backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
+
+    // ═════════════════════════════════════════════
+    // 6. SCROLL REVEAL
+    // ═════════════════════════════════════════════
+    (function scrollReveal() {
+      const cards = document.querySelectorAll('.card');
+      if (!cards.length || !('IntersectionObserver' in window)) {
+        cards.forEach(c => c.classList.add('visible'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      cards.forEach(card => observer.observe(card));
+    })();
+
+    // ═════════════════════════════════════════════
+    // 7. 3D TILT
+    // ═════════════════════════════════════════════
+    (function tiltEffect() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -5;
+          const rotateY = ((x - centerX) / centerX) * 5;
+          card.style.transform =
+            `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.005)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    })();
+
+    // ═════════════════════════════════════════════
+    // 8. PARALLAX ORBS
+    // ═════════════════════════════════════════════
+    (function parallaxOrbs() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const orbs = document.querySelectorAll('.orb');
+      if (!orbs.length) return;
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        orbs.forEach((orb, i) => {
+          const speed = 5 + i * 3;
+          orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+        });
+      }, { passive: true });
+    })();
+  </script>
+  <script>
+    (function themeToggle(){
+      const html = document.documentElement;
+      const btn = document.getElementById('themeToggle');
+      if(!btn) return;
+      const icons = { light:'\u2600\ufe0f', dark:'\ud83c\udf19' };
+      const sys = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      const apply = t => { html.setAttribute('data-theme', t); btn.textContent = icons[t] || icons.dark; };
+      apply(html.getAttribute('data-theme') || sys());
+      btn.addEventListener('click', () => {
+        const next = (html.getAttribute('data-theme') || sys()) === 'light' ? 'dark' : 'light';
+        apply(next);
+        try{ localStorage.setItem('theme', next); }catch(e){}
+      });
+    })();
+  </script>
+</body>
+</html>
