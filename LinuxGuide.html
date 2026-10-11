@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" >
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -21,13 +21,13 @@
     }
   })();
 </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" >
   <title>Linux Guide — Laksh Guides</title>
-  <meta name="description" content="Linux guide covering filesystem, permissions, processes, networking, package management, shell scripting, and system administration." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Ctext x='16' y='23' font-family='Inter,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EL%3C/text%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <meta name="description" content="Linux guide covering filesystem, permissions, processes, networking, package management, shell scripting, and system administration." >
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Ctext x='16' y='23' font-family='Inter,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EL%3C/text%3E%3C/svg%3E" >
+  <link rel="preconnect" href="https://fonts.googleapis.com" >
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" >
   <style>
     :root{
       --bg: #07080e;
@@ -611,14 +611,14 @@
   </div>
   <div id="overlay"></div>
   <div id="menu-bar">
-    <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">☰</button>
+    <button type="button" class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">☰</button>
     <span class="menu-title"><span class="linux-icon" aria-hidden="true" style="width:16px;height:16px;display:inline-block;vertical-align:middle;"></span> Linux Guide</span>
   </div>
 
   <nav id="sidebar">
     <div class="logo">
       <span class="mark"></span> <span class="linux-icon linux-icon-accent" aria-hidden="true"></span> Linux
-      <button class="theme-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+      <button type="button" class="theme-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
       <a href="index.html" class="home-link" title="Back to home">⌂</a>
     </div>
     <div class="toc" id="toc-menu">
@@ -1112,7 +1112,7 @@ dmesg | tail -20                   <span class="cm"># last 20 kernel messages</s
 cat file.txt | wc -l               <span class="cm"># count lines</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
       <h3>Command chaining</h3>
-      <pre><code><span class="cm"># && — run next only if previous succeeds</span>
+      <pre><code><span class="cm"># &amp;&amp; — run next only if previous succeeds</span>
 mkdir project &amp;&amp; cd project &amp;&amp; git init
 
 <span class="cm"># || — run next only if previous fails</span>
@@ -1234,7 +1234,7 @@ sudo parted /dev/sda      <span class="cm"># modern partition tool</span></code>
     <section id="system" class="card sect-offset">
       <h2><span class="section-num">13</span> System Information <span class="level level-beginner">Beginner</span></h2>
 
-      <pre><code><span class="cm"># System & hardware</span>
+      <pre><code><span class="cm"># System &amp; hardware</span>
 uname -a                 <span class="cm"># all system info (kernel, arch, hostname)</span>
 uname -r                 <span class="cm"># kernel release</span>
 hostname                 <span class="cm"># system hostname</span>
@@ -1256,7 +1256,7 @@ sudo dmidecode           <span class="cm"># DMI/BIOS info</span>
 lsusb                    <span class="cm"># USB devices</span>
 lspci                    <span class="cm"># PCI devices</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
 
-      <pre><code><span class="cm"># Date & time</span>
+      <pre><code><span class="cm"># Date &amp; time</span>
 date                     <span class="cm"># current date/time</span>
 cal                      <span class="cm"># calendar of current month</span>
 timedatectl              <span class="cm"># system time settings</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
@@ -1471,7 +1471,7 @@ sudo rkhunter --check</code><button type="button" class="copy-tip" aria-label="C
     <footer><i>Made with ❤ by Laksh.</i> · <a href="index.html">Back to Home</a> · <a href="#intro">Back to top ↑</a></footer>
   </main>
 
-  <button id="back-top" title="Back to top">↑</button>
+  <button type="button" id="back-top" title="Back to top">↑</button>
 
   <script>
     document.querySelectorAll('pre').forEach(pre => {
