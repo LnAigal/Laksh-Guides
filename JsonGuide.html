@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" >
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NDLH3RKL58');
+</script>
+<script>
+  (function(){
+    document.documentElement.classList.add('js');
+    try{
+      var t = localStorage.getItem('theme');
+      if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      else document.documentElement.setAttribute('data-theme', 'light');
+    }catch(e){
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" >
+  <title>JSON Guide — Laksh Guides</title>
+  <meta name="description" content="Practical JSON guide: syntax, data types, objects and arrays, JSON.parse and JSON.stringify, APIs, validation and JSON Schema, JSONL and JSON5 variants, pitfalls, and a cheat sheet." >
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 208 128'%3E%3Crect width='208' height='128' rx='18' fill='%23083fa1'/%3E%3Cpath d='M25 98V30h20l15 22l15-22h20v68h-20V59l-15 22l-15-22v39zM145 30h20v35h20l-30 33l-30-33h20z' fill='white'/%3E%3C/svg%3E" >
+  <link rel="preconnect" href="https://fonts.googleapis.com" >
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" >
+  <style>
+    :root{
+      --bg: #07080e;
+      --bg-alt: #0b0d17;
+      --surface: rgba(18,22,40,0.75);
+      --surface-hover: rgba(28,34,60,0.85);
+      --text: #f1f5f9;
+      --text-dim: #8892b0;
+      --text-muted: #64748b;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.4);
+      --accent-from: #6366f1;
+      --accent-via: #8b5cf6;
+      --accent-to: #a855f7;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --code-bg: #0a0c16;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --glow: 0 0 40px rgba(99,102,241,0.1);
+    }
+    :root[data-theme="light"]{
+      --bg: #f8fafc;
+      --bg-alt: #f1f5f9;
+      --surface: rgba(255,255,255,0.85);
+      --surface-hover: rgba(255,255,255,1);
+      --text: #0f172a;
+      --text-dim: #475569;
+      --text-muted: #94a3b8;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.35);
+      --code-bg: #0f172a;
+      --shadow: 0 8px 32px rgba(0,0,0,0.06);
+      --glow: 0 0 40px rgba(99,102,241,0.05);
+    }
+    @media (prefers-color-scheme: light){
+      :root:not([data-theme="dark"]){
+        --bg: #f8fafc;
+        --bg-alt: #f1f5f9;
+        --surface: rgba(255,255,255,0.85);
+        --surface-hover: rgba(255,255,255,1);
+        --text: #0f172a;
+        --text-dim: #475569;
+        --text-muted: #94a3b8;
+        --border: rgba(99,102,241,0.15);
+        --border-hover: rgba(99,102,241,0.35);
+        --code-bg: #0f172a;
+        --shadow: 0 8px 32px rgba(0,0,0,0.06);
+        --glow: 0 0 40px rgba(99,102,241,0.05);
+      }
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; scroll-padding-top:16px; }
+    html{
+      min-height:100%;
+      background: var(--bg);
+    }
+    body{
+      min-height:100vh;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      display:grid; grid-template-columns:270px minmax(0, 1fr); gap:0;
+    }
+    a{ color:var(--accent-via); text-decoration:none; }
+    :focus-visible{ outline:2px solid var(--accent-from); outline-offset:2px; border-radius:6px; }
+
+    ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
+
+    nav{
+      position:sticky; top:0; height:100dvh; overflow-y:auto;
+      padding:28px 16px; background:var(--bg-alt); border-right:1px solid var(--border);
+      display:flex; flex-direction:column; gap:2px;
+      z-index:100;
+    }
+    nav::-webkit-scrollbar{ width:4px; }
+    nav::-webkit-scrollbar-thumb{ background:var(--border); border-radius:9px; }
+
+    .logo{
+      font-weight:800; font-size:1.1rem; display:flex; align-items:center; gap:10px;
+      padding-bottom:16px; border-bottom:1px solid var(--border); flex-shrink:0;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .logo .mark{
+      width:8px; height:8px; border-radius:999px;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-text-fill-color:initial; flex-shrink:0;
+    }
+    .logo .home-link{
+      margin-left:auto; font-size:0.8rem; opacity:0.4;
+      -webkit-text-fill-color:initial; color:var(--text-dim);
+      transition:opacity 0.2s;
+    }
+    .logo .home-link:hover{ opacity:0.8; }
+    .logo .theme-btn{
+      margin-left:auto; font-size:0.85rem; line-height:1; font-family:inherit;
+      background:transparent; border:1px solid var(--border); color:var(--text-dim);
+      width:26px; height:26px; border-radius:8px; cursor:pointer; padding:0;
+      display:inline-flex; align-items:center; justify-content:center;
+      -webkit-text-fill-color:initial;
+      transition:color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .logo .theme-btn:hover{ color:var(--text); border-color:var(--border-hover); background:var(--surface); }
+    .logo .theme-btn + .home-link{ margin-left:6px; }
+    body{ transition: background-color 0.3s ease, color 0.3s ease; }
+
+    .toc{ display:flex; flex-direction:column; gap:2px; margin-top:6px; flex:1; }
+    .toc a{
+      display:flex; align-items:center; gap:12px;
+      padding:9px 14px; border-radius:12px;
+      text-decoration:none; color:var(--text-dim);
+      border:1px solid transparent;
+      transition:all 0.2s ease; font-size:0.82rem; font-weight:450;
+      position:relative;
+    }
+    .toc a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+    .toc a.active{
+      color:var(--text); border-color:var(--border-hover);
+      background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08));
+      box-shadow:inset 2px 0 0 var(--accent-from);
+    }
+    .toc a .tag-icon{ font-size:0.7rem; width:16px; text-align:center; flex-shrink:0; opacity:0.5; }
+    .toc a.active .tag-icon{ opacity:0.9; }
+
+    .sidebar-footer{
+      padding-top:10px; border-top:1px solid var(--border);
+      font-size:0.7rem; color:var(--text-muted); text-align:center; flex-shrink:0;
+    }
+
+    .level{ font-size:0.55rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:3px 7px; border-radius:6px; margin-left:auto; flex-shrink:0; }
+    .level-beginner{ background:rgba(16,185,129,0.12); color:var(--green); border:1px solid rgba(16,185,129,0.2); }
+    .level-intermediate{ background:rgba(99,102,241,0.12); color:var(--accent-from); border:1px solid rgba(99,102,241,0.2); }
+    .level-advanced{ background:rgba(245,158,11,0.12); color:var(--amber); border:1px solid rgba(245,158,11,0.2); }
+
+    main{ padding:48px 36px 64px; width:100%; max-width:1000px; justify-self:center; }
+    @media (min-width:1500px){ main{ max-width:1120px; } }
+
+    header.hero{ margin-bottom:36px; position:relative; overflow:hidden; }
+    header.hero::after{
+      content:''; position:absolute; bottom:-18px; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,var(--border),transparent);
+    }
+    .breadcrumb{ font-size:0.78rem; color:var(--text-dim); margin-bottom:14px; }
+    .breadcrumb a{ color:var(--text-dim); }
+    .breadcrumb a:hover{ color:var(--accent-from); }
+    .title{
+      font-size: clamp(1.8rem, 1.4rem + 2.2vw, 2.8rem); font-weight:800; margin:0;
+      line-height:1.15; letter-spacing:-0.02em;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .hero-glow{
+      position:absolute; top:-60px; right:-40px;
+      width:200px; height:200px; border-radius:50%;
+      background:radial-gradient(circle,rgba(8,63,161,0.16),transparent 70%);
+      pointer-events:none;
+    }
+    .subtitle{ color:var(--text-dim); margin:10px 0 20px; max-width:70ch; line-height:1.7; font-size:0.95rem; }
+    .pill{
+      display:inline-flex; align-items:center; gap:10px; padding:7px 16px;
+      border-radius:999px; background:var(--surface); backdrop-filter:blur(12px);
+      border:1px solid var(--border); color:var(--text-dim); font-size:0.8rem;
+    }
+
+    section.card{
+      background:var(--surface); backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--border); border-radius:20px;
+      padding:28px 28px 20px; margin-bottom:24px;
+      transition:border-color 0.3s ease, box-shadow 0.3s ease; box-shadow:var(--glow);
+      position:relative; overflow:hidden;
+    }
+    section.card::before{
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,transparent,var(--border-hover),transparent);
+      opacity:0; transition:opacity 0.3s;
+    }
+    section.card:hover{
+      border-color:var(--border-hover); box-shadow:var(--shadow),var(--glow);
+    }
+    section.card:hover::before{ opacity:1; }
+
+    section.card h2{ margin:0 0 12px; font-size:1.3rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    section.card h2 .section-num{
+      font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:8px;
+      background:rgba(99,102,241,0.1); color:var(--accent-from);
+      border:1px solid rgba(99,102,241,0.15);
+    }
+    section.card h3{ margin:18px 0 8px; font-size:1rem; color:var(--text); font-weight:600; }
+    section.card p, section.card li{ color:var(--text-dim); line-height:1.75; }
+    section.card > p, section.card > ul, section.card > ol{ max-width:80ch; }
+    section.card p{ margin:0 0 10px; font-size:0.92rem; }
+    section.card ul, section.card ol{ padding-left:22px; margin:0 0 12px; }
+    section.card ul{ list-style-type:none; padding-left:0; }
+    section.card ul li{ padding-left:20px; position:relative; }
+    section.card ul li::before{ content:'▸'; position:absolute; left:0; color:var(--accent-from); opacity:0.6; font-size:0.8rem; }
+    section.card ol li{ color:var(--text-dim); line-height:1.75; margin-bottom:4px; }
+    section.card li strong{ color:var(--text); }
+
+    details.accordion{
+      border:1px solid var(--border); border-radius:14px; padding:16px 18px;
+      background:var(--bg); transition:all 0.25s ease;
+    }
+    details.accordion[open]{ border-color:var(--border-hover); background:rgba(99,102,241,0.02); }
+    details.accordion + details.accordion{ margin-top:10px; }
+    details.accordion:hover:not([open]){ border-color:var(--border-hover); }
+    details.accordion summary{
+      cursor:pointer; list-style:none; display:flex; align-items:center; gap:12px;
+      font-weight:550; user-select:none; font-size:0.93rem;
+    }
+    details.accordion summary::-webkit-details-marker{ display:none; }
+    details.accordion summary .arrow{
+      font-size:0.6rem; color:var(--accent-from); transition:transform 0.25s ease;
+      width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+      border-radius:6px; border:1px solid var(--border);
+      flex-shrink:0;
+    }
+    details.accordion[open] summary .arrow{ transform:rotate(90deg); border-color:var(--border-hover); background:rgba(99,102,241,0.05); }
+    details.accordion pre{ margin-top:14px; }
+    details.accordion p{ margin-top:10px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+
+    .tag{
+      font-size:0.65rem; font-weight:600; letter-spacing:0.02em;
+      background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.15);
+      padding:4px 10px; border-radius:8px; color:var(--accent-from);
+      white-space:nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    pre{
+      background: var(--code-bg); color:#e2e8f0;
+      padding:18px; border-radius:14px; overflow-x:auto;
+      border:1px solid rgba(99,102,241,0.1);
+      font-size:0.85rem; line-height:1.6;
+      position:relative;
+    }
+    code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:0.87rem; }
+    .inline-code{ display:inline; padding:3px 8px; border-radius:6px; background:rgba(99,102,241,0.06); border:1px solid var(--border); font-size:0.85em; color:var(--accent-from); }
+
+    .note{
+      background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(16,185,129,0.02));
+      border:1px solid rgba(16,185,129,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .note strong{ color:var(--green); }
+
+    .warn{
+      background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(245,158,11,0.02));
+      border:1px solid rgba(245,158,11,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .warn strong{ color:var(--amber); }
+
+    .tip{
+      background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(99,102,241,0.02));
+      border:1px solid rgba(6,182,212,0.15);
+      color:var(--text); padding:14px 18px; border-radius:14px; margin:14px 0;
+      line-height:1.65; font-size:0.9rem;
+    }
+    .tip strong{ color:var(--cyan); }
+
+    .try-it{
+      background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.03));
+      border:1px solid rgba(99,102,241,0.15);
+      padding:18px 22px; border-radius:14px; margin:16px 0;
+    }
+    .try-it .try-head{ font-weight:600; font-size:0.8rem; color:var(--accent-from); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+    .try-it p{ margin:0 0 6px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+    .try-it p:last-child{ margin:0; }
+
+    pre .copy-tip{
+      position:absolute; top:10px; right:10px;
+      font:inherit; font-size:0.6rem; font-weight:500; line-height:1.4;
+      padding:5px 11px; border-radius:8px; font-family:inherit;
+      background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15);
+      color:var(--text-dim); cursor:pointer; opacity:0;
+      transition:opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+      z-index:2;
+    }
+    pre:hover .copy-tip, pre:focus-within .copy-tip{ opacity:1; }
+    @media (hover:none){ .copy-tip{ opacity:1; } }
+    .copy-tip:hover{ background:rgba(99,102,241,0.2); color:var(--text); }
+    .copy-tip.copied{ background:rgba(16,185,129,0.2); color:var(--green); border-color:rgba(16,185,129,0.3); }
+
+    .cheat-grid{
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:8px; margin:14px 0;
+    }
+    .cheat-item{
+      background:var(--code-bg); border:1px solid rgba(99,102,241,0.08); border-radius:12px; padding:12px 14px;
+      transition:border-color 0.2s;
+    }
+    .cheat-item:hover{ border-color:rgba(99,102,241,0.2); }
+    .cheat-item .cheat-cmd{ font-family:ui-monospace, monospace; font-size:0.8rem; font-weight:600; color:var(--cyan); }
+    .cheat-item .cheat-desc{ font-size:0.75rem; color:var(--text-muted); margin-top:3px; }
+
+    footer{ margin-top:44px; color:var(--text-dim); font-size:0.85rem; text-align:center; padding-top:20px; border-top:1px solid var(--border); }
+    footer a{ color:var(--text-dim); }
+    footer a:hover{ color:var(--accent-from); }
+
+    #back-top{
+      position:fixed; bottom:28px; right:28px;
+      width:46px; height:46px; border-radius:999px;
+      background:var(--surface); backdrop-filter:blur(20px);
+      border:1px solid var(--border); color:var(--text-dim);
+      font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition:all 0.3s; z-index:999;
+      box-shadow:var(--shadow);
+    }
+    #back-top.visible{ opacity:1; pointer-events:auto; }
+    #back-top:hover{ border-color:var(--border-hover); color:var(--text); background:var(--surface-hover); transform:translateY(-2px); }
+
+    @media (max-width: 900px){
+      html{ scroll-padding-top:64px; }
+      html,body{ grid-template-columns:minmax(0, 1fr); }
+      nav{
+        position:fixed; left:0; top:0; bottom:0;
+        width:270px; height:100vh;
+        transform:translateX(-100%);
+        padding:24px 14px;
+      }
+      nav.active{ transform:translateX(0); }
+      main{ padding:70px 18px 30px; }
+      #menu-bar{ display:flex !important; }
+      .hero-glow{ display:none; }
+    }
+
+    #menu-bar{
+      display:none;
+      position:fixed; top:0; left:0; right:0; height:52px;
+      background:var(--bg-alt); border-bottom:1px solid var(--border);
+      z-index:50; align-items:center; padding:0 16px;
+      backdrop-filter:blur(20px);
+    }
+    #menu-bar .menu-btn{
+      background:none; border:none; cursor:pointer; color:var(--text);
+      font-size:1.3rem; padding:4px;
+    }
+    #menu-bar .menu-title{
+      margin-left:12px; font-weight:700; font-size:0.95rem;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    #overlay{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
+      backdrop-filter:blur(4px); z-index:99;
+    }
+    @media (max-width: 900px){
+      #overlay.active{ display:block; }
+    }
+
+    .sect-offset{ scroll-margin-top:16px; }
+
+    /* laptop/short-viewport: compact TOC so all items fit without clipping */
+    @media (max-height:860px){
+      nav{ padding:18px 14px; }
+      .logo{ padding-bottom:12px; }
+      .toc a{ padding:6px 12px; font-size:0.78rem; }
+      .toc a .tag-icon{ font-size:0.64rem; }
+      .sidebar-footer{ padding-top:8px; font-size:0.65rem; }
+    }
+
+    .badge{ display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; padding:3px 8px; border-radius:6px; font-weight:500; }
+    .badge-green{ background:rgba(16,185,129,0.1); color:var(--green); }
+    .badge-blue{ background:rgba(99,102,241,0.1); color:var(--accent-from); }
+    .badge-amber{ background:rgba(245,158,11,0.1); color:var(--amber); }
+
+    .brand-icon{
+      display:inline-block; width:18px; height:18px;
+      background:var(--text-dim);
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 208 128'%3E%3Cpath d='M25 98V30h20l15 22l15-22h20v68h-20V59l-15 22l-15-22v39zM145 30h20v35h20l-30 33l-30-33h20z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 208 128'%3E%3Cpath d='M25 98V30h20l15 22l15-22h20v68h-20V59l-15 22l-15-22v39zM145 30h20v35h20l-30 33l-30-33h20z'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .brand-icon-accent{ background:#083fa1; }
+
+    .brand-icon-json{
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1'/%3E%3Cpath d='M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1'/%3E%3Cpath d='M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .brand-icon-json.on-dark{ background:var(--accent-from); }
+
+    pre .hl{ color:var(--cyan); }
+    pre .cm{ color:var(--text-muted); }
+    pre .kw{ color:var(--accent-from); }
+    pre .kbd{ color:var(--green); }
+
+    kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size:0.78em; padding:2px 6px; border-radius:6px;
+      background:var(--code-bg); border:1px solid var(--border);
+      border-bottom-width:2px; color:var(--green); white-space:nowrap;
+    }
+    .visually-hidden{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+    section.card p kbd{ margin:0 1px; }
+
+    @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+    @keyframes pulse-glow{ 0%,100%{ box-shadow:0 0 20px rgba(99,102,241,0.05); } 50%{ box-shadow:0 0 40px rgba(99,102,241,0.12); } }
+    @keyframes gradient-shift{ 0%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+    @keyframes slide-up{ 0%{ opacity:0; transform:translateY(30px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes scale-in{ 0%{ opacity:0; transform:scale(0.9); } 100%{ opacity:1; transform:scale(1); } }
+    @keyframes fade-in{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes orb-drift{ 0%{ transform:translate(0,0); } 50%{ transform:translate(30px,-40px); } 100%{ transform:translate(0,0); } }
+    @keyframes orb-drift-2{ 0%{ transform:translate(0,0); } 50%{ transform:translate(-20px,30px); } 100%{ transform:translate(0,0); } }
+    @keyframes blink-cursor{ 0%,100%{ opacity:1; } 50%{ opacity:0; } }
+    @keyframes title-reveal{ 0%{ opacity:0; transform:translateY(20px) scale(0.95); filter:blur(10px); } 100%{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); } }
+    @keyframes badge-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+    @keyframes wobble{ 0%,100%{ transform:rotate(0deg); } 25%{ transform:rotate(-3deg); } 75%{ transform:rotate(3deg); } }
+
+    .orb-container{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+    .orb{ position:absolute; border-radius:50%; opacity:0.15; filter:blur(60px); }
+    .orb-1{ width:400px; height:400px; background:radial-gradient(circle,var(--accent-from),transparent); top:-100px; right:-100px; }
+    .orb-2{ width:300px; height:300px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-80px; left:-80px; }
+    .orb-3{ width:250px; height:250px; background:radial-gradient(circle,var(--cyan),transparent); top:40%; left:50%; opacity:0.08; }
+
+    .hero{ animation:fade-in 0.8s ease-out; }
+    .title{ animation:title-reveal 1s ease-out both; }
+    .title .animated-gradient{
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan),var(--accent-to),var(--accent-from));
+      background-size:300% 300%;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:gradient-shift 6s ease infinite;
+    }
+    .subtitle{ animation:slide-up 0.8s ease-out 0.3s both; }
+    .breadcrumb{ animation:slide-up 0.6s ease-out 0.1s both; }
+    .pill{ animation:scale-in 0.6s ease-out 0.6s both; }
+    .js .card{ opacity:0; transform:translateY(30px); transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .card.visible{ opacity:1; transform:translateY(0); transition:border-color 0.3s ease, box-shadow 0.3s ease; }
+    .card:hover .section-num{ animation:wobble 0.4s ease; }
+    .card:hover::before{ opacity:1; }
+    #back-top.visible{ animation:scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+    .typewriter-cursor{
+      display:inline-block; width:2px; height:1.1em;
+      background:var(--accent-from); margin-left:2px;
+      animation:blink-cursor 0.8s step-end infinite;
+      vertical-align:text-bottom;
+    }
+    pre:hover{ border-color:rgba(99,102,241,0.2); box-shadow:0 0 30px rgba(99,102,241,0.05); }
+
+    @media (prefers-reduced-motion: reduce){
+      .orb,.card{ animation:none !important; }
+      .card{ opacity:1; transform:none !important; }
+      .title{ animation:none; }
+      .animated-gradient{ background-size:100% 100%; animation:none; }
+      .subtitle,.breadcrumb,.pill{ animation:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div id="overlay"></div>
+  <div id="menu-bar">
+    <button type="button" class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">☰</button>
+    <span class="menu-title"><span class="brand-icon brand-icon-json on-dark" aria-hidden="true" style="width:16px;height:16px;"></span> JSON Guide</span>
+  </div>
+
+  <nav id="sidebar">
+    <div class="logo">
+      <span class="mark"></span> <span class="brand-icon brand-icon-json on-dark" aria-hidden="true"></span> JSON
+      <button type="button" class="theme-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+      <a href="index.html" class="home-link" title="Back to home">⌂</a>
+    </div>
+    <div class="toc" id="toc-menu">
+      <a href="#intro"><span class="tag-icon">●</span> Introduction</a>
+      <a href="#syntax"><span class="tag-icon">⚙</span> Syntax &amp; Data Types</a>
+      <a href="#objects"><span class="tag-icon">▤</span> Objects &amp; Arrays</a>
+      <a href="#values"><span class="tag-icon">❝</span> Strings &amp; Numbers</a>
+      <a href="#javascript"><span class="tag-icon">⌨</span> JSON in JavaScript</a>
+      <a href="#apis"><span class="tag-icon">🔗</span> JSON &amp; APIs</a>
+      <a href="#schema"><span class="tag-icon">✔</span> Validation &amp; Schema</a>
+      <a href="#variants"><span class="tag-icon">≡</span> Variants &amp; Formats</a>
+      <a href="#pitfalls"><span class="tag-icon">⚠</span> Pitfalls</a>
+      <a href="#cheatsheet"><span class="tag-icon">⌗</span> Cheat Sheet</a>
+    </div>
+    <div class="sidebar-footer">Laksh Guides</div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="hero-glow"></div>
+      <div class="breadcrumb"><a href="index.html">⌂ Home</a> / JSON Guide</div>
+      <h1 class="title"><span class="brand-icon brand-icon-json on-dark" aria-hidden="true" style="width:32px;height:32px;"></span> <span class="animated-gradient">JSON Guide</span></h1>
+      <p class="subtitle"><span id="typewriter-text">The data format behind APIs, config files and databases — syntax, data types, objects and arrays, parsing and stringifying, validation, variants and the pitfalls that break your build. Every code block has a Copy button.</span><span class="typewriter-cursor"></span></p>
+      <span class="pill">Copy button on each code block &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
+    </header>
+
+    <!-- ═══ 1. Introduction ═══ -->
+    <section id="intro" class="card sect-offset">
+      <h2><span class="section-num">01</span> Introduction — The Data Format of the Web</h2>
+
+      <p><strong>JSON</strong> (JavaScript Object Notation) is a lightweight, text-based format for representing structured data. It began as a subset of JavaScript syntax, but it is now language-independent and standardised as <strong>RFC 8259</strong> and <strong>ECMA-404</strong>. Every mainstream language — Python, Go, Rust, Java, C#, PHP, Ruby — can read and write it out of the box.</p>
+
+      <p>Its job is simple: move data between programs. A server serialises an object to JSON text, ships it over HTTP, and the browser parses it back into a usable object. The same format also stores configuration, logs, telemetry, and entire databases.</p>
+
+      <h3>Where you will meet JSON</h3>
+      <ul>
+        <li><strong>REST and GraphQL APIs</strong> — request bodies and responses</li>
+        <li><strong>Config files</strong> — <code class="inline-code">package.json</code>, <code class="inline-code">tsconfig.json</code>, <code class="inline-code">settings.json</code></li>
+        <li><strong>Databases</strong> — MongoDB documents, PostgreSQL <code class="inline-code">jsonb</code> columns</li>
+        <li><strong>Logs and events</strong> — structured logging, analytics pipelines</li>
+        <li><strong>Integrations</strong> — webhooks, message queues, CI/CD metadata</li>
+        <li><strong>Browser storage</strong> — saved state in <code class="inline-code">localStorage</code></li>
+      </ul>
+
+      <div class="note"><strong>Analogy:</strong> JSON is the <em>shipping container</em> of data. It has one standard shape that every vehicle, crane and warehouse on the planet already knows how to handle, regardless of what is inside.</div>
+
+      <h3>JSON is not JavaScript</h3>
+      <p>A JavaScript object literal and a JSON document look similar, but JSON is stricter. Key differences:</p>
+      <ul>
+        <li><strong>Keys must be double-quoted strings</strong> — <code class="inline-code">{ name: "Laksh" }</code> is JavaScript, not JSON</li>
+        <li><strong>No comments</strong> — <code class="inline-code">//</code> and <code class="inline-code">/* */</code> are invalid</li>
+        <li><strong>No trailing commas</strong> — the last item must not have one</li>
+        <li><strong>No functions, <code class="inline-code">undefined</code>, <code class="inline-code">NaN</code> or <code class="inline-code">Infinity</code></strong></li>
+        <li><strong>Strings use double quotes only</strong> — single quotes are invalid</li>
+      </ul>
+
+      <div class="warn"><strong>⚠ The #1 beginner error:</strong> using JavaScript syntax in a JSON file. If your editor or API rejects the file, check for single quotes, trailing commas and comments first.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> A JSON document can be a single value — object, array, string, number, boolean or <code class="inline-code">null</code> — but in practice it is almost always an object or an array at the top level.</div>
+    </section>
+
+    <!-- ═══ 2. Syntax & Data Types ═══ -->
+    <section id="syntax" class="card sect-offset">
+      <h2><span class="section-num">02</span> Syntax &amp; Data Types <span class="level level-beginner">Beginner</span></h2>
+
+      <p>JSON has exactly <strong>six data types</strong>. Every value in every document is one of them.</p>
+
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">string</div><div class="cheat-desc">Double-quoted text: "hello"</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">number</div><div class="cheat-desc">Integer or decimal: 42, -3.14, 1e10</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">boolean</div><div class="cheat-desc">true or false (lowercase)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">null</div><div class="cheat-desc">The absence of a value</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">object</div><div class="cheat-desc">Key/value pairs in { }</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">array</div><div class="cheat-desc">Ordered list in [ ]</div></div>
+      </div>
+
+      <h3>A complete document</h3>
+      <pre><code>{
+  "name": "Laksh",
+  "age": 25,
+  "isDeveloper": true,
+  "nickname": null,
+  "skills": ["JavaScript", "Linux", "Git"],
+  "address": {
+    "city": "Mangalore",
+    "country": "India"
+  }
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>The rules in one place</h3>
+      <ul>
+        <li><strong>Keys</strong> are always strings wrapped in double quotes</li>
+        <li><strong>Colon</strong> separates a key from its value; <strong>commas</strong> separate pairs</li>
+        <li><strong>Whitespace</strong> is ignored — pretty-printing is purely cosmetic</li>
+        <li><strong>Values</strong> may be any of the six types, nested to any depth</li>
+        <li><strong>Duplicate keys</strong> are technically allowed, but the last one wins — avoid them</li>
+        <li><strong>No trailing comma</strong> after the final key/value pair or array item</li>
+      </ul>
+
+      <h3>Valid vs invalid — spot the difference</h3>
+      <pre><code><span class="cm">// ❌ Invalid JSON</span>
+{
+  name: 'Laksh',          <span class="cm">// unquoted key, single quotes</span>
+  "age": 25,              <span class="cm">// trailing comma</span>
+  "active": true
+}
+
+<span class="cm">// ✅ Valid JSON</span>
+{
+  "name": "Laksh",
+  "age": 25,
+  "active": true
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Spaces and newlines outside strings are meaningless to a parser. A minified one-line document and a fully indented one are semantically identical.</div>
+    </section>
+
+    <!-- ═══ 3. Objects & Arrays ═══ -->
+    <section id="objects" class="card sect-offset">
+      <h2><span class="section-num">03</span> Objects, Arrays &amp; Nesting <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Objects — unordered key/value pairs</h3>
+      <p>An object maps names to values. The order of keys is <em>not</em> guaranteed by the spec — never rely on it when reading data.</p>
+
+      <pre><code>{
+  "id": 101,
+  "title": "First post",
+  "published": true
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Arrays — ordered lists</h3>
+      <p>An array holds values in a definite order. Items can be of any type, including mixed types and nested arrays.</p>
+
+      <pre><code>["apple", "banana", "cherry"]
+[1, 2, 3, 4, 5]
+[true, null, "mixed", { "nested": true }]
+[[1, 2], [3, 4]]</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>The shape you will see most: an array of objects</h3>
+      <p>APIs almost always return a list of records. This is the canonical JSON response shape.</p>
+
+      <pre><code>{
+  "users": [
+    { "id": 1, "name": "Ada", "role": "admin" },
+    { "id": 2, "name": "Linus", "role": "developer" },
+    { "id": 3, "name": "Grace", "role": "developer" }
+  ],
+  "total": 3
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Empty values</h3>
+      <pre><code>{
+  "object": {},
+  "array": [],
+  "string": "",
+  "number": 0,
+  "boolean": false,
+  "nothing": null
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="note"><strong>Empty is not missing:</strong> <code class="inline-code">[]</code> means “a list with zero items”, while the key being absent means “no list was provided”. APIs often distinguish the two — check before assuming.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Keep nesting shallow. Three levels is usually comfortable; five levels deep makes consumers write long chains like <code class="inline-code">a.b.c.d.e</code> and break when a field is missing.</div>
+    </section>
+
+    <!-- ═══ 4. Strings & Numbers ═══ -->
+    <section id="values" class="card sect-offset">
+      <h2><span class="section-num">04</span> Strings, Numbers &amp; Escapes <span class="level level-intermediate">Intermediate</span></h2>
+
+      <h3>Escape sequences</h3>
+      <p>A few characters cannot appear literally inside a JSON string. Escape them with a backslash.</p>
+
+      <pre><code>"quote: \"hello\""
+"backslash: \\"
+"newline: \n"
+"tab: \t"
+"carriage return: \r"
+"unicode: \u00e9  (é)"
+"emoji: \ud83d\ude80  (🚀)"</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Forward slashes:</strong> <code class="inline-code">\/</code> is legal but redundant — plain <code class="inline-code">/</code> needs no escaping. Escaping it is harmless, just unnecessary.</div>
+
+      <h3>Numbers have no type distinction</h3>
+      <p>JSON does not separate integers from floats. Everything numeric is one <code class="inline-code">number</code> type, and the spec does not define a precision or range.</p>
+
+      <pre><code>42
+-3.14
+1.5e10
+0.0001
+6.02214076e23</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <p>Invalid numbers include leading zeros (<code class="inline-code">007</code>), hexadecimal (<code class="inline-code">0xFF</code>), the special values <code class="inline-code">NaN</code> and <code class="inline-code">Infinity</code>, and a leading <code class="inline-code">+</code>.</p>
+
+      <div class="warn"><strong>⚠ Big integers lose precision:</strong> JavaScript numbers are IEEE-754 doubles, so integers above <code class="inline-code">2^53 - 1</code> (<code class="inline-code">9007199254740991</code>) cannot be represented exactly. Large database IDs and Snowflake IDs silently change when parsed. Send them as <strong>strings</strong> if precision matters.</div>
+
+      <h3>Dates are just strings</h3>
+      <p>JSON has no date type. By convention, dates travel as ISO 8601 strings, and the consumer converts them.</p>
+
+      <pre><code>{
+  "createdAt": "2026-10-19T09:30:00.000Z",
+  "updatedAt": "2026-10-19T12:00:00Z"
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Use <code class="inline-code">new Date(json.createdAt)</code> to parse ISO strings in JavaScript. Prefer UTC (the trailing <code class="inline-code">Z</code>) to avoid timezone drift between server and client.</div>
+    </section>
+
+    <!-- ═══ 5. JSON in JavaScript ═══ -->
+    <section id="javascript" class="card sect-offset">
+      <h2><span class="section-num">05</span> JSON in JavaScript <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Every modern JavaScript runtime — browser, Node.js, Deno, Bun — provides exactly two methods through the global <code class="inline-code">JSON</code> object: <code class="inline-code">parse</code> and <code class="inline-code">stringify</code>.</p>
+
+      <h3>Parsing — text to object</h3>
+      <pre><code>const text = '{"name":"Laksh","skills":["JS","Git"]}';
+const user = JSON.parse(text);
+
+console.log(user.name);    <span class="cm">// "Laksh"</span>
+console.log(user.skills[0]); <span class="cm">// "JS"</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Stringifying — object to text</h3>
+      <pre><code>const user = {
+  name: "Laksh",
+  skills: ["JS", "Git"],
+  active: true
+};
+
+JSON.stringify(user);
+<span class="cm">// '{"name":"Laksh","skills":["JS","Git"],"active":true}'</span>
+
+JSON.stringify(user, null, 2);  <span class="cm">// pretty-print with 2 spaces</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Handling parse errors</h3>
+      <p>Malformed input throws a <code class="inline-code">SyntaxError</code>. Always wrap parsing of external data.</p>
+
+      <pre><code>function safeParse(text) {
+  try {
+    return { ok: true, value: JSON.parse(text) };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}
+
+const result = safeParse('{ "broken": }');
+<span class="cm">// { ok: false, error: "Unexpected token } ..." }</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Replacer and reviver</h3>
+      <p>Both methods accept an optional hook. The <em>replacer</em> filters or transforms values while encoding; the <em>reviver</em> transforms values while decoding.</p>
+
+      <pre><code><span class="cm">// Replacer: omit sensitive fields</span>
+JSON.stringify(user, (key, value) =&gt;
+  key === "password" ? undefined : value
+);
+
+<span class="cm">// Reviver: turn ISO strings into Date objects</span>
+const data = JSON.parse(text, (key, value) =&gt;
+  key.endsWith("At") ? new Date(value) : value
+);</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>What stringify silently drops</h3>
+      <ul>
+        <li><strong>Functions</strong> and <strong><code class="inline-code">undefined</code></strong> values are omitted from objects</li>
+        <li><strong>Symbol-keyed properties</strong> are ignored</li>
+        <li><strong><code class="inline-code">NaN</code> and <code class="inline-code">Infinity</code></strong> become <code class="inline-code">null</code></li>
+        <li><strong><code class="inline-code">Date</code></strong> objects become ISO strings via their <code class="inline-code">toJSON()</code></li>
+        <li><strong>Circular references</strong> throw a <code class="inline-code">TypeError</code></li>
+        <li><strong>Class instances</strong> lose their prototype — only own enumerable properties survive</li>
+      </ul>
+
+      <div class="note"><strong>Deep clone:</strong> <code class="inline-code">JSON.parse(JSON.stringify(obj))</code> is a classic clone idiom, but it loses functions, class identity, <code class="inline-code">undefined</code>, <code class="inline-code">Map</code>/<code class="inline-code">Set</code> and dates (they become strings). For modern JavaScript, prefer <code class="inline-code">structuredClone(obj)</code>.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> <code class="inline-code">JSON.parse</code> is safe on untrusted input — unlike <code class="inline-code">eval</code>, it only parses data and never executes code. Still validate the resulting shape before trusting it.</div>
+    </section>
+
+    <!-- ═══ 6. JSON & APIs ═══ -->
+    <section id="apis" class="card sect-offset">
+      <h2><span class="section-num">06</span> JSON &amp; HTTP APIs <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>JSON is the default body format for web APIs. The two headers that matter are <code class="inline-code">Content-Type</code> (what you send) and <code class="inline-code">Accept</code> (what you want back).</p>
+
+      <h3>Reading a JSON response</h3>
+      <pre><code>const res = await fetch("https://api.example.com/users");
+
+if (!res.ok) {
+  throw new Error(`HTTP ${res.status}`);
+}
+
+const users = await res.json();
+console.log(users[0].name);</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Sending JSON in a request</h3>
+      <pre><code>const res = await fetch("https://api.example.com/users", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  },
+  body: JSON.stringify({
+    name: "Laksh",
+    role: "developer"
+  })
+});
+
+const created = await res.json();</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Forgetting Content-Type:</strong> If you send a JSON string without <code class="inline-code">Content-Type: application/json</code>, many servers treat it as plain text and fail to parse the body. The header, not the string shape, is what tells the server how to read it.</div>
+
+      <h3>Checking before parsing</h3>
+      <p><code class="inline-code">res.json()</code> throws if the body is empty or is not JSON — common for <code class="inline-code">204 No Content</code> and error responses that return HTML. Check status and content type first.</p>
+
+      <pre><code>const type = res.headers.get("content-type") || "";
+const data = type.includes("application/json")
+  ? await res.json()
+  : await res.text();</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Common status codes</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">200 OK</div><div class="cheat-desc">Request succeeded</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">201 Created</div><div class="cheat-desc">A new resource was made</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">204 No Content</div><div class="cheat-desc">Success, empty body</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">400 Bad Request</div><div class="cheat-desc">Invalid JSON or fields</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">401 Unauthorized</div><div class="cheat-desc">Missing or bad credentials</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">404 Not Found</div><div class="cheat-desc">Resource does not exist</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">422 Unprocessable</div><div class="cheat-desc">Well-formed but invalid data</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">500 Server Error</div><div class="cheat-desc">The server crashed</div></div>
+      </div>
+
+      <div class="tip"><strong>💡 Tip:</strong> <code class="inline-code">fetch</code> does not reject on 4xx or 5xx — it only rejects on network failure. Always check <code class="inline-code">res.ok</code> yourself, or use a client like Axios that throws for you.</div>
+    </section>
+
+    <!-- ═══ 7. Validation & Schema ═══ -->
+    <section id="schema" class="card sect-offset">
+      <h2><span class="section-num">07</span> Validation &amp; JSON Schema <span class="level level-advanced">Advanced</span></h2>
+
+      <p>A document can be syntactically valid JSON and still be wrong for your program. <strong>JSON Schema</strong> is the standard way to describe the expected shape and validate against it.</p>
+
+      <h3>A small schema</h3>
+      <pre><code>{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "name", "email"],
+  "properties": {
+    "id":    { "type": "integer", "minimum": 1 },
+    "name":  { "type": "string", "minLength": 1 },
+    "email": { "type": "string", "format": "email" },
+    "role":  { "type": "string", "enum": ["admin", "developer", "viewer"] },
+    "tags":  { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Common keywords</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">type</div><div class="cheat-desc">object, array, string, number…</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">required</div><div class="cheat-desc">List of mandatory keys</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">properties</div><div class="cheat-desc">Rules per key</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">items</div><div class="cheat-desc">Rules for array elements</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">enum</div><div class="cheat-desc">Allowed values</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">pattern</div><div class="cheat-desc">Regex for strings</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">minimum / maximum</div><div class="cheat-desc">Numeric bounds</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">minLength / maxLength</div><div class="cheat-desc">String length bounds</div></div>
+      </div>
+
+      <h3>Validating in code</h3>
+      <p><strong>Ajv</strong> is the most widely used validator for JavaScript and Node.js. Similar libraries exist for every language.</p>
+
+      <pre><code>import Ajv from "ajv";
+const ajv = new Ajv();
+
+const validate = ajv.compile(schema);
+
+if (!validate(data)) {
+  console.error(validate.errors);
+} else {
+  console.log("Valid!");
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Quick checks without code</h3>
+      <ul>
+        <li><strong>VS Code</strong> validates <code class="inline-code">package.json</code> and <code class="inline-code">tsconfig.json</code> automatically using built-in schemas</li>
+        <li><strong>jsonlint.com</strong> — paste a document to check syntax</li>
+        <li><strong><code class="inline-code">jq</code></strong> — <code class="inline-code">jq . file.json</code> pretty-prints and fails loudly on invalid JSON</li>
+        <li><strong>JSON Schema Store</strong> — community schemas for thousands of config formats</li>
+      </ul>
+
+      <div class="note"><strong>Syntax vs schema:</strong> Syntax validation asks “is this valid JSON?” Schema validation asks “does this match the contract?” APIs should do both — reject malformed JSON with 400, and valid-but-wrong data with 422.</div>
+    </section>
+
+    <!-- ═══ 8. Variants & Formats ═══ -->
+    <section id="variants" class="card sect-offset">
+      <h2><span class="section-num">08</span> Variants &amp; Related Formats <span class="level level-advanced">Advanced</span></h2>
+
+      <p>Strict JSON is deliberately minimal. Several extensions and sibling formats fill the gaps — just know which one a tool expects.</p>
+
+      <h3>JSONL / NDJSON — one document per line</h3>
+      <p>JSON Lines stores one complete JSON value per line. It is ideal for streaming, logs and big datasets because a consumer can process line by line without loading the whole file.</p>
+
+      <pre><code>{"id":1,"event":"login","user":"ada"}
+{"id":2,"event":"logout","user":"ada"}
+{"id":3,"event":"login","user":"linus"}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>JSON5 — JSON for humans</h3>
+      <p>JSON5 allows comments, unquoted keys, single quotes, trailing commas and multi-line strings. It is popular in config files, but it is <em>not</em> standard JSON — APIs will reject it.</p>
+
+      <pre><code>{
+  <span class="cm">// comments are allowed</span>
+  unquotedKey: 'single quotes',
+  trailing: true,
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>JSONC — JSON with Comments</h3>
+      <p>VS Code's <code class="inline-code">settings.json</code> and TypeScript's <code class="inline-code">tsconfig.json</code> accept comments and trailing commas. The file is JSONC even though its extension says <code class="inline-code">.json</code> — a strict validator will complain.</p>
+
+      <h3>How the formats compare</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">JSON</div><div class="cheat-desc">Strict, universal, machine-first</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">JSON5</div><div class="cheat-desc">Relaxed syntax, configs and dev tools</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">JSONC</div><div class="cheat-desc">JSON + comments, VS Code / tsconfig</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">JSONL</div><div class="cheat-desc">One document per line, streaming</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">YAML</div><div class="cheat-desc">Indentation-based, comments, CI configs</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">TOML</div><div class="cheat-desc">Key/value config, Rust, Cargo</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">XML</div><div class="cheat-desc">Tags and attributes, legacy enterprise</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">MessagePack</div><div class="cheat-desc">Binary JSON, smaller and faster</div></div>
+      </div>
+
+      <div class="note"><strong>Rule of thumb:</strong> If data crosses a network boundary, use strict JSON. If a human edits the file, YAML, TOML or JSONC may be friendlier. If it is a large event stream, use JSONL.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> YAML is a superset of JSON in theory, so most JSON documents are valid YAML. The reverse is not true — YAML's anchors, tags and implicit typing rarely survive a round-trip to JSON unchanged.</div>
+    </section>
+
+    <!-- ═══ 9. Pitfalls ═══ -->
+    <section id="pitfalls" class="card sect-offset">
+      <h2><span class="section-num">09</span> Pitfalls &amp; Best Practices <span class="level level-intermediate">Intermediate</span></h2>
+
+      <h3>The classic mistakes</h3>
+      <ul>
+        <li><strong>Trailing commas</strong> — valid in JavaScript, fatal in JSON</li>
+        <li><strong>Comments</strong> — valid in JSONC/JSON5, fatal in strict JSON</li>
+        <li><strong>Unquoted or single-quoted keys</strong> — not JSON</li>
+        <li><strong>Smart quotes</strong> — copying from a word processor inserts <code class="inline-code">“ ”</code>, which are not ASCII quotes</li>
+        <li><strong>Hidden BOM characters</strong> — a byte-order mark at the start of a file breaks some parsers</li>
+        <li><strong>Encoding</strong> — JSON must be UTF-8; mismatched encodings produce mojibake</li>
+      </ul>
+
+      <h3>Security and correctness</h3>
+      <ul>
+        <li><strong>Never use <code class="inline-code">eval</code></strong> to parse JSON — use <code class="inline-code">JSON.parse</code>, which cannot execute code</li>
+        <li><strong>Prototype pollution</strong> — a <code class="inline-code">"__proto__"</code> or <code class="inline-code">"constructor"</code> key in untrusted JSON can poison object prototypes when merged blindly. Validate and strip unknown keys.</li>
+        <li><strong>Big numbers</strong> — IDs above the safe integer limit must be strings</li>
+        <li><strong>Deep nesting</strong> — extremely deep documents can exhaust the call stack in recursive parsers; validate shape and depth on the server</li>
+        <li><strong>Huge payloads</strong> — set size limits and stream large data instead of loading it all at once</li>
+        <li><strong>Duplicate keys</strong> — behaviour is implementation-defined; the last value usually wins, which can mask bugs</li>
+      </ul>
+
+      <div class="warn"><strong>⚠ Never trust client JSON:</strong> A valid JSON document is not a safe document. Validate types, ranges, string lengths and allowed fields on the server — always. Syntax validation is not security.</div>
+
+      <h3>Best practices</h3>
+      <ul>
+        <li><strong>Use camelCase keys</strong> consistently, matching the target language's conventions</li>
+        <li><strong>Send dates as ISO 8601 UTC strings</strong>, never as local timestamps</li>
+        <li><strong>Prefer <code class="inline-code">null</code> for intentional absence</strong> and omit fields that are not applicable</li>
+        <li><strong>Version your API payloads</strong> if the shape may evolve</li>
+        <li><strong>Pretty-print files</strong> that humans edit, minify payloads that machines transfer</li>
+        <li><strong>Validate with a schema</strong> at every boundary — client, server and database</li>
+        <li><strong>Wrap parsing in try/catch</strong> and surface a useful error</li>
+      </ul>
+
+      <div class="tip"><strong>💡 Tip:</strong> When debugging a parse error, the message usually includes a position. Paste the document into <code class="inline-code">jq .</code> or a JSON validator — it will point at the exact character, which is often a stray comma just before a closing brace.</div>
+    </section>
+
+    <!-- ═══ 10. Cheat Sheet ═══ -->
+    <section id="cheatsheet" class="card sect-offset">
+      <h2><span class="section-num">10</span> Cheat Sheet</h2>
+
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">{"key": "value"}</div><div class="cheat-desc">Object with one pair</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">[1, 2, 3]</div><div class="cheat-desc">Array of numbers</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">"text"</div><div class="cheat-desc">String (double quotes)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">42 / 3.14</div><div class="cheat-desc">Number (int or float)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">true / false</div><div class="cheat-desc">Boolean (lowercase)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">null</div><div class="cheat-desc">No value</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">\" \\ \n \t</div><div class="cheat-desc">String escapes</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">\u00e9</div><div class="cheat-desc">Unicode escape</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">JSON.parse(str)</div><div class="cheat-desc">Text → object</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">JSON.stringify(obj)</div><div class="cheat-desc">Object → text</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">stringify(obj, null, 2)</div><div class="cheat-desc">Pretty-print</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">structuredClone(obj)</div><div class="cheat-desc">Modern deep clone</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">res.json()</div><div class="cheat-desc">Parse a fetch response</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Content-Type</div><div class="cheat-desc">application/json</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">jq . file.json</div><div class="cheat-desc">Validate and pretty-print</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">$schema</div><div class="cheat-desc">Point at a JSON Schema</div></div>
+      </div>
+
+      <h3>Valid JSON in ten seconds</h3>
+      <ul>
+        <li>Double quotes around <strong>every</strong> key and string</li>
+        <li>No comments, no trailing commas, no single quotes</li>
+        <li>Only six value types — no <code class="inline-code">undefined</code>, functions, <code class="inline-code">NaN</code> or <code class="inline-code">Infinity</code></li>
+        <li>Top level is usually an object or array</li>
+        <li>Dates are ISO strings; big IDs are strings</li>
+        <li>Parse with <code class="inline-code">JSON.parse</code>, never <code class="inline-code">eval</code></li>
+      </ul>
+
+      <div class="note"><strong>Remember:</strong> JSON's value is that it is boring and universal. Use the strict core for anything that crosses a network, and reach for a relaxed variant only when a human is the one editing the file.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Keep this guide bookmarked. Almost every JSON bug is one of five things: a trailing comma, a comment, a single quote, an unquoted key, or a number that lost precision.</div>
+    </section>
+
+    <footer><i>Made with ❤ by Laksh. <a href="index.html">⌂ Back to Home</a></i></footer>
+  </main>
+
+  <button type="button" id="back-top" title="Back to top">↑</button>
+
+  <script>
+    // ═════════════════════════════════════════════
+    // 1. SIDEBAR TOGGLE (Mobile)
+    // ═════════════════════════════════════════════
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menuBtn');
+
+    function setMenu(open) {
+      if (sidebar) sidebar.classList.toggle('active', open);
+      if (overlay) overlay.classList.toggle('active', open);
+      if (menuBtn) menuBtn.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+      syncSidebarInert();
+    }
+
+    function syncSidebarInert() {
+      if (!sidebar) return;
+      sidebar.toggleAttribute('inert', window.innerWidth <= 900 && !sidebar.classList.contains('active'));
+    }
+    syncSidebarInert();
+    window.addEventListener('resize', syncSidebarInert);
+
+    if (menuBtn) {
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.addEventListener('click', () => {
+        setMenu(!(sidebar && sidebar.classList.contains('active')));
+      });
+    }
+    if (overlay) overlay.addEventListener('click', () => setMenu(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) setMenu(false);
+    });
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.addEventListener('click', () => setMenu(false));
+    });
+
+    // ═════════════════════════════════════════════
+    // 2. COPY TO CLIPBOARD
+    // ═════════════════════════════════════════════
+    document.querySelectorAll('pre').forEach(pre => {
+      const tip = pre.querySelector('.copy-tip');
+      if (!tip) return;
+      tip.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        try {
+          await navigator.clipboard.writeText(code ? code.innerText : pre.textContent);
+          tip.textContent = 'Copied!';
+          tip.classList.add('copied');
+          setTimeout(() => {
+            tip.textContent = 'Copy';
+            tip.classList.remove('copied');
+          }, 1800);
+        } catch {
+          tip.textContent = 'Failed';
+        }
+      });
+    });
+
+    // ═════════════════════════════════════════════
+    // 3. TYPEWRITER
+    // ═════════════════════════════════════════════
+    (function typewriter() {
+      const el = document.getElementById('typewriter-text');
+      if (!el) return;
+      const text = el.textContent.trim();
+      const cursor = el.parentElement.querySelector('.typewriter-cursor');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (cursor) cursor.style.display = 'none';
+        return;
+      }
+      el.textContent = '';
+      let i = 0;
+      function tick() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          const delay = text.charAt(i - 1) === '.' || text.charAt(i - 1) === ',' ? 60 : 20;
+          setTimeout(tick, delay);
+        } else if (cursor) {
+          cursor.style.display = 'none';
+        }
+      }
+      setTimeout(tick, 800);
+    })();
+
+    // ═════════════════════════════════════════════
+    // 4. TOC ACTIVE HIGHLIGHT
+    // ═════════════════════════════════════════════
+    const sections = [];
+    document.querySelectorAll('.toc a').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const el = document.querySelector(href);
+        if (el) sections.push({ el, link: a });
+      }
+    });
+    const tocLinks = document.querySelectorAll('.toc a');
+
+    function highlightTOC() {
+      let current = sections[0];
+      for (const s of sections) {
+        const rect = s.el.getBoundingClientRect();
+        if (rect.top <= 120) current = s;
+        else break;
+      }
+      tocLinks.forEach(a => a.classList.remove('active'));
+      if (current) current.link.classList.add('active');
+    }
+    let tocTicking = false;
+    window.addEventListener('scroll', () => {
+      if (tocTicking) return;
+      tocTicking = true;
+      requestAnimationFrame(() => { tocTicking = false; highlightTOC(); });
+    }, { passive: true });
+    highlightTOC();
+
+    // ═════════════════════════════════════════════
+    // 5. BACK TO TOP
+    // ═════════════════════════════════════════════
+    const backTop = document.getElementById('back-top');
+    if (backTop) {
+      let backTicking = false;
+      window.addEventListener('scroll', () => {
+        if (backTicking) return;
+        backTicking = true;
+        requestAnimationFrame(() => {
+          backTop.classList.toggle('visible', window.scrollY > 400);
+          backTicking = false;
+        });
+      }, { passive: true });
+      backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
+
+    // ═════════════════════════════════════════════
+    // 6. SCROLL REVEAL
+    // ═════════════════════════════════════════════
+    (function scrollReveal() {
+      const cards = document.querySelectorAll('.card');
+      if (!cards.length || !('IntersectionObserver' in window)) {
+        cards.forEach(c => c.classList.add('visible'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      cards.forEach(card => observer.observe(card));
+    })();
+
+    // ═════════════════════════════════════════════
+    // 7. 3D TILT
+    // ═════════════════════════════════════════════
+    (function tiltEffect() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -5;
+          const rotateY = ((x - centerX) / centerX) * 5;
+          card.style.transform =
+            `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.005)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    })();
+
+    // ═════════════════════════════════════════════
+    // 8. PARALLAX ORBS
+    // ═════════════════════════════════════════════
+    (function parallaxOrbs() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const orbs = document.querySelectorAll('.orb');
+      if (!orbs.length) return;
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        orbs.forEach((orb, i) => {
+          const speed = 5 + i * 3;
+          orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+        });
+      }, { passive: true });
+    })();
+  </script>
+  <script>
+    (function themeToggle(){
+      const html = document.documentElement;
+      const btn = document.getElementById('themeToggle');
+      if(!btn) return;
+      const icons = { light:'\u2600\ufe0f', dark:'\ud83c\udf19' };
+      const sys = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      const apply = t => { html.setAttribute('data-theme', t); btn.textContent = icons[t] || icons.dark; };
+      apply(html.getAttribute('data-theme') || sys());
+      btn.addEventListener('click', () => {
+        const next = (html.getAttribute('data-theme') || sys()) === 'light' ? 'dark' : 'light';
+        apply(next);
+        try{ localStorage.setItem('theme', next); }catch(e){}
+      });
+    })();
+  </script>
+</body>
+</html>
