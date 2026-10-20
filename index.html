@@ -9,7 +9,8 @@
   gtag('js', new Date());
   gtag('config', 'G-NDLH3RKL58');
 </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f1f5f9" id="themeColorMeta">
   <title>Laksh Guides</title>
   <meta name="description" content="Quick, clear references for coding, tools, and academics — built for practical workflows. Git, Linux, VS Code, HTML &amp; CSS, JavaScript, Markdown, JSON, and Web Dev Tools guides.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Ctext x='16' y='23' font-family='Inter,sans-serif' font-size='18' font-weight='800' text-anchor='middle' fill='white'%3EL%3C/text%3E%3C/svg%3E">
@@ -112,7 +113,7 @@
       background:var(--nav-bg); backdrop-filter:blur(16px);
       -webkit-backdrop-filter:blur(16px);
       border-bottom:1px solid var(--border);
-      padding:0 24px; height:60px;
+      padding:env(safe-area-inset-top) 24px 0; height:calc(60px + env(safe-area-inset-top));
       display:flex; align-items:center; justify-content:space-between;
     }
     .nav-logo{
@@ -394,21 +395,30 @@
     /* ═══ RESPONSIVE ═══ */
     /* laptop/tablet-landscape: tighten nav pills so they never touch the logo */
     @media (max-width: 1000px) and (min-width: 769px) {
-      nav{ padding:0 18px; }
+      nav{ padding:env(safe-area-inset-top) 18px 0; }
       .nav-links{ gap:4px; }
       .nav-links a{ padding:8px 10px; font-size:0.8rem; gap:5px; }
     }
     @media (max-width: 768px) {
-      .menu-btn{ display:block; }
+      .menu-btn{ display:flex; align-items:center; justify-content:center; width:44px; height:44px; margin-left:-10px; }
       .nav-links a:not(.theme-btn-nav){ display:none; }
       .nav-links a.nav-show-mobile{ display:flex; }
+      .nav-links .theme-btn-nav{ width:40px; height:40px; }
       .hero{ padding:40px 18px 32px; }
+      .hero-controls input{ font-size:16px; padding-right:14px; }
+      .search-shortcut{ display:none; }
       .guide-grid{ grid-template-columns:1fr; }
       .hero-stats{ gap:14px; }
       .container{ padding:0 16px 40px; }
+      .back-top{ bottom:calc(20px + env(safe-area-inset-bottom)); right:calc(16px + env(safe-area-inset-right)); }
+      .footer{ padding-bottom:calc(28px + env(safe-area-inset-bottom)); }
+      .mobile-drawer{
+        width:min(260px, 85vw);
+        padding:calc(24px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+      }
     }
     @media (max-width: 480px) {
-      nav{ padding:0 14px; }
+      nav{ padding:env(safe-area-inset-top) 14px 0; }
       .hero-title{ font-size:clamp(1.6rem,1.4rem+2vw,2rem); }
       .hero-sub{ font-size:0.92rem; }
     }
@@ -737,18 +747,22 @@
     (function(){
       const btn = document.getElementById('themeToggle');
       const html = document.documentElement;
+      const themeColor = document.getElementById('themeColorMeta');
+      const themeColors = { light: '#f1f5f9', dark: '#0f111a' };
       const stored = localStorage.getItem('theme');
       if (stored) html.setAttribute('data-theme', stored);
       else html.setAttribute('data-theme', 'light');
       const icons = { dark: '🌙', light: '☀️' };
       const cur = html.getAttribute('data-theme') || 'light';
       btn.textContent = icons[cur] || icons.light;
+      if (themeColor) themeColor.content = themeColors[cur] || themeColors.light;
       btn.addEventListener('click', () => {
         const cur = html.getAttribute('data-theme');
         const next = cur === 'light' ? 'dark' : 'light';
         html.setAttribute('data-theme', next);
         localStorage.setItem('theme', next);
         btn.textContent = icons[next];
+        if (themeColor) themeColor.content = themeColors[next] || themeColors.light;
       });
     })();
 
