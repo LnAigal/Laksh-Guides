@@ -9,20 +9,21 @@
   gtag('js', new Date());
   gtag('config', 'G-NDLH3RKL58');
 </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" >
+  <meta name="theme-color" content="#f8fafc" id="themeColorMeta">
 <script>
   (function(){
     document.documentElement.classList.add('js');
-    try{
-      var t = localStorage.getItem('theme');
-      if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
-      else document.documentElement.setAttribute('data-theme', 'light');
-    }catch(e){
-      document.documentElement.setAttribute('data-theme', 'light');
+    var t = null;
+    try{ t = localStorage.getItem('theme'); }catch(e){}
+    if(t !== 'light' && t !== 'dark'){
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
+    document.documentElement.setAttribute('data-theme', t);
+    var meta = document.getElementById('themeColorMeta');
+    if(meta) meta.content = t === 'dark' ? '#07080e' : '#f8fafc';
   })();
 </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" >
-  <meta name="theme-color" content="#f8fafc" id="themeColorMeta">
   <title>Markdown Guide — Laksh Guides</title>
   <meta name="description" content="Comprehensive Markdown guide: headings, emphasis, lists, links, images, code blocks, tables, blockquotes, GitHub Flavored Markdown, front matter, and README recipes." >
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 208 128'%3E%3Crect width='208' height='128' rx='18' fill='%23083fa1'/%3E%3Cpath d='M25 98V30h20l15 22l15-22h20v68h-20V59l-15 22l-15-22v39zM145 30h20v35h20l-30 33l-30-33h20z' fill='white'/%3E%3C/svg%3E" >
@@ -498,11 +499,11 @@
   </div>
   <div id="overlay"></div>
   <div id="menu-bar">
-    <button type="button" class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">☰</button>
+    <button type="button" class="menu-btn" id="menuBtn" aria-label="Open navigation menu" aria-controls="sidebar" aria-expanded="false">☰</button>
     <span class="menu-title"><span class="brand-icon" aria-hidden="true" style="width:16px;height:16px;"></span> Markdown Guide</span>
   </div>
 
-  <nav id="sidebar">
+  <nav id="sidebar" aria-label="Guide navigation">
     <div class="logo">
       <span class="mark"></span> <span class="brand-icon brand-icon-accent" aria-hidden="true"></span> Markdown
       <button type="button" class="theme-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
@@ -1103,11 +1104,21 @@ MIT</code><button type="button" class="copy-tip" aria-label="Copy code to clipbo
     const menuBtn = document.getElementById('menuBtn');
 
     function setMenu(open) {
+      const wasOpen = !!(sidebar && sidebar.classList.contains('active'));
       if (sidebar) sidebar.classList.toggle('active', open);
       if (overlay) overlay.classList.toggle('active', open);
-      if (menuBtn) menuBtn.setAttribute('aria-expanded', String(open));
+      if (menuBtn) {
+        menuBtn.setAttribute('aria-expanded', String(open));
+        menuBtn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      }
       document.body.style.overflow = open ? 'hidden' : '';
       syncSidebarInert();
+      if (open) {
+        const first = sidebar && sidebar.querySelector('.home-link, .toc a[href]');
+        if (first) first.focus();
+      } else if (wasOpen && menuBtn) {
+        menuBtn.focus();
+      }
     }
 
     function syncSidebarInert() {
@@ -1129,6 +1140,16 @@ MIT</code><button type="button" class="copy-tip" aria-label="Copy code to clipbo
     });
     document.querySelectorAll('.toc a').forEach(a => {
       a.addEventListener('click', () => setMenu(false));
+    });
+    // keep Tab inside the sidebar while it is open
+    if (sidebar) sidebar.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab' || !sidebar.classList.contains('active')) return;
+      const items = [...sidebar.querySelectorAll('a[href], button:not([disabled])')]
+        .filter(el => el.getClientRects().length > 0);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     });
 
     // ═════════════════════════════════════════════

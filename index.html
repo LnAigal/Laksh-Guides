@@ -20,13 +20,14 @@
   <script>
     (function(){
       document.documentElement.classList.add('js');
-      try{
-        var t = localStorage.getItem('theme');
-        if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
-        else document.documentElement.setAttribute('data-theme', 'light');
-      }catch(e){
-        document.documentElement.setAttribute('data-theme', 'light');
+      var t = null;
+      try{ t = localStorage.getItem('theme'); }catch(e){}
+      if(t !== 'light' && t !== 'dark'){
+        t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
+      document.documentElement.setAttribute('data-theme', t);
+      var meta = document.getElementById('themeColorMeta');
+      if(meta) meta.content = t === 'dark' ? '#0f111a' : '#f1f5f9';
     })();
   </script>
   <style>
@@ -394,15 +395,21 @@
 
     /* ═══ RESPONSIVE ═══ */
     /* laptop/tablet-landscape: tighten nav pills so they never touch the logo */
-    @media (max-width: 1000px) and (min-width: 769px) {
+    @media (max-width: 1340px) and (min-width: 769px) {
       nav{ padding:env(safe-area-inset-top) 18px 0; }
       .nav-links{ gap:4px; }
       .nav-links a{ padding:8px 10px; font-size:0.8rem; gap:5px; }
+      .nav-logo{ font-size:1rem; gap:8px; }
+    }
+    /* icon-only nav: the labels no longer fit, keep every guide one click away */
+    @media (max-width: 1150px) and (min-width: 769px) {
+      .nav-links a .nav-label{ display:none; }
+      .nav-links a{ padding:9px; gap:0; }
+      .nav-links .theme-btn-nav{ margin-left:2px; }
     }
     @media (max-width: 768px) {
       .menu-btn{ display:flex; align-items:center; justify-content:center; width:44px; height:44px; margin-left:-10px; }
       .nav-links a:not(.theme-btn-nav){ display:none; }
-      .nav-links a.nav-show-mobile{ display:flex; }
       .nav-links .theme-btn-nav{ width:40px; height:40px; }
       .hero{ padding:40px 18px 32px; }
       .hero-controls input{ font-size:16px; padding-right:14px; }
@@ -499,39 +506,39 @@
 <body>
   <div id="overlay"></div>
 
-  <div class="mobile-drawer" id="mobileDrawer">
+  <nav class="mobile-drawer" id="mobileDrawer" aria-label="Mobile menu">
     <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:4px;">
       <div class="drawer-logo"><span class="dot"></span> Laksh Guides</div>
       <button type="button" id="drawerClose" aria-label="Close menu" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:4px 6px;border-radius:6px;">✕</button>
     </div>
-    <a href="GithubGuide.html"><span class="icon-svg github accent"></span> Git &amp; GitHub</a>
-    <a href="LinuxGuide.html"><span class="icon-svg linux accent"></span> Linux Guide</a>
-    <a href="VSCodeGuide.html"><span class="icon-svg vscode accent"></span> VS Code Guide</a>
-      <a href="HtmlCssGuide.html"><span class="icon-svg htmlcss accent"></span> HTML &amp; CSS</a>
-      <a href="JavaScriptGuide.html"><span class="icon-svg javascript accent"></span> JavaScript Guide</a>
-      <a href="MarkdownGuide.html"><span class="icon-svg markdown accent"></span> Markdown Guide</a>
-      <a href="JsonGuide.html"><span class="icon-svg json accent"></span> JSON Guide</a>
-      <a href="WebDevToolsGuide.html"><span class="icon-svg tools accent"></span> Web Dev Tools</a>
-      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon-svg external accent"></span> NMAMIT-Notes-Hub</a>
+    <a href="GithubGuide.html"><span class="icon-svg github accent" aria-hidden="true"></span> Git &amp; GitHub</a>
+    <a href="LinuxGuide.html"><span class="icon-svg linux accent" aria-hidden="true"></span> Linux Guide</a>
+    <a href="VSCodeGuide.html"><span class="icon-svg vscode accent" aria-hidden="true"></span> VS Code Guide</a>
+      <a href="HtmlCssGuide.html"><span class="icon-svg htmlcss accent" aria-hidden="true"></span> HTML &amp; CSS</a>
+      <a href="JavaScriptGuide.html"><span class="icon-svg javascript accent" aria-hidden="true"></span> JavaScript Guide</a>
+      <a href="MarkdownGuide.html"><span class="icon-svg markdown accent" aria-hidden="true"></span> Markdown Guide</a>
+      <a href="JsonGuide.html"><span class="icon-svg json accent" aria-hidden="true"></span> JSON Guide</a>
+      <a href="WebDevToolsGuide.html"><span class="icon-svg tools accent" aria-hidden="true"></span> Web Dev Tools</a>
+      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon-svg external accent" aria-hidden="true"></span> NMAMIT-Notes-Hub</a>
     <div class="drawer-footer">Laksh Guides</div>
-  </div>
+  </nav>
 
-  <nav>
+  <nav aria-label="Primary">
     <div style="display:flex;align-items:center;gap:12px;">
-      <button type="button" class="menu-btn" id="menuToggle" aria-label="Open menu">☰</button>
+      <button type="button" class="menu-btn" id="menuToggle" aria-label="Open menu" aria-controls="mobileDrawer" aria-expanded="false">☰</button>
       <a href="index.html" class="nav-logo"><span class="dot"></span> Laksh Guides</a>
     </div>
     <div class="nav-links">
-      <a href="GithubGuide.html"><span class="icon-svg github" style="width:14px;height:14px;" aria-hidden="true"></span> Git &amp; GitHub</a>
-      <a href="LinuxGuide.html"><span class="icon-svg linux" style="width:14px;height:14px;" aria-hidden="true"></span> Linux</a>
-      <a href="VSCodeGuide.html"><span class="icon-svg vscode" style="width:14px;height:14px;" aria-hidden="true"></span> VS Code</a>
-      <a href="HtmlCssGuide.html"><span class="icon-svg htmlcss" style="width:14px;height:14px;" aria-hidden="true"></span> HTML &amp; CSS</a>
-      <a href="JavaScriptGuide.html"><span class="icon-svg javascript" style="width:14px;height:14px;" aria-hidden="true"></span> JavaScript</a>
-      <a href="MarkdownGuide.html"><span class="icon-svg markdown" style="width:14px;height:14px;" aria-hidden="true"></span> Markdown</a>
-      <a href="JsonGuide.html"><span class="icon-svg json" style="width:14px;height:14px;" aria-hidden="true"></span> JSON</a>
-      <a href="WebDevToolsGuide.html"><span class="icon-svg tools" style="width:14px;height:14px;" aria-hidden="true"></span> Web Dev Tools</a>
-      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/"><span class="icon-svg external" style="width:14px;height:14px;" aria-hidden="true"></span> Notes Hub</a>
-      <button type="button" class="theme-btn-nav" id="themeToggle" title="Toggle theme">🌙</button>
+      <a href="GithubGuide.html" title="Git &amp; GitHub" aria-label="Git &amp; GitHub"><span class="icon-svg github" style="width:14px;height:14px;" aria-hidden="true"></span><span class="nav-label">Git &amp; GitHub</span></a>
+      <a href="LinuxGuide.html" title="Linux" aria-label="Linux"><span class="icon-svg linux" style="width:14px;height:14px;" aria-hidden="true"></span><span class="nav-label">Linux</span></a>
+      <a href="VSCodeGuide.html" title="VS Code" aria-label="VS Code"><span class="icon-svg vscode" style="width:14px;height:14px;" aria-hidden="true"></span><span class="nav-label">VS Code</span></a>
+      <a href="HtmlCssGuide.html" title="HTML &amp; CSS" aria-label="HTML &amp; CSS"><span class="icon-svg htmlcss" style="width:14px;height:14px;" aria-hidden="true"></span><span class="nav-label">HTML &amp; CSS</span></a>
+      <a href="JavaScriptGuide.html" title="JavaScript" aria-label="JavaScript"><span class="icon-svg javascript" style="width:14px;height:14px;" aria-hidden="true"></span><span class="nav-label">JavaScript</span></a>
+      <a href="MarkdownGuide.html" title="Markdown" aria-label="Markdown"><span class="icon-svg markdown" style="width:14px;height:14px;" aria-hidden="true"></span><span class="nav-label">Markdown</span></a>
+      <a href="JsonGuide.html" title="JSON" aria-label="JSON"><span class="icon-svg json" style="width:14px;height:14px;" aria-hidden="true"></span><span class="nav-label">JSON</span></a>
+      <a href="WebDevToolsGuide.html" title="Web Dev Tools" aria-label="Web Dev Tools"><span class="icon-svg tools" style="width:14px;height:14px;" aria-hidden="true"></span><span class="nav-label">Web Dev Tools</span></a>
+      <a href="https://lnaigal.github.io/NMAMIT-Notes-Hub/" title="NMAMIT Notes Hub" aria-label="NMAMIT Notes Hub"><span class="icon-svg external" style="width:14px;height:14px;" aria-hidden="true"></span><span class="nav-label">Notes Hub</span></a>
+      <button type="button" class="theme-btn-nav" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
     </div>
   </nav>
 
@@ -661,13 +668,21 @@
     const sidebar = document.getElementById('mobileDrawer');
     const overlay = document.getElementById('overlay');
     const menuToggle = document.getElementById('menuToggle');
+    const drawerClose = document.getElementById('drawerClose');
     sidebar.inert = true;
     function setDrawer(open) {
+      const wasOpen = sidebar.classList.contains('active');
       sidebar.classList.toggle('active', open);
       sidebar.inert = !open;
       overlay.classList.toggle('active', open);
       menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       document.body.style.overflow = open ? 'hidden' : '';
+      if (open) {
+        (drawerClose || sidebar.querySelector('a[href]')).focus();
+      } else if (wasOpen) {
+        menuToggle.focus();
+      }
     }
     menuToggle.setAttribute('aria-expanded', 'false');
     menuToggle.addEventListener('click', () => setDrawer(!sidebar.classList.contains('active')));
@@ -675,9 +690,19 @@
     document.querySelectorAll('.mobile-drawer a').forEach(a => {
       a.addEventListener('click', () => setDrawer(false));
     });
-    document.getElementById('drawerClose').addEventListener('click', () => setDrawer(false));
+    drawerClose.addEventListener('click', () => setDrawer(false));
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && sidebar.classList.contains('active')) setDrawer(false);
+    });
+    // keep Tab inside the drawer while it is open
+    sidebar.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab' || !sidebar.classList.contains('active')) return;
+      const items = [...sidebar.querySelectorAll('a[href], button:not([disabled])')]
+        .filter(el => el.getClientRects().length > 0);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     });
 
     // Search
@@ -749,26 +774,24 @@
       const html = document.documentElement;
       const themeColor = document.getElementById('themeColorMeta');
       const themeColors = { light: '#f1f5f9', dark: '#0f111a' };
-      const stored = localStorage.getItem('theme');
-      if (stored) html.setAttribute('data-theme', stored);
-      else html.setAttribute('data-theme', 'light');
       const icons = { dark: '🌙', light: '☀️' };
-      const cur = html.getAttribute('data-theme') || 'light';
-      btn.textContent = icons[cur] || icons.light;
-      if (themeColor) themeColor.content = themeColors[cur] || themeColors.light;
+      const cur = html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      html.setAttribute('data-theme', cur);
+      btn.textContent = icons[cur];
+      if (themeColor) themeColor.content = themeColors[cur];
       btn.addEventListener('click', () => {
-        const cur = html.getAttribute('data-theme');
-        const next = cur === 'light' ? 'dark' : 'light';
+        const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
         html.setAttribute('data-theme', next);
-        localStorage.setItem('theme', next);
+        try { localStorage.setItem('theme', next); } catch (e) {}
         btn.textContent = icons[next];
-        if (themeColor) themeColor.content = themeColors[next] || themeColors.light;
+        if (themeColor) themeColor.content = themeColors[next];
       });
     })();
 
     // Last visited highlight
     (function(){
-      const last = localStorage.getItem('lastGuide');
+      let last = null;
+      try { last = localStorage.getItem('lastGuide'); } catch (e) {}
       if (last) {
         const card = document.querySelector(`.guide-card[data-id="${last}"]`);
         if (card) {
@@ -790,7 +813,7 @@
           card.classList.add('visited');
           const dot = card.querySelector('.visited-dot');
           if (dot) dot.style.display = 'inline-block';
-          localStorage.setItem('lastGuide', id);
+          try { localStorage.setItem('lastGuide', id); } catch (e) {}
         });
       });
     })();

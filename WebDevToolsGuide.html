@@ -9,20 +9,21 @@
   gtag('js', new Date());
   gtag('config', 'G-NDLH3RKL58');
 </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" >
+  <meta name="theme-color" content="#f8fafc" id="themeColorMeta">
 <script>
   (function(){
     document.documentElement.classList.add('js');
-    try{
-      var t = localStorage.getItem('theme');
-      if(t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
-      else document.documentElement.setAttribute('data-theme', 'light');
-    }catch(e){
-      document.documentElement.setAttribute('data-theme', 'light');
+    var t = null;
+    try{ t = localStorage.getItem('theme'); }catch(e){}
+    if(t !== 'light' && t !== 'dark'){
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
+    document.documentElement.setAttribute('data-theme', t);
+    var meta = document.getElementById('themeColorMeta');
+    if(meta) meta.content = t === 'dark' ? '#07080e' : '#f8fafc';
   })();
 </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" >
-  <meta name="theme-color" content="#f8fafc" id="themeColorMeta">
   <title>Web Dev Tools Guide — Laksh Guides</title>
   <meta name="description" content="Practical guide to the modern web development toolchain: Node.js, npm, package.json and semver, Vite and bundlers, TypeScript, ESLint and Prettier, browser DevTools, debugging, environment variables, testing, and deploying to production." >
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z' fill='white' transform='translate(4 4)'/%3E%3C/svg%3E">
@@ -498,11 +499,11 @@
   </div>
   <div id="overlay"></div>
   <div id="menu-bar">
-    <button type="button" class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu">☰</button>
+    <button type="button" class="menu-btn" id="menuBtn" aria-label="Open navigation menu" aria-controls="sidebar" aria-expanded="false">☰</button>
     <span class="menu-title"><span class="brand-icon" aria-hidden="true" style="width:16px;height:16px;"></span> Web Dev Tools Guide</span>
   </div>
 
-  <nav id="sidebar">
+  <nav id="sidebar" aria-label="Guide navigation">
     <div class="logo">
       <span class="mark"></span> <span class="brand-icon brand-icon-accent" aria-hidden="true"></span> Tools
       <button type="button" class="theme-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
@@ -809,7 +810,7 @@ npx tsc --watch          <span class="cm"># recompile on every save</span></code
 type User = { id: number; name: string; admin?: boolean }
 
 function greet(user: User): string {
-  return `Hello, ${'${user.name}'}`
+  return `Hello, ${user.name}`
 }
 
 greet({ id: 1, name: 'Laksh' })   <span class="cm">// ✓</span>
@@ -1151,11 +1152,21 @@ npx gh-pages -d dist</code><button type="button" class="copy-tip" aria-label="Co
     const menuBtn = document.getElementById('menuBtn');
 
     function setMenu(open) {
+      const wasOpen = !!(sidebar && sidebar.classList.contains('active'));
       if (sidebar) sidebar.classList.toggle('active', open);
       if (overlay) overlay.classList.toggle('active', open);
-      if (menuBtn) menuBtn.setAttribute('aria-expanded', String(open));
+      if (menuBtn) {
+        menuBtn.setAttribute('aria-expanded', String(open));
+        menuBtn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      }
       document.body.style.overflow = open ? 'hidden' : '';
       syncSidebarInert();
+      if (open) {
+        const first = sidebar && sidebar.querySelector('.home-link, .toc a[href]');
+        if (first) first.focus();
+      } else if (wasOpen && menuBtn) {
+        menuBtn.focus();
+      }
     }
 
     function syncSidebarInert() {
@@ -1177,6 +1188,16 @@ npx gh-pages -d dist</code><button type="button" class="copy-tip" aria-label="Co
     });
     document.querySelectorAll('.toc a').forEach(a => {
       a.addEventListener('click', () => setMenu(false));
+    });
+    // keep Tab inside the sidebar while it is open
+    if (sidebar) sidebar.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab' || !sidebar.classList.contains('active')) return;
+      const items = [...sidebar.querySelectorAll('a[href], button:not([disabled])')]
+        .filter(el => el.getClientRects().length > 0);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     });
 
     // ═════════════════════════════════════════════
