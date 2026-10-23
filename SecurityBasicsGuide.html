@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" >
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NDLH3RKL58"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-NDLH3RKL58');
+</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" >
+  <meta name="theme-color" content="#f8fafc" id="themeColorMeta">
+<script>
+  (function(){
+    document.documentElement.classList.add('js');
+    var t = null;
+    try{ t = localStorage.getItem('theme'); }catch(e){}
+    if(t !== 'light' && t !== 'dark'){
+      t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+    var meta = document.getElementById('themeColorMeta');
+    if(meta) meta.content = t === 'dark' ? '#07080e' : '#f8fafc';
+  })();
+</script>
+  <title>Security Basics Guide — Laksh Guides</title>
+  <meta name="description" content="Practical security basics for developers: threat modeling, password hashing, authorization, secrets management, HTTPS and cookies, the OWASP Top 10, input validation, supply-chain safety, secure deployment, and incident response." >
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23083fa1'/%3E%3Cpath d='M12 4l6 2.5v5c0 3.6-2.5 6.9-6 8.5-3.5-1.6-6-4.9-6-8.5v-5L12 4z' fill='white'/%3E%3Cpath d='M9 12l2 2 4-4' fill='none' stroke='%23083fa1' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" >
+  <link rel="preconnect" href="https://fonts.googleapis.com" >
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" >
+  <style>
+    :root{
+      --bg: #07080e;
+      --bg-alt: #0b0d17;
+      --surface: rgba(18,22,40,0.75);
+      --surface-hover: rgba(28,34,60,0.85);
+      --text: #f1f5f9;
+      --text-dim: #8892b0;
+      --text-muted: #64748b;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.4);
+      --accent-from: #6366f1;
+      --accent-via: #8b5cf6;
+      --accent-to: #a855f7;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --code-bg: #0a0c16;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --glow: 0 0 40px rgba(99,102,241,0.1);
+    }
+    :root[data-theme="light"]{
+      --bg: #f8fafc;
+      --bg-alt: #f1f5f9;
+      --surface: rgba(255,255,255,0.85);
+      --surface-hover: rgba(255,255,255,1);
+      --text: #0f172a;
+      --text-dim: #475569;
+      --text-muted: #94a3b8;
+      --border: rgba(99,102,241,0.15);
+      --border-hover: rgba(99,102,241,0.35);
+      --code-bg: #0f172a;
+      --shadow: 0 8px 32px rgba(0,0,0,0.06);
+      --glow: 0 0 40px rgba(99,102,241,0.05);
+    }
+    @media (prefers-color-scheme: light){
+      :root:not([data-theme="dark"]){
+        --bg: #f8fafc;
+        --bg-alt: #f1f5f9;
+        --surface: rgba(255,255,255,0.85);
+        --surface-hover: rgba(255,255,255,1);
+        --text: #0f172a;
+        --text-dim: #475569;
+        --text-muted: #94a3b8;
+        --border: rgba(99,102,241,0.15);
+        --border-hover: rgba(99,102,241,0.35);
+        --code-bg: #0f172a;
+        --shadow: 0 8px 32px rgba(0,0,0,0.06);
+        --glow: 0 0 40px rgba(99,102,241,0.05);
+      }
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; scroll-padding-top:16px; }
+    html{
+      min-height:100%;
+      background: var(--bg);
+    }
+    body{
+      min-height:100vh;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      display:grid; grid-template-columns:270px minmax(0, 1fr); gap:0;
+    }
+    a{ color:var(--accent-via); text-decoration:none; }
+    :focus-visible{ outline:2px solid var(--accent-from); outline-offset:2px; border-radius:6px; }
+
+    ::selection{ background:rgba(99,102,241,0.3); color:#fff; }
+
+    nav{
+      position:sticky; top:0; height:100dvh; overflow-y:auto;
+      padding:28px 16px; background:var(--bg-alt); border-right:1px solid var(--border);
+      display:flex; flex-direction:column; gap:2px;
+      z-index:100;
+    }
+    nav::-webkit-scrollbar{ width:4px; }
+    nav::-webkit-scrollbar-thumb{ background:var(--border); border-radius:9px; }
+
+    .logo{
+      font-weight:800; font-size:1.1rem; display:flex; align-items:center; gap:10px;
+      padding-bottom:16px; border-bottom:1px solid var(--border); flex-shrink:0;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .logo .mark{
+      width:8px; height:8px; border-radius:999px;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-text-fill-color:initial; flex-shrink:0;
+    }
+    .logo .home-link{
+      margin-left:auto; font-size:0.8rem; opacity:0.4;
+      -webkit-text-fill-color:initial; color:var(--text-dim);
+      transition:opacity 0.2s;
+    }
+    .logo .home-link:hover{ opacity:0.8; }
+    .logo .theme-btn{
+      margin-left:auto; font-size:0.85rem; line-height:1; font-family:inherit;
+      background:transparent; border:1px solid var(--border); color:var(--text-dim);
+      width:26px; height:26px; border-radius:8px; cursor:pointer; padding:0;
+      display:inline-flex; align-items:center; justify-content:center;
+      -webkit-text-fill-color:initial;
+      transition:color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .logo .theme-btn:hover{ color:var(--text); border-color:var(--border-hover); background:var(--surface); }
+    .logo .theme-btn + .home-link{ margin-left:6px; }
+    body{ transition: background-color 0.3s ease, color 0.3s ease; }
+
+    .toc{ display:flex; flex-direction:column; gap:2px; margin-top:6px; flex:1; }
+    .toc a{
+      display:flex; align-items:center; gap:12px;
+      padding:9px 14px; border-radius:12px;
+      text-decoration:none; color:var(--text-dim);
+      border:1px solid transparent;
+      transition:all 0.2s ease; font-size:0.82rem; font-weight:450;
+      position:relative;
+    }
+    .toc a:hover{ color:var(--text); border-color:var(--border); background:var(--surface); }
+    .toc a.active{
+      color:var(--text); border-color:var(--border-hover);
+      background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(168,85,247,0.08));
+      box-shadow:inset 2px 0 0 var(--accent-from);
+    }
+    .toc a .tag-icon{ font-size:0.7rem; width:16px; text-align:center; flex-shrink:0; opacity:0.5; }
+    .toc a.active .tag-icon{ opacity:0.9; }
+
+    .sidebar-footer{
+      padding-top:10px; border-top:1px solid var(--border);
+      font-size:0.7rem; color:var(--text-muted); text-align:center; flex-shrink:0;
+    }
+
+    .level{ font-size:0.55rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:3px 7px; border-radius:6px; margin-left:auto; flex-shrink:0; }
+    .level-beginner{ background:rgba(16,185,129,0.12); color:var(--green); border:1px solid rgba(16,185,129,0.2); }
+    .level-intermediate{ background:rgba(99,102,241,0.12); color:var(--accent-from); border:1px solid rgba(99,102,241,0.2); }
+    .level-advanced{ background:rgba(245,158,11,0.12); color:var(--amber); border:1px solid rgba(245,158,11,0.2); }
+
+    main{ padding:48px 36px 64px; width:100%; max-width:1000px; justify-self:center; }
+    @media (min-width:1500px){ main{ max-width:1120px; } }
+
+    header.hero{ margin-bottom:36px; position:relative; overflow:hidden; }
+    header.hero::after{
+      content:''; position:absolute; bottom:-18px; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,var(--border),transparent);
+    }
+    .breadcrumb{ font-size:0.78rem; color:var(--text-dim); margin-bottom:14px; }
+    .breadcrumb a{ color:var(--text-dim); }
+    .breadcrumb a:hover{ color:var(--accent-from); }
+    .title{
+      font-size: clamp(1.8rem, 1.4rem + 2.2vw, 2.8rem); font-weight:800; margin:0;
+      line-height:1.15; letter-spacing:-0.02em;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .hero-glow{
+      position:absolute; top:-60px; right:-40px;
+      width:200px; height:200px; border-radius:50%;
+      background:radial-gradient(circle,rgba(8,63,161,0.16),transparent 70%);
+      pointer-events:none;
+    }
+    .subtitle{ color:var(--text-dim); margin:10px 0 20px; max-width:70ch; line-height:1.7; font-size:0.95rem; }
+    .pill{
+      display:inline-flex; align-items:center; gap:10px; padding:7px 16px;
+      border-radius:999px; background:var(--surface); backdrop-filter:blur(12px);
+      border:1px solid var(--border); color:var(--text-dim); font-size:0.8rem;
+    }
+
+    section.card{
+      background:var(--surface); backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--border); border-radius:20px;
+      padding:28px 28px 20px; margin-bottom:24px;
+      transition:border-color 0.3s ease, box-shadow 0.3s ease; box-shadow:var(--glow);
+      position:relative; overflow:hidden;
+    }
+    section.card::before{
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:1px; background:linear-gradient(90deg,transparent,var(--border-hover),transparent);
+      opacity:0; transition:opacity 0.3s;
+    }
+    section.card:hover{
+      border-color:var(--border-hover); box-shadow:var(--shadow),var(--glow);
+    }
+    section.card:hover::before{ opacity:1; }
+
+    section.card h2{ margin:0 0 12px; font-size:1.3rem; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    section.card h2 .section-num{
+      font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:8px;
+      background:rgba(99,102,241,0.1); color:var(--accent-from);
+      border:1px solid rgba(99,102,241,0.15);
+    }
+    section.card h3{ margin:18px 0 8px; font-size:1rem; color:var(--text); font-weight:600; }
+    section.card p, section.card li{ color:var(--text-dim); line-height:1.75; }
+    section.card > p, section.card > ul, section.card > ol{ max-width:80ch; }
+    section.card p{ margin:0 0 10px; font-size:0.92rem; }
+    section.card ul, section.card ol{ padding-left:22px; margin:0 0 12px; }
+    section.card ul{ list-style-type:none; padding-left:0; }
+    section.card ul li{ padding-left:20px; position:relative; }
+    section.card ul li::before{ content:'▸'; position:absolute; left:0; color:var(--accent-from); opacity:0.6; font-size:0.8rem; }
+    section.card ol li{ color:var(--text-dim); line-height:1.75; margin-bottom:4px; }
+    section.card li strong{ color:var(--text); }
+
+    details.accordion{
+      border:1px solid var(--border); border-radius:14px; padding:16px 18px;
+      background:var(--bg); transition:all 0.25s ease;
+    }
+    details.accordion[open]{ border-color:var(--border-hover); background:rgba(99,102,241,0.02); }
+    details.accordion + details.accordion{ margin-top:10px; }
+    details.accordion:hover:not([open]){ border-color:var(--border-hover); }
+    details.accordion summary{
+      cursor:pointer; list-style:none; display:flex; align-items:center; gap:12px;
+      font-weight:550; user-select:none; font-size:0.93rem;
+    }
+    details.accordion summary::-webkit-details-marker{ display:none; }
+    details.accordion summary .arrow{
+      font-size:0.6rem; color:var(--accent-from); transition:transform 0.25s ease;
+      width:18px; height:18px; display:flex; align-items:center; justify-content:center;
+      border-radius:6px; border:1px solid var(--border);
+      flex-shrink:0;
+    }
+    details.accordion[open] summary .arrow{ transform:rotate(90deg); border-color:var(--border-hover); background:rgba(99,102,241,0.05); }
+    details.accordion pre{ margin-top:14px; }
+    details.accordion p{ margin-top:10px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+
+    .tag{
+      font-size:0.65rem; font-weight:600; letter-spacing:0.02em;
+      background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.15);
+      padding:4px 10px; border-radius:8px; color:var(--accent-from);
+      white-space:nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    pre{
+      background: var(--code-bg); color:#e2e8f0;
+      padding:18px; border-radius:14px; overflow-x:auto;
+      border:1px solid rgba(99,102,241,0.1);
+      font-size:0.85rem; line-height:1.6;
+      position:relative;
+    }
+    code{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size:0.87rem; }
+    .inline-code{ display:inline; padding:3px 8px; border-radius:6px; background:rgba(99,102,241,0.06); border:1px solid var(--border); font-size:0.85em; color:var(--accent-from); }
+
+    .note{
+      background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(16,185,129,0.02));
+      border:1px solid rgba(16,185,129,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .note strong{ color:var(--green); }
+
+    .warn{
+      background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(245,158,11,0.02));
+      border:1px solid rgba(245,158,11,0.15);
+      color:var(--text); padding:16px 20px; border-radius:14px; margin:16px 0;
+      line-height:1.7; font-size:0.9rem;
+    }
+    .warn strong{ color:var(--amber); }
+
+    .tip{
+      background:linear-gradient(135deg,rgba(6,182,212,0.06),rgba(99,102,241,0.02));
+      border:1px solid rgba(6,182,212,0.15);
+      color:var(--text); padding:14px 18px; border-radius:14px; margin:14px 0;
+      line-height:1.65; font-size:0.9rem;
+    }
+    .tip strong{ color:var(--cyan); }
+
+    .try-it{
+      background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(168,85,247,0.03));
+      border:1px solid rgba(99,102,241,0.15);
+      padding:18px 22px; border-radius:14px; margin:16px 0;
+    }
+    .try-it .try-head{ font-weight:600; font-size:0.8rem; color:var(--accent-from); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+    .try-it p{ margin:0 0 6px; color:var(--text-dim); font-size:0.9rem; line-height:1.7; }
+    .try-it p:last-child{ margin:0; }
+
+    pre .copy-tip{
+      position:absolute; top:10px; right:10px;
+      font:inherit; font-size:0.6rem; font-weight:500; line-height:1.4;
+      padding:5px 11px; border-radius:8px; font-family:inherit;
+      background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.15);
+      color:var(--text-dim); cursor:pointer; opacity:0;
+      transition:opacity 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+      z-index:2;
+    }
+    pre:hover .copy-tip, pre:focus-within .copy-tip{ opacity:1; }
+    @media (hover:none){ .copy-tip{ opacity:1; } }
+    .copy-tip:hover{ background:rgba(99,102,241,0.2); color:var(--text); }
+    .copy-tip.copied{ background:rgba(16,185,129,0.2); color:var(--green); border-color:rgba(16,185,129,0.3); }
+
+    .cheat-grid{
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(190px, 1fr)); gap:8px; margin:14px 0;
+    }
+    .cheat-item{
+      background:var(--code-bg); border:1px solid rgba(99,102,241,0.08); border-radius:12px; padding:12px 14px;
+      transition:border-color 0.2s;
+    }
+    .cheat-item:hover{ border-color:rgba(99,102,241,0.2); }
+    .cheat-item .cheat-cmd{ font-family:ui-monospace, monospace; font-size:0.8rem; font-weight:600; color:var(--cyan); }
+    .cheat-item .cheat-desc{ font-size:0.75rem; color:var(--text-muted); margin-top:3px; }
+
+    footer{ margin-top:44px; color:var(--text-dim); font-size:0.85rem; text-align:center; padding-top:20px; border-top:1px solid var(--border); }
+    footer a{ color:var(--text-dim); }
+    footer a:hover{ color:var(--accent-from); }
+
+    #back-top{
+      position:fixed; bottom:28px; right:28px;
+      width:46px; height:46px; border-radius:999px;
+      background:var(--surface); backdrop-filter:blur(20px);
+      border:1px solid var(--border); color:var(--text-dim);
+      font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; pointer-events:none;
+      transition:all 0.3s; z-index:999;
+      box-shadow:var(--shadow);
+    }
+    #back-top.visible{ opacity:1; pointer-events:auto; }
+    #back-top:hover{ border-color:var(--border-hover); color:var(--text); background:var(--surface-hover); transform:translateY(-2px); }
+
+    @media (max-width: 900px){
+      html{ scroll-padding-top:calc(68px + env(safe-area-inset-top)); }
+      html,body{ grid-template-columns:minmax(0, 1fr); }
+      nav{
+        position:fixed; left:0; top:0; bottom:0;
+        width:min(270px, 85vw); height:100dvh;
+        transform:translateX(-100%);
+        padding:calc(24px + env(safe-area-inset-top)) 14px calc(14px + env(safe-area-inset-bottom));
+      }
+      nav.active{ transform:translateX(0); }
+      main{ padding:calc(70px + env(safe-area-inset-top)) 18px calc(40px + env(safe-area-inset-bottom)); }
+      #menu-bar{ display:flex !important; }
+      .toc a{ padding:11px 14px; font-size:0.86rem; }
+      section.card{ padding:20px 16px 16px; }
+      section.card h2{ font-size:1.15rem; }
+      pre{ padding:14px; font-size:0.82rem; border-radius:12px; }
+      .pill{ display:flex; flex-wrap:wrap; border-radius:16px; row-gap:6px; }
+      #menu-bar .menu-btn{ width:44px; height:44px; margin-left:-10px; display:flex; align-items:center; justify-content:center; }
+      #back-top{ bottom:calc(20px + env(safe-area-inset-bottom)); right:calc(16px + env(safe-area-inset-right)); }
+      .hero-glow{ display:none; }
+    }
+
+    #menu-bar{
+      display:none;
+      position:fixed; top:0; left:0; right:0; height:calc(52px + env(safe-area-inset-top));
+      background:var(--bg-alt); border-bottom:1px solid var(--border);
+      z-index:50; align-items:center; padding:env(safe-area-inset-top) 16px 0;
+      backdrop-filter:blur(20px);
+    }
+    #menu-bar .menu-btn{
+      background:none; border:none; cursor:pointer; color:var(--text);
+      font-size:1.3rem; padding:4px;
+    }
+    #menu-bar .menu-title{
+      margin-left:12px; font-weight:700; font-size:0.95rem;
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    #overlay{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
+      backdrop-filter:blur(4px); z-index:99;
+    }
+    @media (max-width: 900px){
+      #overlay.active{ display:block; }
+    }
+
+    .sect-offset{ scroll-margin-top:16px; }
+
+    /* laptop/short-viewport: compact TOC so all items fit without clipping */
+    @media (max-height:860px) and (min-width:901px){
+      nav{ padding:18px 14px; }
+      .logo{ padding-bottom:12px; }
+      .toc a{ padding:6px 12px; font-size:0.78rem; }
+      .toc a .tag-icon{ font-size:0.64rem; }
+      .sidebar-footer{ padding-top:8px; font-size:0.65rem; }
+    }
+
+    .badge{ display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; padding:3px 8px; border-radius:6px; font-weight:500; }
+    .badge-green{ background:rgba(16,185,129,0.1); color:var(--green); }
+    .badge-blue{ background:rgba(99,102,241,0.1); color:var(--accent-from); }
+    .badge-amber{ background:rgba(245,158,11,0.1); color:var(--amber); }
+
+    .brand-icon{
+      display:inline-block; width:18px; height:18px;
+      background:var(--text-dim);
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 208 128'%3E%3Cpath d='M25 98V30h20l15 22l15-22h20v68h-20V59l-15 22l-15-22v39zM145 30h20v35h20l-30 33l-30-33h20z'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 208 128'%3E%3Cpath d='M25 98V30h20l15 22l15-22h20v68h-20V59l-15 22l-15-22v39zM145 30h20v35h20l-30 33l-30-33h20z'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .brand-icon-accent{ background:#083fa1; }
+
+    .brand-icon-security{
+      mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.4-3 8.3-7 10-4-1.7-7-5.6-7-10V6l7-3z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") no-repeat center;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l7 3v5c0 4.4-3 8.3-7 10-4-1.7-7-5.6-7-10V6l7-3z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E") no-repeat center;
+      mask-size:contain; -webkit-mask-size:contain;
+      vertical-align:middle; flex-shrink:0;
+    }
+    .brand-icon-security.on-dark{ background:var(--accent-from); }
+
+    pre .hl{ color:var(--cyan); }
+    pre .cm{ color:var(--text-muted); }
+    pre .kw{ color:var(--accent-from); }
+    pre .kbd{ color:var(--green); }
+
+    kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size:0.78em; padding:2px 6px; border-radius:6px;
+      background:var(--code-bg); border:1px solid var(--border);
+      border-bottom-width:2px; color:var(--green); white-space:nowrap;
+    }
+    .visually-hidden{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+    section.card p kbd{ margin:0 1px; }
+
+    @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-12px); } }
+    @keyframes pulse-glow{ 0%,100%{ box-shadow:0 0 20px rgba(99,102,241,0.05); } 50%{ box-shadow:0 0 40px rgba(99,102,241,0.12); } }
+    @keyframes gradient-shift{ 0%{ background-position:0% 50%; } 50%{ background-position:100% 50%; } 100%{ background-position:0% 50%; } }
+    @keyframes slide-up{ 0%{ opacity:0; transform:translateY(30px); } 100%{ opacity:1; transform:translateY(0); } }
+    @keyframes scale-in{ 0%{ opacity:0; transform:scale(0.9); } 100%{ opacity:1; transform:scale(1); } }
+    @keyframes fade-in{ 0%{ opacity:0; } 100%{ opacity:1; } }
+    @keyframes orb-drift{ 0%{ transform:translate(0,0); } 50%{ transform:translate(30px,-40px); } 100%{ transform:translate(0,0); } }
+    @keyframes orb-drift-2{ 0%{ transform:translate(0,0); } 50%{ transform:translate(-20px,30px); } 100%{ transform:translate(0,0); } }
+    @keyframes blink-cursor{ 0%,100%{ opacity:1; } 50%{ opacity:0; } }
+    @keyframes title-reveal{ 0%{ opacity:0; transform:translateY(20px) scale(0.95); filter:blur(10px); } 100%{ opacity:1; transform:translateY(0) scale(1); filter:blur(0); } }
+    @keyframes badge-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+    @keyframes wobble{ 0%,100%{ transform:rotate(0deg); } 25%{ transform:rotate(-3deg); } 75%{ transform:rotate(3deg); } }
+
+    .orb-container{ position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+    .orb{ position:absolute; border-radius:50%; opacity:0.15; filter:blur(60px); }
+    .orb-1{ width:400px; height:400px; background:radial-gradient(circle,var(--accent-from),transparent); top:-100px; right:-100px; }
+    .orb-2{ width:300px; height:300px; background:radial-gradient(circle,var(--accent-to),transparent); bottom:-80px; left:-80px; }
+    .orb-3{ width:250px; height:250px; background:radial-gradient(circle,var(--cyan),transparent); top:40%; left:50%; opacity:0.08; }
+
+    .hero{ animation:fade-in 0.8s ease-out; }
+    .title{ animation:title-reveal 1s ease-out both; }
+    .title .animated-gradient{
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-via),var(--cyan),var(--accent-to),var(--accent-from));
+      background-size:300% 300%;
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:gradient-shift 6s ease infinite;
+    }
+    .subtitle{ animation:slide-up 0.8s ease-out 0.3s both; }
+    .breadcrumb{ animation:slide-up 0.6s ease-out 0.1s both; }
+    .pill{ animation:scale-in 0.6s ease-out 0.6s both; }
+    .js .card{ opacity:0; transform:translateY(30px); transition:opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+    .card.visible{ opacity:1; transform:translateY(0); transition:border-color 0.3s ease, box-shadow 0.3s ease; }
+    .card:hover .section-num{ animation:wobble 0.4s ease; }
+    .card:hover::before{ opacity:1; }
+    #back-top.visible{ animation:scale-in 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+    .typewriter-cursor{
+      display:inline-block; width:2px; height:1.1em;
+      background:var(--accent-from); margin-left:2px;
+      animation:blink-cursor 0.8s step-end infinite;
+      vertical-align:text-bottom;
+    }
+    pre:hover{ border-color:rgba(99,102,241,0.2); box-shadow:0 0 30px rgba(99,102,241,0.05); }
+
+    @media (prefers-reduced-motion: reduce){
+      .orb,.card{ animation:none !important; }
+      .card{ opacity:1; transform:none !important; }
+      .title{ animation:none; }
+      .animated-gradient{ background-size:100% 100%; animation:none; }
+      .subtitle,.breadcrumb,.pill{ animation:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb-container">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div id="overlay"></div>
+  <div id="menu-bar">
+    <button type="button" class="menu-btn" id="menuBtn" aria-label="Open navigation menu" aria-controls="sidebar" aria-expanded="false">☰</button>
+    <span class="menu-title"><span class="brand-icon brand-icon-security on-dark" aria-hidden="true" style="width:16px;height:16px;"></span> Security Guide</span>
+  </div>
+
+  <nav id="sidebar" aria-label="Guide navigation">
+    <div class="logo">
+      <span class="mark"></span> <span class="brand-icon brand-icon-security on-dark" aria-hidden="true"></span> Security
+      <button type="button" class="theme-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+      <a href="index.html" class="home-link" title="Back to home">⌂</a>
+    </div>
+    <div class="toc" id="toc-menu">
+      <a href="#intro"><span class="tag-icon">●</span> Introduction</a>
+      <a href="#passwords"><span class="tag-icon">⚿</span> Passwords &amp; Auth</a>
+      <a href="#authz"><span class="tag-icon">◈</span> Authorization</a>
+      <a href="#secrets"><span class="tag-icon">⚿</span> Secrets &amp; Config</a>
+      <a href="#transport"><span class="tag-icon">🔒</span> HTTPS &amp; Cookies</a>
+      <a href="#owasp"><span class="tag-icon">⚠</span> OWASP Top 10</a>
+      <a href="#validation"><span class="tag-icon">✔</span> Validation &amp; Encoding</a>
+      <a href="#supply-chain"><span class="tag-icon">⛓</span> Supply Chain</a>
+      <a href="#deploy"><span class="tag-icon">⚙</span> Secure Deployment</a>
+      <a href="#cheatsheet"><span class="tag-icon">⌗</span> Incident &amp; Cheat Sheet</a>
+    </div>
+    <div class="sidebar-footer">Laksh Guides</div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div class="hero-glow"></div>
+      <div class="breadcrumb"><a href="index.html">⌂ Home</a> / Security Basics Guide</div>
+      <h1 class="title"><span class="brand-icon brand-icon-security on-dark" aria-hidden="true" style="width:32px;height:32px;"></span> <span class="animated-gradient">Security Basics Guide</span></h1>
+      <p class="subtitle"><span id="typewriter-text">The habits and defences every developer needs — threat modeling, password storage, access control, secrets, HTTPS, the OWASP Top 10, input validation, supply-chain safety, secure deployment and incident response. Every code block has a Copy button.</span><span class="typewriter-cursor"></span></p>
+      <span class="pill">Copy button on each code block &nbsp;·&nbsp; <span class="badge badge-green">● Beginner</span> <span class="badge badge-blue">● Intermediate</span> <span class="badge badge-amber">● Advanced</span></span>
+    </header>
+
+    <!-- ═══ 1. Introduction ═══ -->
+    <section id="intro" class="card sect-offset">
+      <h2><span class="section-num">01</span> Introduction — Think Like an Attacker <span class="level level-beginner">Beginner</span></h2>
+
+      <p><strong>Security</strong> is not a library you install or a checkbox at the end of a project. It is the set of decisions that keep other people from doing things you did not intend with your system. Most breaches are not exotic — they are missed authorization checks, leaked secrets, outdated dependencies and unvalidated input.</p>
+
+      <h3>The CIA triad</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Confidentiality</div><div class="cheat-desc">Only the right people can read the data</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Integrity</div><div class="cheat-desc">Data cannot be changed silently</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Availability</div><div class="cheat-desc">The service keeps working under attack</div></div>
+      </div>
+
+      <h3>Core principles</h3>
+      <ul>
+        <li><strong>Least privilege</strong> — every user, process and token gets the minimum access it needs, and only for as long as it needs it</li>
+        <li><strong>Defense in depth</strong> — assume any single layer will fail; add another</li>
+        <li><strong>Fail securely</strong> — when something breaks, deny access rather than allow it</li>
+        <li><strong>Never trust input</strong> — headers, cookies, query strings, JSON bodies and file names are all attacker-controlled</li>
+        <li><strong>Keep it simple</strong> — every extra feature, endpoint and permission is another thing to secure</li>
+        <li><strong>Security by design</strong> — decide who can do what before writing the endpoint, not after</li>
+      </ul>
+
+      <h3>Threat modeling in five minutes</h3>
+      <ol>
+        <li><strong>What are we building?</strong> — draw the data flow: browser, API, database, third-party services</li>
+        <li><strong>What can go wrong?</strong> — walk each trust boundary and ask what an attacker could send, read or replay</li>
+        <li><strong>What are we going to do?</strong> — pick a mitigation for each credible threat</li>
+        <li><strong>Did we do a good job?</strong> — test it, review it, and repeat when the design changes</li>
+      </ol>
+
+      <p><strong>STRIDE</strong> is a handy checklist for step two: <em>Spoofing</em> identity, <em>Tampering</em> with data, <em>Repudiation</em> of actions, <em>Information disclosure</em>, <em>Denial of service</em>, and <em>Elevation of privilege</em>.</p>
+
+      <div class="note"><strong>Rule of thumb:</strong> If a feature touches money, identity, personal data or admin power, slow down and threat-model it. Everything else still needs the basics — but these deserve the extra pass.</div>
+
+      <div class="warn"><strong>⚠ You are a target even if you are small:</strong> Automated scanners do not care who you are. Bots find exposed <code class="inline-code">.env</code> files, default admin logins and forgotten staging servers within hours of them going live.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Read the <strong>OWASP Top 10</strong> once a year. It is the industry's shared list of the most common, most damaging web application mistakes — and this guide covers each category.</div>
+    </section>
+
+    <!-- ═══ 2. Passwords & Auth ═══ -->
+    <section id="passwords" class="card sect-offset">
+      <h2><span class="section-num">02</span> Passwords, Hashing &amp; Authentication <span class="level level-beginner">Beginner</span></h2>
+
+      <h3>Never store passwords in plain text</h3>
+      <p>Store only a <strong>slow, salted hash</strong>. Hashing is one-way: you verify a login by hashing the attempt and comparing, never by decrypting the stored value.</p>
+
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">argon2id</div><div class="cheat-desc">Best default in 2026 — memory-hard</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">bcrypt</div><div class="cheat-desc">Battle-tested, cost factor ≥ 12</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">scrypt</div><div class="cheat-desc">Memory-hard, good alternative</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">PBKDF2</div><div class="cheat-desc">Acceptable when FIPS is required</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">MD5 / SHA-1</div><div class="cheat-desc">❌ Never for passwords</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">SHA-256 alone</div><div class="cheat-desc">❌ Too fast — brute-forces easily</div></div>
+      </div>
+
+      <pre><code><span class="cm">// Node.js — argon2 (recommended)</span>
+import argon2 from "argon2";
+
+const hash = await argon2.hash(password);
+<span class="cm">// "$argon2id$v=19$m=65536,t=3,p=4$..."</span>
+
+const ok = await argon2.verify(hash, attempt);</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <pre><code><span class="cm">// Node.js — bcrypt alternative</span>
+import bcrypt from "bcrypt";
+
+const hash = await bcrypt.hash(password, 12);
+const ok = await bcrypt.compare(attempt, hash);</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Salting is not optional:</strong> Modern libraries generate and embed a unique salt automatically. If you are hand-rolling hashes, you are almost certainly doing it wrong. Use a maintained library.</div>
+
+      <h3>Password policy that actually helps</h3>
+      <ul>
+        <li><strong>Minimum length 8–12</strong>, allow long passphrases (64+ characters)</li>
+        <li><strong>No forced composition rules</strong> — they produce <code class="inline-code">Password1!</code>, not strength</li>
+        <li><strong>Block breached passwords</strong> — check against Have I Been Pwned's k-anonymity API</li>
+        <li><strong>Rate-limit and lock out</strong> login attempts, with exponential backoff</li>
+        <li><strong>Offer MFA</strong> — TOTP or passkeys; SMS is the weakest option</li>
+        <li><strong>Never email a password</strong> — send a single-use reset link with a short expiry</li>
+      </ul>
+
+      <h3>Sessions vs JWTs</h3>
+      <p>Sessions store state on the server and send an opaque ID in a cookie. JWTs carry signed claims in the token itself and are stateless — but stateless means you cannot easily revoke them.</p>
+
+      <pre><code><span class="cm">// Session cookie — safe defaults</span>
+res.cookie("sid", sessionId, {
+  httpOnly: true,          <span class="cm">// JavaScript cannot read it</span>
+  secure: true,            <span class="cm">// HTTPS only</span>
+  sameSite: "lax",         <span class="cm">// blocks most CSRF</span>
+  maxAge: 1000 * 60 * 60 * 24,
+  path: "/"
+});</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Do not store JWTs in <code class="inline-code">localStorage</code>:</strong> Any XSS bug can read them. Prefer an <code class="inline-code">httpOnly</code> cookie, keep access tokens short-lived, and use refresh-token rotation with revocation. Never accept <code class="inline-code">alg: "none"</code>, and always verify the signature and issuer.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> On login, compare with a constant-time function where the library does not already do it, and return the same generic error for “unknown user” and “wrong password” so attackers cannot enumerate accounts.</div>
+    </section>
+
+    <!-- ═══ 3. Authorization ═══ -->
+    <section id="authz" class="card sect-offset">
+      <h2><span class="section-num">03</span> Authorization &amp; Access Control <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p><strong>Authentication</strong> answers “who are you?”. <strong>Authorization</strong> answers “what are you allowed to do?”. Broken access control is consistently the #1 item on the OWASP Top 10 — and it is almost always a missing server-side check.</p>
+
+      <h3>Models</h3>
+      <ul>
+        <li><strong>RBAC</strong> — roles such as <code class="inline-code">admin</code>, <code class="inline-code">editor</code>, <code class="inline-code">viewer</code>; simple and predictable</li>
+        <li><strong>ABAC</strong> — rules based on attributes (owner, department, time, resource state)</li>
+        <li><strong>ReBAC</strong> — relationships such as “owner of”, “member of”, “shared with”</li>
+      </ul>
+
+      <h3>Deny by default</h3>
+      <p>Every route should require an explicit grant. If a check is missing, the request should fail — not succeed.</p>
+
+      <pre><code><span class="cm">// Express — authorize after authenticating</span>
+function requireRole(...roles) {
+  return (req, res, next) =&gt; {
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+    next();
+  };
+}
+
+app.delete("/api/users/:id", requireRole("admin"), deleteUser);</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>IDOR — the classic bug</h3>
+      <p>An <strong>Insecure Direct Object Reference</strong> happens when the app fetches a record by an ID from the request without checking ownership.</p>
+
+      <pre><code><span class="cm">// ❌ Any logged-in user can read any invoice</span>
+const invoice = await db.invoice.findById(req.params.id);
+
+<span class="cm">// ✅ Scope the query to the authenticated user</span>
+const invoice = await db.invoice.findOne({
+  _id: req.params.id,
+  userId: req.user.id
+});
+if (!invoice) return res.status(404).json({ error: "Not found" });</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Hiding a button is not authorization:</strong> The UI is a convenience, not a security boundary. Anyone can call your API directly with <code class="inline-code">curl</code> or DevTools. Check permissions on the server for every request.</div>
+
+      <h3>Multi-tenant rules</h3>
+      <ul>
+        <li>Always filter by <code class="inline-code">tenantId</code> / <code class="inline-code">orgId</code> in the query itself, not after fetching</li>
+        <li>Check permissions on the <em>specific record</em>, not just the route</li>
+        <li>Use unguessable IDs (UUIDv4/ULID) as defence in depth, never as the only control</li>
+        <li>Return <strong>404</strong> instead of <strong>403</strong> when revealing existence is itself a leak</li>
+        <li>Log access to sensitive records for audit</li>
+      </ul>
+
+      <div class="tip"><strong>💡 Tip:</strong> Write authorization as a reusable policy layer (<code class="inline-code">can(user, "delete", post)</code>) instead of scattering <code class="inline-code">if</code> statements. It is easier to test, review and keep consistent.</div>
+    </section>
+
+    <!-- ═══ 4. Secrets ═══ -->
+    <section id="secrets" class="card sect-offset">
+      <h2><span class="section-num">04</span> Secrets &amp; Configuration <span class="level level-beginner">Beginner</span></h2>
+
+      <p>A <strong>secret</strong> is anything that grants access: API keys, database passwords, JWT signing keys, private certificates, OAuth client secrets. Secrets belong in the environment or a secret manager — never in source code.</p>
+
+      <h3>Local development with .env</h3>
+      <pre><code><span class="cm"># .env — never commit this file</span>
+DATABASE_URL=postgres://app:password@localhost:5432/app
+JWT_SECRET=replace-with-a-long-random-value
+STRIPE_SECRET_KEY=sk_test_...
+NODE_ENV=development</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <pre><code><span class="cm"># .gitignore</span>
+.env
+.env.*
+!.env.example
+node_modules/
+*.pem
+*.key</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <pre><code><span class="cm"># .env.example — commit this as documentation</span>
+DATABASE_URL=
+JWT_SECRET=
+STRIPE_SECRET_KEY=</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Reading secrets safely in Node.js</h3>
+      <pre><code>import "dotenv/config";
+
+const secret = process.env.JWT_SECRET;
+if (!secret) {
+  throw new Error("JWT_SECRET is required");
+}
+
+<span class="cm">// Fail fast on missing configuration — do not boot half-configured</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Anything shipped to the browser is public:</strong> A key in frontend JavaScript, a <code class="inline-code">VITE_</code> variable or a mobile app bundle can be extracted in minutes. Only publish values that are safe for anyone to see.</div>
+
+      <h3>If a secret leaks</h3>
+      <ol>
+        <li><strong>Rotate it immediately</strong> — revoke the old key and issue a new one. Do this before cleaning history.</li>
+        <li><strong>Check usage</strong> — audit logs for unexpected calls or spend.</li>
+        <li><strong>Remove it from history</strong> — <code class="inline-code">git filter-repo</code> or the BFG Repo-Cleaner; a normal delete commit still leaves the value in history.</li>
+        <li><strong>Add prevention</strong> — pre-commit secret scanning, CI checks, and a <code class="inline-code">.gitignore</code> entry.</li>
+      </ol>
+
+      <pre><code><span class="cm"># Scan the working tree and full history for common secret patterns</span>
+gitleaks detect --source . --log-opts="--all"
+
+<span class="cm"># Rewrite history to drop a leaked file (then force-push carefully)</span>
+git filter-repo --path .env --invert-paths</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> In production, prefer a managed secret store (AWS Secrets Manager, GCP Secret Manager, Azure Key Vault, HashiCorp Vault) or your platform's encrypted environment variables. Rotate secrets on a schedule and after anyone leaves the team.</div>
+    </section>
+
+    <!-- ═══ 5. Transport ═══ -->
+    <section id="transport" class="card sect-offset">
+      <h2><span class="section-num">05</span> HTTPS, TLS &amp; Cookies <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p><strong>HTTPS</strong> encrypts traffic between the browser and your server and proves you are talking to the right server. Without it, passwords, session cookies and API tokens travel in clear text on every coffee-shop Wi-Fi.</p>
+
+      <h3>What good looks like</h3>
+      <ul>
+        <li><strong>TLS 1.2+ only</strong> — disable SSL and TLS 1.0/1.1</li>
+        <li><strong>Redirect HTTP → HTTPS</strong> with a 301, except ACME challenges</li>
+        <li><strong>HSTS</strong> — tell browsers to refuse plain HTTP for your domain</li>
+        <li><strong>Valid certificate</strong> — Let's Encrypt is free and auto-renews</li>
+        <li><strong>No mixed content</strong> — every script, image and font must also be HTTPS</li>
+      </ul>
+
+      <pre><code><span class="cm"># Redirect all HTTP traffic to HTTPS</span>
+server {
+  listen 80;
+  server_name example.com;
+  return 301 https://$host$request_uri;
+}
+
+<span class="cm"># HSTS: one year, include subdomains, allow preload</span>
+add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Cookie flags that matter</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">HttpOnly</div><div class="cheat-desc">Blocks JavaScript access (XSS defence)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Secure</div><div class="cheat-desc">Sent over HTTPS only</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">SameSite=Lax</div><div class="cheat-desc">Good default for sessions</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">SameSite=Strict</div><div class="cheat-desc">Strongest CSRF defence</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">SameSite=None</div><div class="cheat-desc">Requires Secure; for cross-site flows</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Max-Age</div><div class="cheat-desc">Keep session lifetimes short</div></div>
+      </div>
+
+      <pre><code>Set-Cookie: sid=abc123; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=86400</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ CORS is not access control:</strong> CORS only tells browsers which origins may read responses. It does nothing for <code class="inline-code">curl</code>, scripts or attackers. Never rely on CORS to protect an endpoint — authenticate and authorize instead.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Test your TLS setup at <code class="inline-code">ssllabs.com/ssltest</code> and your headers at <code class="inline-code">securityheaders.com</code>. Both give a clear grade and explain every deduction.</div>
+    </section>
+
+    <!-- ═══ 6. OWASP Top 10 ═══ -->
+    <section id="owasp" class="card sect-offset">
+      <h2><span class="section-num">06</span> OWASP Top 10 in Practice <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>The OWASP Top 10 is a consensus list of the most critical web application risks. Learn the categories, then learn the fix for each one.</p>
+
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">A01</div><div class="cheat-desc">Broken access control</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">A02</div><div class="cheat-desc">Cryptographic failures</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">A03</div><div class="cheat-desc">Injection (SQL, command, XSS)</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">A04</div><div class="cheat-desc">Insecure design</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">A05</div><div class="cheat-desc">Security misconfiguration</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">A06</div><div class="cheat-desc">Vulnerable components</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">A07</div><div class="cheat-desc">Authentication failures</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">A08</div><div class="cheat-desc">Data integrity failures</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">A09</div><div class="cheat-desc">Logging &amp; monitoring failures</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">A10</div><div class="cheat-desc">Server-side request forgery</div></div>
+      </div>
+
+      <h3>XSS — cross-site scripting</h3>
+      <p>XSS happens when untrusted data is rendered as HTML or JavaScript. It comes in three flavours: <strong>stored</strong> (saved in the database), <strong>reflected</strong> (bounced back in a response) and <strong>DOM-based</strong> (written by client-side code).</p>
+
+      <pre><code><span class="cm">// ❌ Untrusted string interpreted as HTML</span>
+element.innerHTML = userComment;
+
+<span class="cm">// ✅ Plain text — the browser never parses tags</span>
+element.textContent = userComment;
+
+<span class="cm">// ✅ If HTML is genuinely required, sanitise it first</span>
+import DOMPurify from "dompurify";
+element.innerHTML = DOMPurify.sanitize(userComment);</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ Escape on output, not on input:</strong> The same value may be safe in HTML but dangerous in an attribute, URL or script. Encode for the exact context where it is rendered, and avoid <code class="inline-code">innerHTML</code>, <code class="inline-code">eval</code> and <code class="inline-code">document.write</code> with untrusted data.</div>
+
+      <h3>SQL injection</h3>
+      <pre><code><span class="cm">// ❌ String concatenation — attacker controls the query</span>
+db.query(`SELECT * FROM users WHERE email = '${email}'`);
+
+<span class="cm">// ✅ Parameterised query — data stays data</span>
+db.query("SELECT * FROM users WHERE email = $1", [email]);
+
+<span class="cm">// ✅ Or use an ORM / query builder</span>
+await User.findOne({ where: { email } });</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>CSRF — cross-site request forgery</h3>
+      <p>An attacker makes a logged-in user's browser send a state-changing request to your site. Defences: <code class="inline-code">SameSite</code> cookies, a CSRF token checked on every mutating request, and requiring re-authentication for sensitive actions.</p>
+
+      <pre><code><span class="cm">// Express — CSRF token in a form</span>
+app.get("/transfer", (req, res) =&gt; {
+  res.render("transfer", { csrfToken: req.csrfToken() });
+});
+app.post("/transfer", csrfProtection, (req, res) =&gt; {
+  <span class="cm">// token was validated by csrfProtection</span>
+});</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>SSRF — server-side request forgery</h3>
+      <p>If your server fetches a URL supplied by the user, an attacker can make it reach internal services or cloud metadata endpoints. Allowlist destinations, block private IP ranges, disable redirects and never return raw responses.</p>
+
+      <pre><code><span class="cm">// Cloud metadata endpoint — a classic SSRF target</span>
+http://169.254.169.254/latest/meta-data/iam/security-credentials/
+
+<span class="cm">// Defence: allow only expected hosts and schemes</span>
+const allowed = new Set(["api.example.com", "images.example.com"]);</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Injection is not only SQL. Shell commands, LDAP, NoSQL, template engines and HTTP headers all have their own injection syntax. The universal fix is the same: never build a command by concatenating untrusted strings.</div>
+    </section>
+
+    <!-- ═══ 7. Validation ═══ -->
+    <section id="validation" class="card sect-offset">
+      <h2><span class="section-num">07</span> Input Validation &amp; Output Encoding <span class="level level-intermediate">Intermediate</span></h2>
+
+      <p>Validation decides what data is allowed in. Encoding decides how data is written out. You need both — neither is a substitute for the other.</p>
+
+      <h3>Validate with allowlists</h3>
+      <ul>
+        <li><strong>Allowlist</strong> what is expected; do not blocklist what looks bad</li>
+        <li><strong>Check type, length, range, format</strong> and required fields</li>
+        <li><strong>Validate on the server</strong> — client-side checks are only a UX nicety</li>
+        <li><strong>Use a schema library</strong> such as Zod, Yup, Joi or Ajv</li>
+        <li><strong>Reject unknown fields</strong> so mass-assignment cannot set <code class="inline-code">isAdmin</code></li>
+      </ul>
+
+      <pre><code>import { z } from "zod";
+
+const Signup = z.object({
+  email: z.string().email().max(254),
+  password: z.string().min(12).max(128),
+  age: z.number().int().min(13).max(120).optional()
+}).strict();
+
+const data = Signup.parse(req.body);
+<span class="cm">// Throws on invalid input; unknown keys are rejected</span></code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Encode for the right context</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">HTML text</div><div class="cheat-desc">Escape &amp;lt; &amp;gt; &amp;amp; &amp;quot; &#39;</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Attribute</div><div class="cheat-desc">Quote and HTML-escape values</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">URL</div><div class="cheat-desc">encodeURIComponent()</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">JavaScript</div><div class="cheat-desc">JSON.stringify(), never string concat</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">SQL</div><div class="cheat-desc">Bind parameters</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Shell</div><div class="cheat-desc">execFile / spawn with an array</div></div>
+      </div>
+
+      <pre><code><span class="cm">// ❌ Shell injection through exec()</span>
+exec(`convert ${filename} out.png`);
+
+<span class="cm">// ✅ No shell — arguments stay separate</span>
+execFile("convert", [filename, "out.png"]);</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>File uploads</h3>
+      <ul>
+        <li>Check the <strong>real content type</strong>, not just the extension or the <code class="inline-code">Content-Type</code> header</li>
+        <li>Rename files and store them outside the web root (or in object storage)</li>
+        <li>Enforce size limits and image dimension limits</li>
+        <li>Never execute uploaded files; serve them with a safe <code class="inline-code">Content-Disposition</code></li>
+        <li>Prevent path traversal — reject <code class="inline-code">..</code> and absolute paths; resolve and verify the final path stays inside the upload directory</li>
+      </ul>
+
+      <pre><code><span class="cm"># Path traversal attempt</span>
+GET /download?file=../../../../etc/passwd
+
+<span class="cm"># Defence: basename + resolve + prefix check</span>
+const safe = path.basename(req.query.file);
+const full = path.resolve(UPLOAD_DIR, safe);
+if (!full.startsWith(path.resolve(UPLOAD_DIR) + path.sep)) {
+  return res.status(400).end();
+}</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="tip"><strong>💡 Tip:</strong> Add a <strong>Content-Security-Policy</strong> as a second line of defence against XSS. Start in report-only mode, fix violations, then enforce. See the deployment section for a starter policy.</div>
+    </section>
+
+    <!-- ═══ 8. Supply chain ═══ -->
+    <section id="supply-chain" class="card sect-offset">
+      <h2><span class="section-num">08</span> Dependencies &amp; Supply Chain <span class="level level-advanced">Advanced</span></h2>
+
+      <p>Most modern applications are mostly other people's code. A single compromised or outdated package can hand an attacker your build, your CI secrets or your users' data.</p>
+
+      <h3>Everyday habits</h3>
+      <ul>
+        <li><strong>Commit the lockfile</strong> (<code class="inline-code">package-lock.json</code>, <code class="inline-code">pnpm-lock.yaml</code>) and install with <code class="inline-code">npm ci</code></li>
+        <li><strong>Audit regularly</strong> — <code class="inline-code">npm audit</code>, <code class="inline-code">pnpm audit</code>, Dependabot or Renovate</li>
+        <li><strong>Update deliberately</strong> — patch promptly, read changelogs for majors</li>
+        <li><strong>Remove unused packages</strong> — fewer dependencies, fewer surprises</li>
+        <li><strong>Prefer well-maintained libraries</strong> with recent releases and multiple maintainers</li>
+        <li><strong>Watch for typosquatting</strong> — <code class="inline-code">cross-env</code> vs <code class="inline-code">crossenv</code>, <code class="inline-code">lodash</code> vs <code class="inline-code">lodahs</code></li>
+      </ul>
+
+      <pre><code><span class="cm"># Audit the dependency tree</span>
+npm audit
+npm audit fix
+
+<span class="cm"># Install exactly what the lockfile says, ignoring scripts</span>
+npm ci --ignore-scripts
+
+<span class="cm"># See why a package is installed</span>
+npm ls package-name</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <div class="warn"><strong>⚠ The <code class="inline-code">curl … | bash</code> pattern runs whatever the server sends today:</strong> Download, read and pin the script instead. The same applies to unpinned GitHub Actions — pin third-party actions to a full commit SHA, not a moving tag.</div>
+
+      <h3>Scripts and browser integrity</h3>
+      <pre><code><span class="cm">&lt;!-- Subresource Integrity: pin the exact file hash --&gt;</span>
+&lt;script
+  src="https://cdn.example.com/lib.min.js"
+  integrity="sha384-BASE64_HASH_HERE"
+  crossorigin="anonymous"&gt;&lt;/script&gt;</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Protect the pipeline</h3>
+      <ul>
+        <li>Store CI secrets in the CI provider's secret store, never in the repo</li>
+        <li>Restrict who can merge to <code class="inline-code">main</code> and who can publish packages</li>
+        <li>Require review for lockfile changes — they are code changes</li>
+        <li>Generate an SBOM (<code class="inline-code">npm sbom</code>, Syft) so you can answer “are we affected?” fast</li>
+        <li>Use <code class="inline-code">npm ci --ignore-scripts</code> in untrusted builds to stop install-time code execution</li>
+      </ul>
+
+      <div class="tip"><strong>💡 Tip:</strong> Treat a dependency update like a small deploy: it can introduce breaking changes <em>and</em> malicious code. Automated PRs still deserve a quick look at what changed.</div>
+    </section>
+
+    <!-- ═══ 9. Deployment ═══ -->
+    <section id="deploy" class="card sect-offset">
+      <h2><span class="section-num">09</span> Secure Deployment &amp; Headers <span class="level level-advanced">Advanced</span></h2>
+
+      <p>Secure code can still be defeated by a misconfigured server. Harden the edges: headers, CORS, rate limits, error handling, logging and backups.</p>
+
+      <h3>Security headers</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">Content-Security-Policy</div><div class="cheat-desc">Restrict script/style sources</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Strict-Transport-Security</div><div class="cheat-desc">Force HTTPS</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">X-Content-Type-Options</div><div class="cheat-desc">nosniff — stop MIME guessing</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Referrer-Policy</div><div class="cheat-desc">Limit leaked URLs</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">Permissions-Policy</div><div class="cheat-desc">Disable unused browser APIs</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">frame-ancestors</div><div class="cheat-desc">Blocks clickjacking</div></div>
+      </div>
+
+      <pre><code><span class="cm"># A reasonable starter set (tune the CSP to your app)</span>
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+X-Frame-Options: DENY</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Express hardening</h3>
+      <pre><code>import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+
+app.use(helmet());
+app.disable("x-powered-by");
+
+app.use("/api", rateLimit({
+  windowMs: 60_000,
+  limit: 100,
+  standardHeaders: "draft-7",
+  legacyHeaders: false
+}));
+
+app.use(express.json({ limit: "100kb" }));</code><button type="button" class="copy-tip" aria-label="Copy code to clipboard">Copy</button></pre>
+
+      <h3>Error handling and logging</h3>
+      <ul>
+        <li><strong>Never show stack traces</strong> or database errors to users — log them server-side instead</li>
+        <li><strong>Return generic messages</strong> for auth and internal errors</li>
+        <li><strong>Log security events</strong> — failed logins, permission denials, admin actions</li>
+        <li><strong>Never log secrets, tokens, passwords or full card numbers</strong></li>
+        <li><strong>Redact PII</strong> and set a retention period</li>
+        <li><strong>Alert on anomalies</strong> — spikes in 401/403, error rates, unusual regions</li>
+      </ul>
+
+      <h3>Operational basics</h3>
+      <ul>
+        <li>Run the database with a least-privilege user, not as the owner/superuser</li>
+        <li>Disable directory listing and remove default pages, sample apps and debug endpoints</li>
+        <li>Keep the OS, runtime and dependencies patched; automate updates where possible</li>
+        <li>Use separate credentials and data for development, staging and production</li>
+        <li>Encrypt backups and <strong>test restores</strong> — an untested backup is a hope, not a plan</li>
+        <li>Set request size limits and timeouts to blunt denial-of-service attempts</li>
+      </ul>
+
+      <div class="warn"><strong>⚠ Debug mode in production:</strong> Verbose errors, <code class="inline-code">DEBUG=true</code>, source maps and admin panels left open are among the most common real-world exposures. Make “production” the safe default and require explicit opt-in for diagnostics.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> Run a quick external scan after each deploy — <code class="inline-code">securityheaders.com</code>, <code class="inline-code">observatory.mozilla.org</code>, and <code class="inline-code">nuclei</code> for known misconfigurations. Fix the easy wins first.</div>
+    </section>
+
+    <!-- ═══ 10. Incident response & cheat sheet ═══ -->
+    <section id="cheatsheet" class="card sect-offset">
+      <h2><span class="section-num">10</span> Incident Response &amp; Cheat Sheet <span class="level level-advanced">Advanced</span></h2>
+
+      <h3>When something goes wrong</h3>
+      <ol>
+        <li><strong>Identify</strong> — confirm the incident, scope what is affected, start a timeline and keep notes</li>
+        <li><strong>Contain</strong> — revoke keys, disable the vulnerable endpoint, isolate the host, block the attacker</li>
+        <li><strong>Eradicate</strong> — patch the root cause, remove backdoors and malicious packages</li>
+        <li><strong>Recover</strong> — restore from a known-good backup, rotate all potentially exposed credentials, monitor closely</li>
+        <li><strong>Learn</strong> — write a blameless post-mortem: what happened, what helped, what to change</li>
+      </ol>
+
+      <div class="note"><strong>Rotate before you investigate:</strong> If credentials may be exposed, revoke them first. Attackers rarely wait while you read logs, and every extra minute is another chance to use the key.</div>
+
+      <h3>Developer security checklist</h3>
+      <ul>
+        <li>Passwords hashed with argon2id/bcrypt — never plain text or fast hashes</li>
+        <li>MFA available; login and reset endpoints rate-limited</li>
+        <li>Authorization checked on the server for every object and action</li>
+        <li>All input validated; all output encoded for its context</li>
+        <li>Parameterized queries and <code class="inline-code">execFile</code> instead of string-built commands</li>
+        <li>Secrets in env/secret manager; <code class="inline-code">.env</code> git-ignored and history scanned</li>
+        <li>HTTPS everywhere, HSTS enabled, cookies <code class="inline-code">HttpOnly; Secure; SameSite</code></li>
+        <li>Dependencies audited and lockfile committed; CI actions pinned</li>
+        <li>Security headers, CORS allowlist, request size limits and rate limits</li>
+        <li>Generic error messages, structured logs without secrets, alerts on anomalies</li>
+        <li>Backups encrypted and restore-tested; least-privilege DB users</li>
+        <li>A written plan for revoked keys and incident response</li>
+      </ul>
+
+      <h3>Copy-paste reference</h3>
+      <div class="cheat-grid">
+        <div class="cheat-item"><div class="cheat-cmd">argon2.hash(pw)</div><div class="cheat-desc">Hash a password</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">argon2.verify(h, pw)</div><div class="cheat-desc">Check a login</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">HttpOnly; Secure; SameSite</div><div class="cheat-desc">Safe session cookie</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">$1 parameter</div><div class="cheat-desc">Parameterized SQL</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">textContent</div><div class="cheat-desc">Safe text insertion</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">DOMPurify.sanitize()</div><div class="cheat-desc">Sanitise required HTML</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">npm ci --ignore-scripts</div><div class="cheat-desc">Locked, script-free install</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">npm audit</div><div class="cheat-desc">Known vulnerabilities</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">gitleaks detect</div><div class="cheat-desc">Find leaked secrets</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">helmet()</div><div class="cheat-desc">Sensible security headers</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">rateLimit()</div><div class="cheat-desc">Stop brute force and abuse</div></div>
+        <div class="cheat-item"><div class="cheat-cmd">res.status(404)</div><div class="cheat-desc">Do not leak resource existence</div></div>
+      </div>
+
+      <div class="note"><strong>Remember:</strong> Security is layers, not a single lock. Assume any one control can fail — authentication, validation, headers, monitoring — and make sure the others still hold.</div>
+
+      <div class="tip"><strong>💡 Tip:</strong> The highest-return habits are boring: patch dependencies, keep secrets out of Git, check authorization on every request, and never trust input. Do those four consistently and you are ahead of most production codebases.</div>
+    </section>
+
+    <footer><i>Made with ❤ by Laksh. <a href="index.html">⌂ Back to Home</a></i></footer>
+  </main>
+
+
+
+  <button type="button" id="back-top" title="Back to top">↑</button>
+
+  <script>
+    // ═════════════════════════════════════════════
+    // 1. SIDEBAR TOGGLE (Mobile)
+    // ═════════════════════════════════════════════
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menuBtn');
+
+    function setMenu(open) {
+      const wasOpen = !!(sidebar && sidebar.classList.contains('active'));
+      if (sidebar) sidebar.classList.toggle('active', open);
+      if (overlay) overlay.classList.toggle('active', open);
+      if (menuBtn) {
+        menuBtn.setAttribute('aria-expanded', String(open));
+        menuBtn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      }
+      document.body.style.overflow = open ? 'hidden' : '';
+      syncSidebarInert();
+      if (open) {
+        const first = sidebar && sidebar.querySelector('.home-link, .toc a[href]');
+        if (first) first.focus();
+      } else if (wasOpen && menuBtn) {
+        menuBtn.focus();
+      }
+    }
+
+    function syncSidebarInert() {
+      if (!sidebar) return;
+      sidebar.toggleAttribute('inert', window.innerWidth <= 900 && !sidebar.classList.contains('active'));
+    }
+    syncSidebarInert();
+    window.addEventListener('resize', syncSidebarInert);
+
+    if (menuBtn) {
+      menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn.addEventListener('click', () => {
+        setMenu(!(sidebar && sidebar.classList.contains('active')));
+      });
+    }
+    if (overlay) overlay.addEventListener('click', () => setMenu(false));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) setMenu(false);
+    });
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.addEventListener('click', () => setMenu(false));
+    });
+    // keep Tab inside the sidebar while it is open
+    if (sidebar) sidebar.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab' || !sidebar.classList.contains('active')) return;
+      const items = [...sidebar.querySelectorAll('a[href], button:not([disabled])')]
+        .filter(el => el.getClientRects().length > 0);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    // ═════════════════════════════════════════════
+    // 2. COPY TO CLIPBOARD
+    // ═════════════════════════════════════════════
+    document.querySelectorAll('pre').forEach(pre => {
+      const tip = pre.querySelector('.copy-tip');
+      if (!tip) return;
+      tip.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        try {
+          await navigator.clipboard.writeText(code ? code.innerText : pre.textContent);
+          tip.textContent = 'Copied!';
+          tip.classList.add('copied');
+          setTimeout(() => {
+            tip.textContent = 'Copy';
+            tip.classList.remove('copied');
+          }, 1800);
+        } catch {
+          tip.textContent = 'Failed';
+        }
+      });
+    });
+
+    // ═════════════════════════════════════════════
+    // 3. TYPEWRITER
+    // ═════════════════════════════════════════════
+    (function typewriter() {
+      const el = document.getElementById('typewriter-text');
+      if (!el) return;
+      const text = el.textContent.trim();
+      const cursor = el.parentElement.querySelector('.typewriter-cursor');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (cursor) cursor.style.display = 'none';
+        return;
+      }
+      el.textContent = '';
+      let i = 0;
+      function tick() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          const delay = text.charAt(i - 1) === '.' || text.charAt(i - 1) === ',' ? 60 : 20;
+          setTimeout(tick, delay);
+        } else if (cursor) {
+          cursor.style.display = 'none';
+        }
+      }
+      setTimeout(tick, 800);
+    })();
+
+    // ═════════════════════════════════════════════
+    // 4. TOC ACTIVE HIGHLIGHT
+    // ═════════════════════════════════════════════
+    const sections = [];
+    document.querySelectorAll('.toc a').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const el = document.querySelector(href);
+        if (el) sections.push({ el, link: a });
+      }
+    });
+    const tocLinks = document.querySelectorAll('.toc a');
+
+    function highlightTOC() {
+      let current = sections[0];
+      for (const s of sections) {
+        const rect = s.el.getBoundingClientRect();
+        if (rect.top <= 120) current = s;
+        else break;
+      }
+      tocLinks.forEach(a => a.classList.remove('active'));
+      if (current) current.link.classList.add('active');
+    }
+    let tocTicking = false;
+    window.addEventListener('scroll', () => {
+      if (tocTicking) return;
+      tocTicking = true;
+      requestAnimationFrame(() => { tocTicking = false; highlightTOC(); });
+    }, { passive: true });
+    highlightTOC();
+
+    // ═════════════════════════════════════════════
+    // 5. BACK TO TOP
+    // ═════════════════════════════════════════════
+    const backTop = document.getElementById('back-top');
+    if (backTop) {
+      let backTicking = false;
+      window.addEventListener('scroll', () => {
+        if (backTicking) return;
+        backTicking = true;
+        requestAnimationFrame(() => {
+          backTop.classList.toggle('visible', window.scrollY > 400);
+          backTicking = false;
+        });
+      }, { passive: true });
+      backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
+
+    // ═════════════════════════════════════════════
+    // 6. SCROLL REVEAL
+    // ═════════════════════════════════════════════
+    (function scrollReveal() {
+      const cards = document.querySelectorAll('.card');
+      if (!cards.length || !('IntersectionObserver' in window)) {
+        cards.forEach(c => c.classList.add('visible'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      cards.forEach(card => observer.observe(card));
+    })();
+
+    // ═════════════════════════════════════════════
+    // 7. 3D TILT
+    // ═════════════════════════════════════════════
+    (function tiltEffect() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -5;
+          const rotateY = ((x - centerX) / centerX) * 5;
+          card.style.transform =
+            `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.005)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    })();
+
+    // ═════════════════════════════════════════════
+    // 8. PARALLAX ORBS
+    // ═════════════════════════════════════════════
+    (function parallaxOrbs() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const orbs = document.querySelectorAll('.orb');
+      if (!orbs.length) return;
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        orbs.forEach((orb, i) => {
+          const speed = 5 + i * 3;
+          orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+        });
+      }, { passive: true });
+    })();
+  </script>
+  <script>
+    (function themeToggle(){
+      const html = document.documentElement;
+      const btn = document.getElementById('themeToggle');
+      if(!btn) return;
+      const icons = { light:'\u2600\ufe0f', dark:'\ud83c\udf19' };
+      const sys = () => window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      const themeColor = document.getElementById('themeColorMeta');
+      const themeColors = { light: '#f8fafc', dark: '#07080e' };
+      const apply = t => {
+        html.setAttribute('data-theme', t); btn.textContent = icons[t] || icons.dark;
+        if (themeColor) themeColor.content = themeColors[t] || themeColors.dark;
+      };
+      apply(html.getAttribute('data-theme') || sys());
+      btn.addEventListener('click', () => {
+        const next = (html.getAttribute('data-theme') || sys()) === 'light' ? 'dark' : 'light';
+        apply(next);
+        try{ localStorage.setItem('theme', next); }catch(e){}
+      });
+    })();
+  </script>
+</body>
+</html>
