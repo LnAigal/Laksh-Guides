@@ -103,6 +103,14 @@
     :focus-visible{ outline:2px solid var(--accent-light); outline-offset:3px; border-radius:8px; }
     ::selection{ background:rgba(99,102,241,0.4); color:#fff; }
 
+    .skip-link{
+      position:fixed; top:-40px; left:50%; transform:translateX(-50%);
+      background:var(--accent); color:#fff; padding:8px 16px; border-radius:0 0 10px 10px;
+      z-index:200; font-weight:600; font-size:0.85rem; transition:top 0.2s;
+      text-decoration:none;
+    }
+    .skip-link:focus{ top:0; color:#fff; outline:2px solid #fff; outline-offset:2px; }
+
     ::-webkit-scrollbar{ width:6px; }
     ::-webkit-scrollbar-track{ background:transparent; }
     ::-webkit-scrollbar-thumb{ background:var(--border-hover); border-radius:3px; }
@@ -143,6 +151,9 @@
       background:var(--surface);
     }
     .nav-links a:hover .icon-svg{ background:var(--accent-light); }
+    .nav-links a:focus-visible{
+      outline:2px solid var(--accent-light); outline-offset:2px;
+    }
     .nav-links a.active{
       color:var(--accent-light); border-color:var(--border-hover);
       background:var(--surface);
@@ -216,6 +227,7 @@
       background:var(--surface); backdrop-filter:blur(12px);
       color:var(--text); font-size:0.9rem; outline:none;
       transition:all 0.25s; font-family:inherit;
+      -webkit-appearance:none; appearance:none;
     }
     .hero-controls input:focus{
       border-color:var(--accent);
@@ -264,6 +276,11 @@
       text-decoration:none; color:var(--text);
       position:relative; overflow:hidden;
       cursor:pointer;
+    }
+    .guide-card:focus-visible{
+      outline:2px solid var(--accent-light); outline-offset:2px;
+      border-color:var(--border-hover);
+      box-shadow:var(--shadow),var(--glow);
     }
     .guide-card::before{
       content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
@@ -348,6 +365,9 @@
     .back-top:hover{
       border-color:var(--border-hover); color:var(--accent-light);
       box-shadow:var(--shadow),var(--glow); transform:translateY(-2px);
+    }
+    .back-top:focus-visible{
+      outline:2px solid var(--accent-light); outline-offset:2px;
     }
 
     /* ═══ FOOTER ═══ */
@@ -506,6 +526,7 @@
   </style>
 </head>
 <body>
+  <a href="#guideGrid" class="skip-link">Skip to guides</a>
   <div id="overlay"></div>
 
   <nav class="mobile-drawer" id="mobileDrawer" aria-label="Mobile menu">
@@ -736,6 +757,7 @@
       emptyState.classList.toggle('visible', visible === 0);
       guideCount.textContent = visible;
       guideCountLabel.textContent = q ? (visible === 1 ? 'match' : 'matches') : 'guides';
+      guideCount.setAttribute('aria-live', 'polite');
     });
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {

@@ -639,6 +639,15 @@
     }
 
     /* Reduced motion */
+    .skip-link{
+      position:fixed; top:-40px; left:50%; transform:translateX(-50%);
+      background:linear-gradient(135deg,var(--accent-from),var(--accent-to));
+      color:#fff; padding:8px 16px; border-radius:0 0 10px 10px;
+      z-index:200; font-weight:600; font-size:0.85rem; transition:top 0.2s;
+      text-decoration:none;
+    }
+    .skip-link:focus{ top:0; color:#fff; outline:2px solid #fff; outline-offset:2px; }
+
     @media (prefers-reduced-motion: reduce){
       .orb,.card,.flow .step{ animation:none !important; }
       .card{ opacity:1; transform:none !important; }
@@ -654,6 +663,7 @@
     </style>
 </head>
 <body>
+  <a href="#intro" class="skip-link">Skip to content</a>
   <div class="orb-container">
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
